@@ -6,11 +6,23 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TestComponent } from './test/test.component';
+import { LoginComponent } from './login/login.component';
+import { RegistrationComponent } from './registration/registration.component';
+import { AdminHomeComponent } from './admin-home/admin-home.component';
+import { UserHomeComponent } from './user-home/user-home.component';
+import { CertificateComponent } from './certificate/certificate.component';
+import { NewAdminComponent } from './new-admin/new-admin.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    TestComponent
+    TestComponent,
+    LoginComponent,
+    RegistrationComponent,
+    AdminHomeComponent,
+    UserHomeComponent,
+    CertificateComponent,
+    NewAdminComponent
   ],
   imports: [
     BrowserModule,
