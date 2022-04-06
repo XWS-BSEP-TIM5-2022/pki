@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-registration',
@@ -7,9 +10,60 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RegistrationComponent implements OnInit {
 
-  constructor() { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   ngOnInit(): void {
+  }
+
+  email = new FormControl('', [Validators.required, Validators.email]);
+
+  getErrorMessage() {
+    if (this.email.hasError('required')) {
+      return 'You must enter a value';
+    }
+
+    return this.email.hasError('email') ? 'Not a valid email' : '';
+  }
+
+  password = new FormControl('', [Validators.required]);
+  hide = true;
+  getPasswordErrorMessage() {
+    if (this.password.hasError('required')) {
+      return 'You must enter a value';
+    }
+    return;
+  }
+
+  password2 = new FormControl('', [Validators.required]);
+
+  getPassword2ErrorMessage() {
+    if (this.password2.hasError('required')) {
+      return 'You must enter a value';
+    }
+    if(this.password != this.password2) {
+      return 'Passwords do not match'
+    }
+    return;
+  }
+
+  signUp() {
+    if(this.password.value != this.password2.value) {
+      return;
+    }
+    let user = {
+      'email': this.email.value,
+      'password': this.password.value,
+      'userType': "USER",
+      'authorityType': "END-ENTITY"
+    }
+    let body = JSON.stringify(user)
+    const headers = { 'content-type': 'application/json'} 
+    this.http.post('http://localhost:8080/api/users/signup', body, {'headers': headers })
+    .subscribe(data => {
+      alert('Uspesna registracija korisnika! ' + data)
+      console.log(data)
+      this.router.navigate(['user-home', data])
+    })
   }
 
 }
