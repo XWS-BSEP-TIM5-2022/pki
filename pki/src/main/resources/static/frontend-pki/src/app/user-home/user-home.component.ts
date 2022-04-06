@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Certificate } from '../model/certificate.model';
 
 @Component({
   selector: 'app-user-home',
@@ -7,9 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UserHomeComponent implements OnInit {
 
+  caCert : Certificate[] = []
+  endEntityCert : Certificate[] = []
+  
   constructor() { }
 
   ngOnInit(): void {
+    this.caCert.push(new Certificate())
   }
 
 }

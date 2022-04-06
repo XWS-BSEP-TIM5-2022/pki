@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core'; 
+import { Certificate } from '../model/certificate.model';
 
 @Component({
   selector: 'app-admin-home',
@@ -7,9 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AdminHomeComponent implements OnInit {
 
+  rootCert : Certificate[] = []
+  caCert : Certificate[] = []
+  endEntityCert : Certificate[] = []
+ 
   constructor() { }
 
   ngOnInit(): void {
+    this.rootCert.push(new Certificate())
+
   }
 
 }
