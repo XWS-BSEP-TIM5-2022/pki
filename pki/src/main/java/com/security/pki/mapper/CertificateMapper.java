@@ -1,8 +1,8 @@
-package mapper;
+package com.security.pki.mapper;
 
 import com.security.pki.model.Certificate;
 
-import dto.CertificateDTO;
+import com.security.pki.dto.CertificateDTO;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor

@@ -1,4 +1,4 @@
-package mapper;
+package com.security.pki.mapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,8 +8,8 @@ import com.security.pki.model.Certificate;
 import com.security.pki.model.User;
 import com.security.pki.model.UserType;
 
-import dto.CertificateDTO;
-import dto.UserDTO;
+import com.security.pki.dto.CertificateDTO;
+import com.security.pki.dto.UserDTO;
 
 public class UserMapper {
 	

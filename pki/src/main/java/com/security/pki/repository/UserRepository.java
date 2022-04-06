@@ -1,4 +1,4 @@
-package repository;
+package com.security.pki.repository;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.jpa.repository.JpaRepository;

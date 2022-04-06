@@ -1,4 +1,4 @@
-package dto;
+package com.security.pki.dto;
 
 import java.util.List;
 

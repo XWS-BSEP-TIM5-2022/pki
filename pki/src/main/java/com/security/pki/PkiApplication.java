@@ -10,7 +10,7 @@ import com.security.pki.model.AuthorityType;
 import com.security.pki.model.User;
 import com.security.pki.model.UserType;
 
-import repository.UserRepository;
+import com.security.pki.repository.UserRepository;
 
 
 
