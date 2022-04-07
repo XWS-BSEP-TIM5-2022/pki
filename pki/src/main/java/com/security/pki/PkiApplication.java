@@ -8,7 +8,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.security.pki.model.AuthorityType;
 import com.security.pki.model.User;
 import com.security.pki.model.UserType;
 
@@ -43,7 +42,7 @@ public class PkiApplication implements CommandLineRunner {
 //		admin.setCertificates(new ArrayList<>());
 //		
 //		userRepository.save(admin);
-		User admin = new User(1, "admin@gmail.com", "admin", UserType.ADMIN, AuthorityType.ROOT, null);
+		User admin = new User(1, "admin@gmail.com", "admin", UserType.ADMIN, null);
 		userRepository.save(admin);
 
 		Calendar cal = Calendar.getInstance();
