@@ -2,7 +2,6 @@ package com.security.pki.controller;
 
 import com.security.pki.dto.LoginDTO;
 import com.security.pki.dto.SignUpUserDTO;
-import com.security.pki.dto.UserDTO;
 import com.security.pki.mapper.UserMapper;
 import com.security.pki.model.User;
 import com.security.pki.repository.UserRepository;
@@ -12,8 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/api/users")
@@ -25,7 +22,7 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, value = "/signup")
     public ResponseEntity<?> user(@RequestBody SignUpUserDTO dto) {
-        User user = userService.registerUser(dto);
+        User user = userService.register(dto);
         return ResponseEntity.ok(user.getId());
     }
 
@@ -46,4 +43,11 @@ public class UserController {
         }
         return ResponseEntity.ok(new UserMapper().UserToUserDto(user));
     }
+
+    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, value = "/addAdmin")
+    public ResponseEntity<?> addAdmin(@RequestBody SignUpUserDTO dto) {
+        User user = userService.register(dto);
+        return ResponseEntity.ok(user.getId());
+    }
+
 }

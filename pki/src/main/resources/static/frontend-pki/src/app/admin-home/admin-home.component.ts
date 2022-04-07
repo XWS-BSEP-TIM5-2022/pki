@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core'; 
+import { Router } from '@angular/router';
 import { Certificate } from '../model/certificate.model';
 
 @Component({
@@ -12,11 +13,15 @@ export class AdminHomeComponent implements OnInit {
   caCert : Certificate[] = []
   endEntityCert : Certificate[] = []
  
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
     this.rootCert.push(new Certificate())
 
+  }
+
+  addAdmin() {
+    this.router.navigate(['/new-admin'])
   }
 
 }

@@ -16,7 +16,7 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public User registerUser(SignUpUserDTO dto) {
+    public User register(SignUpUserDTO dto) {
         User newUser = new UserMapper().SignUpUserDtoToUser(dto);
         userRepository.save(newUser);
         return newUser;
@@ -42,4 +42,5 @@ public class UserServiceImpl implements UserService {
         }
         return null;
     }
+
 }
