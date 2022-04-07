@@ -1,5 +1,6 @@
 package com.security.pki.service.impl;
 
+import com.security.pki.dto.LoginDTO;
 import com.security.pki.dto.SignUpUserDTO;
 import com.security.pki.mapper.UserMapper;
 import com.security.pki.model.User;
@@ -25,6 +26,17 @@ public class UserServiceImpl implements UserService {
     public User findUserById(Integer id) {
         for(User user: userRepository.findAll()){
             if(user.getId() == id){
+                return user;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public User login(String email, String password) {
+        User user = userRepository.findByEmail(email);
+        if(user != null) {
+            if (user.getPassword().equals(password)) {
                 return user;
             }
         }

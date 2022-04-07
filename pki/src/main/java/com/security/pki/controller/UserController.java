@@ -1,5 +1,6 @@
 package com.security.pki.controller;
 
+import com.security.pki.dto.LoginDTO;
 import com.security.pki.dto.SignUpUserDTO;
 import com.security.pki.dto.UserDTO;
 import com.security.pki.mapper.UserMapper;
@@ -31,6 +32,15 @@ public class UserController {
     @RequestMapping(method = RequestMethod.GET, value = "/getById/{id}")
     public ResponseEntity getUserById(@PathVariable Integer id) {
         User user = userService.findUserById(id);
+        if(user == null) {
+            return ResponseEntity.ok(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(new UserMapper().UserToUserDto(user));
+    }
+
+    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, value = "/login")
+    public ResponseEntity<?> login(@RequestBody LoginDTO dto) {
+        User user = userService.login(dto.email, dto.password);
         if(user == null) {
             return ResponseEntity.ok(HttpStatus.NOT_FOUND);
         }

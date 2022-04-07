@@ -25,7 +25,6 @@ export class RegistrationComponent implements OnInit {
   }
 
   password = new FormControl('', [Validators.required]);
-  hide = true;
   getPasswordErrorMessage() {
     if (this.password.hasError('required')) {
       return 'You must enter a value';
