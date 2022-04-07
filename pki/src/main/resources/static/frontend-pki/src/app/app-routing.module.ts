@@ -10,7 +10,7 @@ import { NewAdminComponent } from './new-admin/new-admin.component';
 import { NewCertificateComponent } from './new-certificate/new-certificate.component';
 
 const routes: Routes = [
-  {path: "", component: TestComponent},
+  {path: "", redirectTo: '/login', pathMatch: 'full'},
   {path: "login", component: LoginComponent},
   {path: "registration", component: RegistrationComponent},
   {path: "admin-home", component: AdminHomeComponent},

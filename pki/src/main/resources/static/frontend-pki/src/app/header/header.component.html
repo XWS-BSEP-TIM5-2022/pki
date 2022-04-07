@@ -12,6 +12,11 @@
             <button *ngIf="isAdmin()" mat-button mat-ripple routerLink="/new-certificate">
                 <span>New Certificate</span>
             </button> 
+
+            
+            <button *ngIf="isAdmin() || isClient()" mat-button mat-ripple (click) = "logout()">
+                <span>Logout</span>
+            </button> 
             
             <!-- <button *ngIf="hasSignedIn()" [matMenuTriggerFor]="userMenu" class="greeting-hamburger" mat-icon-button
                 mat-ripple>
