@@ -1,0 +1,25 @@
+<body>
+    <div class = "container">
+      <div class = "title"> Create Certificate </div> <br>
+      <form  #registrationForm = "ngForm" (ngSubmit)="newCertificate()">
+        <div class = "user-details">
+          <div class = "input-box">
+            <span class="details">Common Name</span>
+            <input type="text" name="commonName" placeholder="Enter common name" [(ngModel)]="certificate.commonName" required>
+          </div>
+          <div class = "input-box">
+            <span class="details">Valid From</span>
+            <input type="date"  name="validFrom"  [(ngModel)]="certificate.validFrom" required>
+          </div>
+          <div class = "input-box">
+            <span class="details">Valid To</span>
+            <input type="date"  name="validTo"  [(ngModel)]="certificate.validTo" required>
+          </div> 
+          <br>
+        </div>
+        <div class = "button">
+          <input type ="submit" value="Create">
+        </div>
+      </form>
+    </div>
+    </body>

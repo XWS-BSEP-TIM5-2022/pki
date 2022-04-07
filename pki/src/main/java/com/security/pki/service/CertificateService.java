@@ -17,7 +17,6 @@ public class CertificateService {
         return this.certificateRepository.findAll();
     }
 
-
     public Certificate findById(Integer id){
         return this.certificateRepository.findById(id).orElseGet(null);
     }
