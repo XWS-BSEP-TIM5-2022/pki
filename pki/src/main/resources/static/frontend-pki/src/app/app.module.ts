@@ -18,6 +18,8 @@ import { UserHomeComponent } from './user-home/user-home.component';
 import { CertificateComponent } from './certificate/certificate.component';
 import { NewAdminComponent } from './new-admin/new-admin.component';
 import { HeaderComponent } from './header/header.component';
+import { NewCertificateComponent } from './new-certificate/new-certificate.component';
+import { FormsModule, NgForm } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -30,6 +32,7 @@ import { HeaderComponent } from './header/header.component';
     CertificateComponent,
     NewAdminComponent,
     HeaderComponent,
+    NewCertificateComponent,
   ],
   imports: [
     BrowserModule,
@@ -40,7 +43,8 @@ import { HeaderComponent } from './header/header.component';
     MatCardModule,
     MatButtonModule,
     MatToolbarModule,
-    MatMenuModule
+    MatMenuModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

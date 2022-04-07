@@ -7,6 +7,7 @@ import { AdminHomeComponent } from './admin-home/admin-home.component';
 import { UserHomeComponent } from './user-home/user-home.component';
 import { CertificateComponent } from './certificate/certificate.component';
 import { NewAdminComponent } from './new-admin/new-admin.component';
+import { NewCertificateComponent } from './new-certificate/new-certificate.component';
 
 const routes: Routes = [
   {path: "", component: TestComponent},
@@ -16,6 +17,7 @@ const routes: Routes = [
   {path: "user-home", component: UserHomeComponent},
   {path: "certificate-review", component: CertificateComponent},
   {path: "new-admin", component: NewAdminComponent},
+  {path: "new-certificate", component: NewCertificateComponent},
 ];
 
 @NgModule({
