@@ -1,8 +1,11 @@
 package com.security.pki.service;
 
-import org.springframework.stereotype.Service;
+import com.security.pki.dto.LoginDTO;
+import com.security.pki.dto.SignUpUserDTO;
+import com.security.pki.model.User;
 
-@Service
-public class UserService {
-
+public interface UserService {
+    User register(SignUpUserDTO dto);
+    User findUserById(Integer id);
+    User login(String email, String password);
 }

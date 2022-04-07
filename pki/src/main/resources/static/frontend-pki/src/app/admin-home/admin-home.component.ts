@@ -23,5 +23,8 @@ export class AdminHomeComponent implements OnInit {
   review(id: any){
     this.router.navigate(['/certificate-review/'+ id]);
   }
+  addAdmin() {
+    this.router.navigate(['/new-admin'])
+  }
 
 }
