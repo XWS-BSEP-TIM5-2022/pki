@@ -1,7 +1,7 @@
 
 
 <section>
-    <h1>CA certificates</h1>
+    <h1>CA certificates of {{email}}</h1>
 
     <mat-divider></mat-divider>
 
@@ -14,7 +14,7 @@
             <p><b>Neki podatak: </b></p>
             </mat-card-content> 
             <mat-card-actions>
-            <button style="margin:2%; margin-left: 40%;" mat-button>Details</button> 
+            <button style="margin:2%; margin-left: 40%;" (click)="review(c.id)" mat-button>Details</button> 
             </mat-card-actions>
         </mat-card> 
     </div>

@@ -1,4 +1,5 @@
 <section>
+    <button style="margin: 10px;" mat-raised-button color="primary" (click)="addAdmin()"> Add new admin </button>
     <h1>Root certificates</h1>
 
     <mat-divider></mat-divider>
@@ -12,7 +13,7 @@
             <p><b>Neki podatak: </b></p>
             </mat-card-content> 
             <mat-card-actions>
-            <button style="margin:2%; margin-left: 40%;" mat-button>Details</button> 
+            <button style="margin:2%; margin-left: 40%;" mat-button (click)="review(c.id)">Details</button> 
             </mat-card-actions>
         </mat-card> 
     </div>

@@ -15,7 +15,7 @@ const routes: Routes = [
   {path: "registration", component: RegistrationComponent},
   {path: "admin-home", component: AdminHomeComponent},
   {path: "user-home", component: UserHomeComponent},
-  {path: "certificate-review", component: CertificateComponent},
+  {path: "certificate-review/:id", component: CertificateComponent},
   {path: "new-admin", component: NewAdminComponent},
   {path: "new-certificate", component: NewCertificateComponent},
 ];

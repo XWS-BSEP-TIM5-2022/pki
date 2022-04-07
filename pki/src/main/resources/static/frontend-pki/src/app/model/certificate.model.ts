@@ -1,8 +1,8 @@
 export class Certificate{
-    commonName: string = ""; 
-    revoked: boolean = false;
-	validFrom: Date = new Date();
-    validTo: Date = new Date();
+    id: number = -1;
+    commonName: string = "Menjaj"; 
+    validFrom?: Date | string = "02/03/2022";
+    validTo?: Date | string = "02/03/2022";
     //user: User;
 
     // constructor(commonName: string, revoked: boolean, validFrom: Date, validTo: Date){

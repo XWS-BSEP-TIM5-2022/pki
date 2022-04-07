@@ -1,3 +1,4 @@
+import { Certificate } from './../model/certificate.model';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -7,6 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CertificateComponent implements OnInit {
 
+  certificate : Certificate;
   constructor() { }
 
   ngOnInit(): void {

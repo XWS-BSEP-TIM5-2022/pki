@@ -17,4 +17,12 @@ public class CertificateMapper {
 		return cert;
 	}
 
+	public CertificateDTO certificateToCertificateDto(Certificate certificate) {
+		CertificateDTO dto = new CertificateDTO();
+		dto.revoked = certificate.isRevoked();
+		dto.validFrom = certificate.getValidFrom();
+		dto.validTo = certificate.getValidTo();
+		dto.id = certificate.getId();
+		return dto;
+	}
 }
