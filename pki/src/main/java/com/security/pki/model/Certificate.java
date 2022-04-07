@@ -3,14 +3,10 @@ package com.security.pki.model;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,9 +32,10 @@ public class Certificate {
     @Column(name = "validto", nullable = false)
     private Date validTo;
     
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "user")
-    private User user;
+	@JsonManagedReference
+	private User user;
     
     
 

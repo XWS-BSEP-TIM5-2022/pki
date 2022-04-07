@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Certificate } from '../model/certificate.model';
 
 @Component({
@@ -14,7 +15,8 @@ export class UserHomeComponent implements OnInit {
   email: string = '';
   user: any;
   
-  constructor(private http: HttpClient) { }
+  constructor(private router: Router, private http: HttpClient) { }
+
 
   ngOnInit(): void {
     this.caCert.push(new Certificate())
@@ -26,5 +28,10 @@ export class UserHomeComponent implements OnInit {
       this.email = this.user.email
     })
   }
+
+  review(id: any){
+    this.router.navigate(['/certificate-review/'+ id]);
+  }
+
 
 }
