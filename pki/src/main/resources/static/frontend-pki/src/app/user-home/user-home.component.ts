@@ -19,9 +19,8 @@ export class UserHomeComponent implements OnInit {
   ngOnInit(): void {
     this.caCert.push(new Certificate())
     
-    let urlArray = window.location.href.split('/')
-    let id = urlArray[urlArray.length - 1]
-    this.http.get('http://localhost:8080/api/users/getById/' + id)
+    let idLocalStorage = localStorage.getItem('userId')
+    this.http.get('http://localhost:8080/api/users/getById/' + idLocalStorage)
     .subscribe(data => {
       this.user = data
       this.email = this.user.email
