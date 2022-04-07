@@ -1,8 +1,10 @@
 export class Certificate{
     id: number = -1;
-    commonName: string = "Menjaj"; 
+    commonName: string = "undefined"; 
     validFrom?: Date | string = "02/03/2022";
     validTo?: Date | string = "02/03/2022";
+    email : string = "undefined";
+    certificateType : string = "";
     //user: User;
 
     // constructor(commonName: string, revoked: boolean, validFrom: Date, validTo: Date){

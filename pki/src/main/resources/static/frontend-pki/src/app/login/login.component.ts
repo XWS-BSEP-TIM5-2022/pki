@@ -41,7 +41,8 @@ export class LoginComponent implements OnInit {
     this.http.post('http://localhost:8080/api/users/login', body, {'headers': headers })
     .subscribe(data => {
       this.user = data
-      localStorage.setItem('userId', this.user.id.toString())
+      localStorage.setItem('userId', this.user.id.toString());
+      localStorage.setItem('role', this.user.userType); 
       if(this.user.authorityType == "ROOT"){
         this.router.navigate(['admin-home'])
       } else {

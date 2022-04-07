@@ -1,4 +1,4 @@
-package com.security.pki.model;
+package com.security.pki.enums;
 
 public enum UserType {
 	USER,

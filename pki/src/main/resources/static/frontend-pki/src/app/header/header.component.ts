@@ -12,4 +12,21 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  isAdmin(){
+    if(localStorage.getItem('role') == "ADMIN"){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  isClient(){
+    if(localStorage.getItem('role') == "USER"){
+      return true;
+    } else {
+      return false;
+    }
+    
+  }
+
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core'; 
 import { Router } from '@angular/router';
 import { Certificate } from '../model/certificate.model';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-admin-home',
@@ -13,10 +14,23 @@ export class AdminHomeComponent implements OnInit {
   caCert : Certificate[] = []
   endEntityCert : Certificate[] = []
  
-  constructor(private router: Router) { }
+  constructor(private router: Router, private http: HttpClient) { }
 
-  ngOnInit(): void {
-    this.rootCert.push(new Certificate())
+  ngOnInit(): void { 
+
+    this.http.get<Certificate[]>('http://localhost:8080/api/certificate')
+    .subscribe(data => {
+      var allCertificates : Certificate[] = data   
+      for(var c of allCertificates){
+        if(c.certificateType === "SELF_SIGNED"){
+          this.rootCert.push(c)
+        }else if(c.certificateType === "INTERMEDIATE"){
+          this.caCert.push(c);
+        }else{
+          this.endEntityCert.push(c)
+        }
+      }
+    });
 
   }
 

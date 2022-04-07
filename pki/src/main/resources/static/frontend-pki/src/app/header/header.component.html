@@ -1,20 +1,18 @@
 <mat-toolbar class="app-navbar" color="primary">
     <div class="right">
-        <div fxFlex="1 1 auto" fxLayout="row" fxLayoutAlign="flex-end center">
-            <button mat-button mat-ripple routerLink="/#!">
-                <span>Menjacemo ovo :D</span>
-            </button> 
-            <button mat-button mat-ripple routerLink="/admin-home">
-                <span>Admin Home</span>
+        <div fxFlex="1 1 auto" fxLayout="row" fxLayoutAlign="flex-end center"> 
+            <button *ngIf="isAdmin()" mat-button mat-ripple routerLink="/admin-home">
+                <span>Home</span>
             </button> 
             
-            <button mat-button mat-ripple routerLink="/user-home">
-                <span>Client Home</span>
+            <button *ngIf="isClient()" mat-button mat-ripple routerLink="/user-home">
+                <span>Home</span>
             </button> 
 
-            <button mat-button mat-ripple routerLink="/new-certificate">
+            <button *ngIf="isAdmin()" mat-button mat-ripple routerLink="/new-certificate">
                 <span>New Certificate</span>
             </button> 
+            
             <!-- <button *ngIf="hasSignedIn()" [matMenuTriggerFor]="userMenu" class="greeting-hamburger" mat-icon-button
                 mat-ripple>
                 <mat-icon>menu</mat-icon>

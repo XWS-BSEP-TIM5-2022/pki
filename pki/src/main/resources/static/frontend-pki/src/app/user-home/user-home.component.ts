@@ -18,8 +18,7 @@ export class UserHomeComponent implements OnInit {
   constructor(private router: Router, private http: HttpClient) { }
 
 
-  ngOnInit(): void {
-    this.caCert.push(new Certificate())
+  ngOnInit(): void { 
     
     let idLocalStorage = localStorage.getItem('userId')
     this.http.get('http://localhost:8080/api/users/getById/' + idLocalStorage)
@@ -27,11 +26,27 @@ export class UserHomeComponent implements OnInit {
       this.user = data
       this.email = this.user.email
     })
+
+    this.getCertificates();
   }
 
   review(id: any){
     this.router.navigate(['/certificate-review/'+ id]);
   }
 
+  getCertificates(){
+
+    this.http.get<Certificate[]>('http://localhost:8080/api/certificate/getAllByUser/' + localStorage.getItem('userId'))
+    .subscribe(data => {
+      var allCertificates : Certificate[] = data   
+      for(var c of allCertificates){
+        if(c.certificateType === "INTERMEDIATE"){
+          this.caCert.push(c);
+        }else{
+          this.endEntityCert.push(c)
+        }
+      }
+    });
+  }
 
 }

@@ -2,13 +2,12 @@ package com.security.pki.mapper;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import com.security.pki.dto.SignUpUserDTO;
-import com.security.pki.model.AuthorityType;
+import com.security.pki.enums.AuthorityType;
 import com.security.pki.model.Certificate;
 import com.security.pki.model.User;
-import com.security.pki.model.UserType;
+import com.security.pki.enums.UserType;
 
 import com.security.pki.dto.CertificateDTO;
 import com.security.pki.dto.UserDTO;

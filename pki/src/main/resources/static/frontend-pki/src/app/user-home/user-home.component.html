@@ -10,11 +10,11 @@
             <mat-card-title>{{c.commonName}}</mat-card-title>
             <mat-card-subtitle>Common name</mat-card-subtitle>
             <mat-card-content>
-            <p><b>Organization: </b></p>
-            <p><b>Neki podatak: </b></p>
+            <p><b>Valid from: </b> {{ c.validFrom }}</p>
+            <p><b>Valid to: </b> {{ c.validTo }}</p> 
             </mat-card-content> 
             <mat-card-actions>
-            <button style="margin:2%; margin-left: 40%;" (click)="review(c.id)" mat-button>Details</button> 
+            <button style="margin:2%; margin-left: 40%;" mat-button (click)="review(c.id)">Details</button> 
             </mat-card-actions>
         </mat-card> 
     </div>
@@ -31,11 +31,11 @@
             <mat-card-title>{{c.commonName}}</mat-card-title>
             <mat-card-subtitle>Common name</mat-card-subtitle>
             <mat-card-content>
-            <p><b>Organization: </b></p>
-            <p><b>Neki podatak: </b></p>
+            <p><b>Valid from: </b> {{ c.validFrom }}</p>
+            <p><b>Valid to: </b> {{ c.validTo }}</p> 
             </mat-card-content> 
             <mat-card-actions>
-            <button style="margin:2%; margin-left: 40%;" mat-button>Details</button> 
+            <button style="margin:2%; margin-left: 40%;" mat-button (click)="review(c.id)">Details</button> 
             </mat-card-actions>
         </mat-card> 
     </div>
