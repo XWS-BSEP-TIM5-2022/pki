@@ -42,18 +42,4 @@ public class CertificateData {
     @Column(name = "email_address")
     private String emailAddress;
 
-    @Column(name = "serialNumber")
-    private int serialNumber;
-
-    @Column(name = "isCA", nullable = false)
-    private boolean isCA;
-
-    @Column(name = "subject_key_identifier")
-    private String subjectKeyIdentifier;
-
-    @Column(name = "cert_usage", nullable = false)
-    private CertificateUsage certUsage;
-
-
-
 }

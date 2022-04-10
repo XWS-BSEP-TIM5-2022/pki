@@ -51,6 +51,4 @@ public class Certificate {
 	@JoinColumn(name = "certificateData_id", referencedColumnName = "id")
 	private CertificateData certificateData;
 
-
-
 }
