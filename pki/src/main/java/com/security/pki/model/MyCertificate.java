@@ -16,7 +16,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity(name = "certificates")
-public class Certificate {
+public class MyCertificate {
 
 	//TODO: svuda staviti u polja nullable = false
 

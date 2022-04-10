@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.security.pki.dto.SignUpUserDTO;
-import com.security.pki.enums.AuthorityType;
-import com.security.pki.model.Certificate;
+import com.security.pki.model.MyCertificate;
 import com.security.pki.model.User;
 import com.security.pki.enums.UserType;
 
@@ -22,7 +21,7 @@ public class UserMapper {
 		user.setPassword(dto.password);
 		setUserType(dto.userType, user);
 //		setAuthorityType(dto.authorityType, user);
-		List<Certificate> certificates = new ArrayList<Certificate>();
+		List<MyCertificate> certificates = new ArrayList<MyCertificate>();
 		for(CertificateDTO certDtos: dto.certificates) {
 			certificates.add(new CertificateMapper().CertificateDtoToCertificate(certDtos));
 		}
@@ -70,7 +69,7 @@ public class UserMapper {
 		dto.password = user.getPassword();
 		if(user.getCertificates() != null) {
 			ArrayList<CertificateDTO> dtos = new ArrayList<>();
-			for (Certificate certificate : user.getCertificates()) {
+			for (MyCertificate certificate : user.getCertificates()) {
 				dtos.add(new CertificateMapper().certificateToCertificateDto(certificate));
 			}
 			dto.certificates = dtos;

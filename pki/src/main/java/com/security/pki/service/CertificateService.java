@@ -1,10 +1,10 @@
 package com.security.pki.service;
 
 import com.security.pki.dto.AllCertificatesViewDTO;
-import com.security.pki.dto.CertificateDTO;
 import com.security.pki.dto.CreateCertificateDTO;
+import com.security.pki.enums.CertificateType;
 import com.security.pki.mapper.CertificateMapper;
-import com.security.pki.model.Certificate;
+import com.security.pki.model.MyCertificate;
 import com.security.pki.model.IssuerData;
 import com.security.pki.model.SubjectData;
 import com.security.pki.repository.CertificateRepository;
@@ -19,6 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 
+import java.io.File;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.*;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
@@ -31,12 +35,8 @@ import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
 import org.bouncycastle.cert.jcajce.JcaX509v3CertificateBuilder;
 import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.operator.OperatorCreationException;
-import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -51,19 +51,19 @@ public class CertificateService {
 
     public List<AllCertificatesViewDTO> findAll() {
         List<AllCertificatesViewDTO> dtos  = new ArrayList<>();
-        for(Certificate c : this.certificateRepository.findAll()){
+        for(MyCertificate c : this.certificateRepository.findAll()){
             dtos.add(this.certificateMapper.certificateWithCommonNameToCertificateDto(c));
         }
         return dtos;
     }
 
-    public Certificate findById(Integer id){
+    public MyCertificate findById(Integer id){
         return this.certificateRepository.findById(id).orElseGet(null);
     }
 
     public List<AllCertificatesViewDTO> findAllByUser(Integer id) {
         List<AllCertificatesViewDTO> dtos  = new ArrayList<>();
-        for(Certificate c : this.certificateRepository.findAll()){
+        for(MyCertificate c : this.certificateRepository.findAll()){
             if(c.getUser().getId() == id){
                 dtos.add(this.certificateMapper.certificateWithCommonNameToCertificateDto(c));
             }
@@ -74,8 +74,9 @@ public class CertificateService {
     public X509Certificate issueCertificate(CreateCertificateDTO dto) {
 
         Security.addProvider(new BouncyCastleProvider());       // TODO: premestiti
+        KeyPair keyPairSubject = generateKeyPair();
 
-        SubjectData subjectData = generateSubjectData(dto);
+        SubjectData subjectData = generateSubjectData(dto, keyPairSubject);
         //X500Name subject = new X500NameBuilder().addRDN(BCStyle.E, dto.getSubjectName()).build();
         //subjectData.setX500Name(subject);
 
@@ -119,8 +120,12 @@ public class CertificateService {
             JcaX509CertificateConverter certConverter = new JcaX509CertificateConverter();
             certConverter = certConverter.setProvider("BC");
 
+            X509Certificate x509Certificate = certConverter.getCertificate(certHolder);
+
+            writeCertificate(dto, x509Certificate, keyPairSubject);
+            
             //Konvertuje objekat u sertifikat (izvlacenje konkretnog sertifikata)
-            return certConverter.getCertificate(certHolder);
+            return x509Certificate;
 
         } catch (CertificateEncodingException e) {
             e.printStackTrace();
@@ -138,8 +143,43 @@ public class CertificateService {
         return null;
     }
 
-    private SubjectData generateSubjectData(CreateCertificateDTO dto) {
-        KeyPair keyPairSubject = generateKeyPair();
+    private void writeCertificate(CreateCertificateDTO dto, X509Certificate x509Certificate, KeyPair keyPairSubject){
+        KeyStoreWriterService ksw = new KeyStoreWriterService();
+        ksw.loadKeyStore(null, "pass".toCharArray());
+        ksw.write(x509Certificate.getSerialNumber().toString(), keyPairSubject.getPrivate(), "pass".toCharArray(), x509Certificate);
+
+        if(dto.getCertificateType().equals(CertificateType.END_ENTITY.toString())){
+            ksw.saveKeyStore(getPath("ee.jks"), "pass".toCharArray());
+            readCertificate(x509Certificate, "ee.jks");
+
+        }
+        else if(dto.getCertificateType().equals(CertificateType.INTERMEDIATE.toString())){
+            ksw.saveKeyStore(getPath("ca.jks"), "pass".toCharArray());
+            readCertificate(x509Certificate, "ca.jks");
+
+        }
+        else if(dto.getCertificateType().equals(CertificateType.SELF_SIGNED.toString())){
+            ksw.saveKeyStore(getPath("root.jks"), "pass".toCharArray());
+            readCertificate(x509Certificate, "root.jks");
+
+        }
+    }
+
+
+    private void readCertificate(X509Certificate x509Certificate, String path){
+
+        KeyStoreReaderService ksr = new KeyStoreReaderService();
+        java.security.cert.Certificate c = ksr.readCertificate(getPath(path), "pass",x509Certificate.getSerialNumber().toString());
+        System.out.println("----------------------------------UCITAN--------------------------------------");
+        System.out.println(c);
+        System.out.println("----------------------------------KRAJ----------------------------------------");
+    }
+
+    private String getPath(String path){
+        return Paths.get(FileSystems.getDefault().getPath("").toAbsolutePath().toString(),"src", "main", "resources", "keystores", path).toString();
+    }
+
+    private SubjectData generateSubjectData(CreateCertificateDTO dto,  KeyPair keyPairSubject ) {
 
         //klasa X500NameBuilder pravi X500Name objekat koji predstavlja podatke o vlasniku
         // (konkretno, objekat se napravi nakon poziva metode build nad objektom tipa X500NameBuilder)

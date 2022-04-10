@@ -1,7 +1,7 @@
 package com.security.pki.mapper;
 
 import com.security.pki.dto.AllCertificatesViewDTO;
-import com.security.pki.model.Certificate;
+import com.security.pki.model.MyCertificate;
 
 import com.security.pki.dto.CertificateDTO;
 import lombok.NoArgsConstructor;
@@ -14,15 +14,15 @@ import java.util.Date;
 public class CertificateMapper {
 	
 	
-	public Certificate CertificateDtoToCertificate(CertificateDTO dto) {
-		Certificate cert = new Certificate();
+	public MyCertificate CertificateDtoToCertificate(CertificateDTO dto) {
+		MyCertificate cert = new MyCertificate();
 		cert.setRevoked(dto.revoked);
 		cert.setValidFrom(dto.validFrom);
 		cert.setValidTo(dto.validTo);
 		return cert;
 	}
 
-	public CertificateDTO certificateToCertificateDto(Certificate certificate) {
+	public CertificateDTO certificateToCertificateDto(MyCertificate certificate) {
 		CertificateDTO dto = new CertificateDTO();
 		dto.revoked = certificate.isRevoked();
 		dto.validFrom = certificate.getValidFrom();
@@ -31,7 +31,7 @@ public class CertificateMapper {
 		return dto;
 	}
 
-	public AllCertificatesViewDTO certificateWithCommonNameToCertificateDto(Certificate certificate) {
+	public AllCertificatesViewDTO certificateWithCommonNameToCertificateDto(MyCertificate certificate) {
 		AllCertificatesViewDTO dto = new AllCertificatesViewDTO();
 		dto.id = certificate.getId();
 		//dto.commonName = certificate.getSubjectData().getCommonName();

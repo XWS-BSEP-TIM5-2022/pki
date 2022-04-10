@@ -22,7 +22,7 @@ public class CreateCertificateDTO {
     private String issuerName;
     private String subjectName;
     private CertificateDataDTO certificateDataDTO;
-    private CertificateType certificateType;
-    private CertificateUsage certificateUsage;
+    private String certificateType;
+    private String certificateUsage;
 
 }
