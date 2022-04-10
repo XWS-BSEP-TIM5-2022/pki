@@ -11,6 +11,9 @@ import com.security.pki.repository.CertificateRepository;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.X500NameBuilder;
 import org.bouncycastle.asn1.x500.style.BCStyle;
+import org.bouncycastle.asn1.x509.Extension;
+import org.bouncycastle.asn1.x509.KeyUsage;
+import org.bouncycastle.cert.CertIOException;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -103,6 +106,10 @@ public class CertificateService {
                     subjectData.getPublicKey()
             );
 
+            // TODO: sta znaci ekstenzija sertifikata - critical ???
+            KeyUsage usage = new KeyUsage(KeyUsage.keyCertSign | KeyUsage.digitalSignature | KeyUsage.keyEncipherment | KeyUsage.dataEncipherment | KeyUsage.cRLSign);
+            certGen.addExtension(Extension.keyUsage, true, usage);
+
             //Generise se sertifikat
             X509CertificateHolder certHolder = certGen.build(contentSigner);	// povezujuemo sertifikat sa content signer-om (odnosno digitalnim potpisom)
             // napravi sve sa prethodno popunjenim podacima i potpisi sa privatnim kljucem onoga ko izdaje sertifikat
@@ -124,6 +131,8 @@ public class CertificateService {
         } catch (OperatorCreationException e) {
             e.printStackTrace();
         } catch (CertificateException e) {
+            e.printStackTrace();
+        } catch (CertIOException e) {
             e.printStackTrace();
         }
         return null;

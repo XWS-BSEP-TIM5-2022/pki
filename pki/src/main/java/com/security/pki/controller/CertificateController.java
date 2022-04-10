@@ -38,6 +38,12 @@ public class CertificateController {
     @RequestMapping(value="/create", method = RequestMethod.POST)
     public ResponseEntity<?> issueCertificate(@RequestBody CreateCertificateDTO dto) {
         X509Certificate certificate = certificateService.issueCertificate(dto);
+
+        System.out.println("-------------------------------------------------------");
+        System.out.println(certificate.getKeyUsage());
+        System.out.println("-------------------------------------------------------");
+
+
         if(certificate == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
