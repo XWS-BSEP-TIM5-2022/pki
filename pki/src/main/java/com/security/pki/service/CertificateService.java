@@ -7,6 +7,7 @@ import com.security.pki.mapper.CertificateMapper;
 import com.security.pki.model.MyCertificate;
 import com.security.pki.model.IssuerData;
 import com.security.pki.model.SubjectData;
+import com.security.pki.model.User;
 import com.security.pki.repository.CertificateRepository;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.X500NameBuilder;
@@ -45,6 +46,8 @@ public class CertificateService {
     @Autowired
     private CertificateRepository certificateRepository;
 
+    @Autowired
+    private UserService userService;
 
     private CertificateMapper certificateMapper = new CertificateMapper();
 
@@ -123,6 +126,8 @@ public class CertificateService {
             X509Certificate x509Certificate = certConverter.getCertificate(certHolder);
 
             writeCertificate(dto, x509Certificate, keyPairSubject);
+
+            saveCertificate(dto);
             
             //Konvertuje objekat u sertifikat (izvlacenje konkretnog sertifikata)
             return x509Certificate;
@@ -139,8 +144,20 @@ public class CertificateService {
             e.printStackTrace();
         } catch (CertIOException e) {
             e.printStackTrace();
+        } catch (Exception exception) {
+            System.out.println(" ********** cuvanje sertifikata u bazu nije uspelo **********");
+            exception.printStackTrace();
         }
         return null;
+    }
+
+    private void saveCertificate(CreateCertificateDTO dto) throws Exception {
+        User user = userService.findByEmail(dto.getSubjectName());
+        if(user == null) {
+            throw new Exception();
+        }
+        MyCertificate myCertificate = new CertificateMapper().CreateCertificateDtoToCertificate(dto, user);
+        certificateRepository.save(myCertificate);
     }
 
     private void writeCertificate(CreateCertificateDTO dto, X509Certificate x509Certificate, KeyPair keyPairSubject){
@@ -151,23 +168,19 @@ public class CertificateService {
         if(dto.getCertificateType().equals(CertificateType.END_ENTITY.toString())){
             ksw.saveKeyStore(getPath("ee.jks"), "pass".toCharArray());
             readCertificate(x509Certificate, "ee.jks");
-
         }
         else if(dto.getCertificateType().equals(CertificateType.INTERMEDIATE.toString())){
             ksw.saveKeyStore(getPath("ca.jks"), "pass".toCharArray());
             readCertificate(x509Certificate, "ca.jks");
-
         }
         else if(dto.getCertificateType().equals(CertificateType.SELF_SIGNED.toString())){
             ksw.saveKeyStore(getPath("root.jks"), "pass".toCharArray());
             readCertificate(x509Certificate, "root.jks");
-
         }
     }
 
 
     private void readCertificate(X509Certificate x509Certificate, String path){
-
         KeyStoreReaderService ksr = new KeyStoreReaderService();
         java.security.cert.Certificate c = ksr.readCertificate(getPath(path), "pass",x509Certificate.getSerialNumber().toString());
         System.out.println("----------------------------------UCITAN--------------------------------------");
@@ -180,7 +193,6 @@ public class CertificateService {
     }
 
     private SubjectData generateSubjectData(CreateCertificateDTO dto,  KeyPair keyPairSubject ) {
-
         //klasa X500NameBuilder pravi X500Name objekat koji predstavlja podatke o vlasniku
         // (konkretno, objekat se napravi nakon poziva metode build nad objektom tipa X500NameBuilder)
         X500NameBuilder builder = new X500NameBuilder(BCStyle.INSTANCE);

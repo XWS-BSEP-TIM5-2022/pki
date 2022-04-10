@@ -15,7 +15,6 @@ import java.util.Date;
 @Setter
 @Getter
 public class CreateCertificateDTO {
-
     private Date validFrom;
     private Date validTo;
     private String serialNumber;
@@ -24,5 +23,4 @@ public class CreateCertificateDTO {
     private CertificateDataDTO certificateDataDTO;
     private String certificateType;
     private String certificateUsage;
-
 }
