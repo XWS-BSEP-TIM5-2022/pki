@@ -34,7 +34,7 @@ public class CertificateMapper {
 	public AllCertificatesViewDTO certificateWithCommonNameToCertificateDto(Certificate certificate) {
 		AllCertificatesViewDTO dto = new AllCertificatesViewDTO();
 		dto.id = certificate.getId();
-		dto.commonName = certificate.getSubjectData().getCommonName();
+		//dto.commonName = certificate.getSubjectData().getCommonName();
 		dto.validFrom = convertDateToString(certificate.getValidFrom());
 		dto.validTo = convertDateToString(certificate.getValidTo());
 		dto.email = certificate.getUser().getEmail();

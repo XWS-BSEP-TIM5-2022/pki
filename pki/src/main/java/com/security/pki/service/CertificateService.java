@@ -42,4 +42,8 @@ public class CertificateService {
         }
         return dtos;
     }
+
+    public Certificate issueCertificate(CertificateDTO dto) {
+        return null;
+    }
 }

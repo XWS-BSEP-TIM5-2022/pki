@@ -31,21 +31,11 @@ public class User {
 	
 	private UserType userType;
 	
-	private AuthorityType authorityType;		// TODO: mozda izbrisati
+	//private AuthorityType authorityType;		// TODO: mozda izbrisati
 	
 	@OneToMany(mappedBy = "user")
 	@JsonBackReference
 	private List<Certificate> certificates;
-
-
-
-	public User(Integer id, String email, String password, UserType userType, List<Certificate> certificates){
-		this.id = id;
-		this.email = email;
-		this.password = password;
-		this.userType = userType;
-		this.certificates = certificates;
-	}
 
 
 }
