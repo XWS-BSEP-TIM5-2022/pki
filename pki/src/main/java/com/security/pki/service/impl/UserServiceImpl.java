@@ -17,6 +17,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User register(SignUpUserDTO dto) {
+        for(User user: userRepository.findAll()){
+            if(user.getEmail().equals(dto.email)){
+                return null;
+            }
+        }
         User newUser = new UserMapper().SignUpUserDtoToUser(dto);
         userRepository.save(newUser);
         return newUser;
@@ -41,6 +46,11 @@ public class UserServiceImpl implements UserService {
             }
         }
         return null;
+    }
+
+    @Override
+    public User findByEmail(String subjectName) {
+        return userRepository.findByEmail(subjectName);
     }
 
 }

@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.security.pki.dto.SignUpUserDTO;
-import com.security.pki.enums.AuthorityType;
-import com.security.pki.model.Certificate;
+import com.security.pki.model.MyCertificate;
 import com.security.pki.model.User;
 import com.security.pki.enums.UserType;
 
@@ -21,8 +20,8 @@ public class UserMapper {
 		user.setEmail(dto.email);
 		user.setPassword(dto.password);
 		setUserType(dto.userType, user);
-		setAuthorityType(dto.authorityType, user);
-		List<Certificate> certificates = new ArrayList<Certificate>();
+//		setAuthorityType(dto.authorityType, user);
+		List<MyCertificate> certificates = new ArrayList<MyCertificate>();
 		for(CertificateDTO certDtos: dto.certificates) {
 			certificates.add(new CertificateMapper().CertificateDtoToCertificate(certDtos));
 		}
@@ -31,15 +30,15 @@ public class UserMapper {
 		
 	}
 
-	private void setAuthorityType(String authorityType, User user) {
-		if(authorityType.equals("ROOT")) {
-			user.setAuthorityType(AuthorityType.ROOT);
-		} else if(authorityType.equals("INTERMEDIATE")) {
-			user.setAuthorityType(AuthorityType.INTERMEDIATE);
-		} else {
-			user.setAuthorityType(AuthorityType.END_ENTITY);
-		}
-	}
+//	private void setAuthorityType(String authorityType, User user) {
+//		if(authorityType.equals("ROOT")) {
+//			user.setAuthorityType(AuthorityType.ROOT);
+//		} else if(authorityType.equals("INTERMEDIATE")) {
+//			user.setAuthorityType(AuthorityType.INTERMEDIATE);
+//		} else {
+//			user.setAuthorityType(AuthorityType.END_ENTITY);
+//		}
+//	}
 
 	private void setUserType(String userType, User user) {
 		if(userType.equals("ADMIN")) {
@@ -55,7 +54,7 @@ public class UserMapper {
 		user.setEmail(dto.email);
 		user.setPassword(dto.password);
 		setUserType(dto.userType, user);
-		setAuthorityType(dto.authorityType, user);
+//		setAuthorityType(dto.authorityType, user);
 		user.setCertificates(new ArrayList<>());
 		return user;
 	}
@@ -65,12 +64,12 @@ public class UserMapper {
 		dto.id = user.getId();
 		// TODO Sanja: ispraviti userType i authorityType
 		dto.userType = user.getUserType().toString();
-		dto.authorityType = user.getAuthorityType().toString();
+//		dto.authorityType = user.getAuthorityType().toString();
 		dto.email = user.getEmail();
 		dto.password = user.getPassword();
 		if(user.getCertificates() != null) {
 			ArrayList<CertificateDTO> dtos = new ArrayList<>();
-			for (Certificate certificate : user.getCertificates()) {
+			for (MyCertificate certificate : user.getCertificates()) {
 				dtos.add(new CertificateMapper().certificateToCertificateDto(certificate));
 			}
 			dto.certificates = dtos;

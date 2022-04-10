@@ -8,4 +8,5 @@ public interface UserService {
     User register(SignUpUserDTO dto);
     User findUserById(Integer id);
     User login(String email, String password);
+    User findByEmail(String subjectName);
 }

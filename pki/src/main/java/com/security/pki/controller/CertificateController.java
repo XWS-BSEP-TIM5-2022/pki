@@ -1,17 +1,15 @@
 package com.security.pki.controller;
 
 import com.security.pki.dto.AllCertificatesViewDTO;
-import com.security.pki.dto.CertificateDTO;
-import com.security.pki.model.Certificate;
+import com.security.pki.dto.CreateCertificateDTO;
+import com.security.pki.model.MyCertificate;
 import com.security.pki.service.CertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.criteria.CriteriaBuilder;
+import java.security.cert.X509Certificate;
 import java.util.List;
 
 @RestController
@@ -32,7 +30,27 @@ public class CertificateController {
     }
 
     @RequestMapping(value="/findById/{id}", method = RequestMethod.GET)
-    public Certificate findById(@PathVariable Integer id) {
+    public MyCertificate findById(@PathVariable Integer id) {
         return this.certificateService.findById(id);
+    }
+
+    @RequestMapping(value="/create", method = RequestMethod.POST)
+    public ResponseEntity<?> issueCertificate(@RequestBody CreateCertificateDTO dto) {
+        X509Certificate certificate = certificateService.issueCertificate(dto);
+
+//        System.out.println("-------------------------------------------------------");
+//        System.out.println(certificate.getKeyUsage());
+//        System.out.println("-------------------------------------------------------");
+
+
+        if(certificate == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+//        System.out.println("-------------------------------------------------------");
+//        System.out.println(certificate);
+//        System.out.println("-------------------------------------------------------");
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

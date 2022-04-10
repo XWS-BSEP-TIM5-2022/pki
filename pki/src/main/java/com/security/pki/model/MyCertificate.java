@@ -15,8 +15,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @Setter
 @Getter
-@Entity
-public class Certificate {
+@Entity(name = "certificates")
+public class MyCertificate {
 
 	//TODO: svuda staviti u polja nullable = false
 
@@ -33,34 +33,22 @@ public class Certificate {
     @Column(name = "validto", nullable = false)
     private Date validTo;
     
-    @ManyToOne()
-    @JoinColumn(name = "user")
+    @ManyToOne
+    @JoinColumn(name = "user", nullable = false)
 	@JsonManagedReference
-	private User user;		// subject info - kome se sertifikat izdaje
-							// TODO: mozda user da bude u SubjectData ?
-	@ManyToOne
-	@JoinColumn(name="subject")
-	private SubjectData subjectData;
+	private User user;
 
-//	@ManyToOne
-//	@JoinColumn(name="issuer")
-//	private IssuerData issuerData;
-
-	@Column(name = "certificateType")
+	@Column(name = "certificateType", nullable = false)
 	private CertificateType certificateType;
 
-	@Column(name = "serialNumber")
+	@Column(name = "serialNumber", nullable = false)
 	private String serialNumber;	// potrebno kod OCSP protokola za proveru povucenosti sertifikata
 
-	@Column(name = "certificateUsage")
-	private String certificateUsage; 	// namena sertifikata
+	@Column(name = "certificateUsage", nullable = false)
+	private CertificateUsage certificateUsage; 	// namena sertifikata
 
-	public Certificate(Integer id, boolean revoked, Date validFrom, Date validTo, User user){
-		this.id = id;
-		this.revoked = revoked;
-		this.validFrom = validFrom;
-		this.validTo = validTo;
-		this.user = user;
-	}
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "certificateData_id", referencedColumnName = "id")
+	private CertificateData certificateData;
 
 }

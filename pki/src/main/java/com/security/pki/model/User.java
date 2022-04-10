@@ -5,7 +5,6 @@ import java.util.List;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.security.pki.enums.AuthorityType;
 import com.security.pki.enums.UserType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,28 +23,18 @@ public class User {
 	@Column(name = "id")
 	private Integer id;
 
-	@Column(unique = true)
+	@Column(unique = false)
 	private String email;
 	
 	private String password;
 	
 	private UserType userType;
 	
-	private AuthorityType authorityType;		// TODO: mozda izbrisati
+	//private AuthorityType authorityType;		// TODO: mozda izbrisati
 	
 	@OneToMany(mappedBy = "user")
 	@JsonBackReference
-	private List<Certificate> certificates;
-
-
-
-	public User(Integer id, String email, String password, UserType userType, List<Certificate> certificates){
-		this.id = id;
-		this.email = email;
-		this.password = password;
-		this.userType = userType;
-		this.certificates = certificates;
-	}
+	private List<MyCertificate> certificates;
 
 
 }
