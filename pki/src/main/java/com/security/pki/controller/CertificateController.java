@@ -30,6 +30,13 @@ public class CertificateController {
         return this.certificateService.findAllByUser(id);
     }
 
+    @RequestMapping(value="/downloadCertificate/{id}", method = RequestMethod.GET)
+    public void downloadCertificate(@PathVariable Integer id) {
+//        return this.certificateService.findAllByUser(id);
+        System.out.println("TODO DOWNLOAD SERTIFIKATA");
+    }
+
+
     @RequestMapping(value="/findById/{id}", method = RequestMethod.GET)
     public MyCertificate findById(@PathVariable Integer id) {
         return this.certificateService.findById(id);

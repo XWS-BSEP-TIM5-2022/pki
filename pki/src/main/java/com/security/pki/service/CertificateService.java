@@ -64,7 +64,6 @@ public class CertificateService {
 
     public List<MyCertificate> findAllRootsAndCA() {
         List<MyCertificate> certificates = new ArrayList<>();
-
         for (MyCertificate c : this.certificateRepository.findAll()) {
             if (c.getCertificateType() != CertificateType.END_ENTITY && !c.isRevoked()) {
                 certificates.add(c);
