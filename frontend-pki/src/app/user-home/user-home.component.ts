@@ -14,12 +14,12 @@ export class UserHomeComponent implements OnInit {
   endEntityCert : Certificate[] = []
   email: string = '';
   user: any;
-  
+
   constructor(private router: Router, private http: HttpClient) { }
 
 
-  ngOnInit(): void { 
-    
+  ngOnInit(): void {
+
     let idLocalStorage = localStorage.getItem('userId')
     this.http.get('http://localhost:8080/api/users/getById/' + idLocalStorage)
     .subscribe(data => {
@@ -38,11 +38,11 @@ export class UserHomeComponent implements OnInit {
 
     this.http.get<Certificate[]>('http://localhost:8080/api/certificate/getAllByUser/' + localStorage.getItem('userId'))
     .subscribe(data => {
-      var allCertificates : Certificate[] = data   
+      var allCertificates : Certificate[] = data
       for(var c of allCertificates){
         if(c.certificateType === "INTERMEDIATE"){
           this.caCert.push(c);
-        }else{
+        }else if (c.certificateType === "END_ENTITY"){
           this.endEntityCert.push(c)
         }
       }

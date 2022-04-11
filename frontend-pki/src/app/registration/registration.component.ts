@@ -58,10 +58,10 @@ export class RegistrationComponent implements OnInit {
       'authorityType': "END-ENTITY"
     }
     let body = JSON.stringify(user)
-    const headers = { 'content-type': 'application/json'} 
+    const headers = { 'content-type': 'application/json'}
     this.http.post('http://localhost:8080/api/users/signup', body, {'headers': headers })
     .subscribe(data => {
-      localStorage.setItem('userId', data.toString())
+      localStorage.setItem('userId', JSON.stringify(data))
       this.router.navigate(['user-home'])
     })
   }

@@ -1,10 +1,13 @@
+import { CertificateData } from "./certificateData.model";
+
 export class Certificate{
     id: number = -1;
-    commonName: string = "undefined"; 
+    commonName: string = "undefined";
     validFrom?: Date | string = "02/03/2022";
     validTo?: Date | string = "02/03/2022";
     email : string = "undefined";
     certificateType : string = "";
+    certificateData : CertificateData;
     //user: User;
 
     // constructor(commonName: string, revoked: boolean, validFrom: Date, validTo: Date){

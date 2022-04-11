@@ -37,18 +37,18 @@ export class LoginComponent implements OnInit {
       'password': this.password.value
     }
     let body = JSON.stringify(u)
-    const headers = { 'content-type': 'application/json'} 
+    const headers = { 'content-type': 'application/json'}
     this.http.post('http://localhost:8080/api/users/login', body, {'headers': headers })
     .subscribe(data => {
       this.user = data
-      localStorage.setItem('userId', this.user.id.toString());
-      localStorage.setItem('role', this.user.userType); 
-      if(this.user.authorityType == "ROOT"){
+      localStorage.setItem('userId', this.user.id);
+      localStorage.setItem('role', this.user.userType);
+      if(this.user.userType == "ADMIN"){
         this.router.navigate(['admin-home'])
       } else {
         this.router.navigate(['user-home'])
       }
-    }, 
+    },
     err => {
       alert('Invalid email and/or password')
     })

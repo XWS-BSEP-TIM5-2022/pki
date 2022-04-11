@@ -12,11 +12,11 @@
             <p><b>Valid from: </b> {{ c.validFrom }}</p>
             <p><b>Valid to: </b> {{ c.validTo }}</p>
             <p><b>Email: </b> {{ c.email }} </p>
-            </mat-card-content> 
+            </mat-card-content>
             <mat-card-actions>
-            <button style="margin:2%; margin-left: 40%;" mat-button (click)="review(c.id)">Details</button> 
+            <button style="margin:2%; margin-left: 40%;" mat-button (click)="review(c.id)">Details</button>
             </mat-card-actions>
-        </mat-card> 
+        </mat-card>
     </div>
 
 </section>
@@ -34,11 +34,11 @@
             <p><b>Valid from: </b> {{ c.validFrom }}</p>
             <p><b>Valid to: </b> {{ c.validTo }}</p>
             <p><b>Email: </b> {{ c.email }} </p>
-            </mat-card-content> 
+            </mat-card-content>
             <mat-card-actions>
-            <button style="margin:2%; margin-left: 40%;" mat-button (click)="review(c.id)">Details</button> 
+            <button style="margin:2%; margin-left: 40%;" mat-button (click)="review(c.id)">Details</button>
             </mat-card-actions>
-        </mat-card> 
+        </mat-card>
     </div>
 
 </section>
@@ -46,7 +46,7 @@
 <section>
     <h1>End Entity certificates</h1>
 
-    <mat-divider></mat-divider>  
+    <mat-divider></mat-divider>
 
     <div class="card-holder row">
         <mat-card *ngFor="let c of endEntityCert" class="example-card column">
@@ -56,11 +56,11 @@
             <p><b>Valid from: </b> {{ c.validFrom }}</p>
             <p><b>Valid to: </b> {{ c.validTo }}</p>
             <p><b>Email: </b> {{ c.email }} </p>
-            </mat-card-content> 
+            </mat-card-content>
             <mat-card-actions>
-            <button style="margin:2%; margin-left: 40%;" mat-button (click)="review(c.id)">Details</button> 
+            <button style="margin:2%; margin-left: 40%;" mat-button (click)="review(c.id)">Details</button>
             </mat-card-actions>
-        </mat-card> 
+        </mat-card>
     </div>
 
 </section>
