@@ -48,6 +48,10 @@ public class CertificateService {
     @Autowired
     private UserService userService;
 
+
+    private KeyStoreWriterService ksw = new KeyStoreWriterService();
+    private KeyStoreReaderService ksr = new KeyStoreReaderService();
+
     private CertificateMapper certificateMapper = new CertificateMapper();
 
     private String password = "pass";
@@ -132,9 +136,11 @@ public class CertificateService {
             X509Certificate x509Certificate = certConverter.getCertificate(certHolder);
 
             writeCertificate(dto, x509Certificate, keyPairSubject);
+            saveIssuerPrivateKey(dto, x509Certificate, keyPairIssuer);
+
+            //PrivateKey pkIssuer = findPrivateKeyFromKeyStore(getPath("issuers.jks"), x509Certificate.getSerialNumber().toString());
 
             saveCertificateToDatabase(dto, serialNumber);
-            
             //Konvertuje objekat u sertifikat (izvlacenje konkretnog sertifikata)
             return x509Certificate;
 
@@ -168,10 +174,6 @@ public class CertificateService {
     }
 
     private void writeCertificate(CreateCertificateDTO dto, X509Certificate x509Certificate, KeyPair keyPairSubject){
-        KeyStoreWriterService ksw = new KeyStoreWriterService();
-
-        User subject = userService.findByEmail(dto.getSubjectName());
-        User issuer = userService.findByEmail(dto.getIssuerName());
 
         ksw.loadKeyStore(null, password.toCharArray());
         ksw.write(x509Certificate.getSerialNumber().toString(), keyPairSubject.getPrivate(), password.toCharArray(), x509Certificate);
@@ -190,9 +192,17 @@ public class CertificateService {
         }
     }
 
+    private void saveIssuerPrivateKey(CreateCertificateDTO dto, X509Certificate x509Certificate, KeyPair keyPairIssuer){
+
+        ksw.loadKeyStore(null, password.toCharArray());
+        ksw.write(x509Certificate.getSerialNumber().toString(), keyPairIssuer.getPrivate(), password.toCharArray(), x509Certificate);
+
+        ksw.saveKeyStore(getPath("issuers.jks"), password.toCharArray());
+
+        readCertificate(x509Certificate, "issuers.jks");
+    }
 
     private void readCertificate(X509Certificate x509Certificate, String path){
-        KeyStoreReaderService ksr = new KeyStoreReaderService();
         java.security.cert.Certificate c = ksr.readCertificate(getPath(path), password,x509Certificate.getSerialNumber().toString());
         System.out.println("----------------------------------UCITAN--------------------------------------");
         System.out.println(c);
@@ -250,17 +260,11 @@ public class CertificateService {
         return true;
     }
 
-//    private PrivateKey findIssuerPrivateKey(CertificationEntity issuer){
-//
-//        String keystorePassword = passwordsService.findPasswordByOrganization(issuer.getOrganization());
-//
-//        // used only to retrieve private key, any issuer certificate will suffice, so we take first
-//        String keystoreFileName = issuer.getCertificates().get(0).getCerFileName();
-//        String certificateAlias = issuer.getCertificates().get(0).getAlias();
-//
-//        keystoreHandler.loadKeyStore(keystoreFileName, keystorePassword.toCharArray());
-//        PrivateKey pk = keystoreHandler.readPrivateKey(keystoreFileName, keystorePassword, certificateAlias, issuer.getPassword());
-//        return pk;
-//    }
+    private PrivateKey findPrivateKeyFromKeyStore( String fileName, String serialNumber){ //TODO: promeniti da se salje pass usera???
+
+        ksw.loadKeyStore(fileName, password.toCharArray());
+        PrivateKey pk = ksr.readPrivateKey(fileName, password, serialNumber, password);
+        return pk;
+    }
 
 }
