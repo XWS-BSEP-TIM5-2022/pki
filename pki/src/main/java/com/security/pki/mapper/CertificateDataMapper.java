@@ -18,4 +18,16 @@ public class CertificateDataMapper {
         certificateData.setSurname(dto.getSurname());
         return certificateData;
     }
+
+    public CertificateDataDTO certDataToCertDTO(CertificateData certificateData) {
+        CertificateDataDTO dto = new CertificateDataDTO();
+        dto.setCommonName(certificateData.getCommonName());
+        dto.setCountryCode(certificateData.getCountryCode());
+        dto.setGivenName(certificateData.getGivenName());
+        dto.setOrganization(certificateData.getOrganization());
+        dto.setEmailAddress(certificateData.getEmailAddress());
+        dto.setOrganizationalUnit(certificateData.getOrganizationalUnit());
+        dto.setSurname(certificateData.getSurname());
+        return dto;
+    }
 }
