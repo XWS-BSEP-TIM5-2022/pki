@@ -88,13 +88,92 @@ public class CertificateService {
         return dtos;
     }
 
+    public X509Certificate issueSelfSignedCertificate(CreateCertificateDTO dto) {
+        Security.addProvider(new BouncyCastleProvider());
+        KeyPair keyPair = generateKeyPair();
+
+        SubjectData subjectData = generateSubjectData(dto, keyPair);
+
+        X500Name issuer = new X500NameBuilder().addRDN(BCStyle.E, dto.getIssuerName()).build();
+        IssuerData issuerData = new IssuerData(issuer, keyPair.getPrivate());
+
+
+        String serialNumber = UUID.randomUUID().toString().replace("-", "").toUpperCase();
+
+        if (!isSerialNumberUnique(serialNumber)) {
+            serialNumber = UUID.randomUUID().toString().replace("-", "").toUpperCase();
+        }
+        try {
+            //Posto klasa za generisanje sertifikata ne moze da primi direktno privatni kljuc, pravi se builder za objekat
+            //Ovaj objekat sadrzi privatni kljuc izdavaoca sertifikata i koristiti se za potpisivanje sertifikata
+            //Parametar koji se prosledjuje je algoritam koji se koristi za potpisivanje sertifiakta
+            JcaContentSignerBuilder builder = new JcaContentSignerBuilder("SHA256WithRSAEncryption");
+
+            builder = builder.setProvider("BC");
+
+            //Formira se objekat koji ce sadrzati privatni kljuc i koji ce se koristiti za potpisivanje sertifikata
+            ContentSigner contentSigner = builder.build(issuerData.getPrivateKey());    // ContentSigner je wrapper oko private kljuca
+
+            //Postavljaju se podaci za generisanje sertifikata
+            X509v3CertificateBuilder certGen = new JcaX509v3CertificateBuilder(
+                    issuerData.getX500name(),
+                    new BigInteger(serialNumber, 16),
+                    dto.getValidFrom(),
+                    dto.getValidTo(),
+                    subjectData.getX500Name(),
+                    subjectData.getPublicKey()
+            );
+
+            // TODO: sta znaci ekstenzija sertifikata - critical ???
+            KeyUsage usage = new KeyUsage(KeyUsage.keyCertSign | KeyUsage.digitalSignature | KeyUsage.keyEncipherment | KeyUsage.dataEncipherment | KeyUsage.cRLSign);
+            certGen.addExtension(Extension.keyUsage, true, usage);
+
+            //Generise se sertifikat
+            X509CertificateHolder certHolder = certGen.build(contentSigner);    // povezujuemo sertifikat sa content signer-om (odnosno digitalnim potpisom)
+            // napravi sve sa prethodno popunjenim podacima i potpisi sa privatnim kljucem onoga ko izdaje sertifikat
+
+            //Builder generise sertifikat kao objekat klase X509CertificateHolder
+            //Nakon toga je potrebno certHolder konvertovati u sertifikat, za sta se koristi certConverter
+            JcaX509CertificateConverter certConverter = new JcaX509CertificateConverter();
+            certConverter = certConverter.setProvider("BC");
+
+            X509Certificate x509Certificate = certConverter.getCertificate(certHolder);
+
+            writeCertificate(dto, x509Certificate, keyPair);
+
+            saveIssuerPrivateKey(dto, x509Certificate, keyPair);
+
+            saveCertificateToDatabase(dto, serialNumber);
+            //Konvertuje objekat u sertifikat (izvlacenje konkretnog sertifikata)
+            return x509Certificate;
+        } catch (CertificateEncodingException e) {
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (OperatorCreationException e) {
+            e.printStackTrace();
+        } catch (CertificateException e) {
+            e.printStackTrace();
+        } catch (CertIOException e) {
+            e.printStackTrace();
+        } catch (Exception exception) {
+            System.out.println(" ********** cuvanje sertifikata u bazu nije uspelo **********");
+            exception.printStackTrace();
+        }
+        return null;
+
+
+    }
+
     public X509Certificate issueCertificate(CreateCertificateDTO dto) {
 
         Security.addProvider(new BouncyCastleProvider());
         KeyPair keyPairSubject = generateKeyPair();
 
         SubjectData subjectData = generateSubjectData(dto, keyPairSubject);
-        //X500Name subject = new X500NameBuilder().addRDN(BCStyle.E, dto.getSubjectName()).build();
+        // X500Name subject = new X500NameBuilder().addRDN(BCStyle.E, dto.getSubjectName()).build();
         //subjectData.setX500Name(subject);
 
         KeyPair keyPairIssuer = generateKeyPair();
@@ -145,9 +224,7 @@ public class CertificateService {
 
             writeCertificate(dto, x509Certificate, keyPairSubject);
 
-            if(dto.getCertificateType().equals("SELF_SIGNED")){
-                saveIssuerPrivateKey(dto, x509Certificate, keyPairIssuer);
-            }
+            saveIssuerPrivateKey(dto, x509Certificate, keyPairIssuer);
 
             saveCertificateToDatabase(dto, serialNumber);
             //Konvertuje objekat u sertifikat (izvlacenje konkretnog sertifikata)

@@ -36,7 +36,8 @@ public class CertificateController {
 
     @RequestMapping(value="/create", method = RequestMethod.POST)
     public ResponseEntity<?> issueCertificate(@RequestBody CreateCertificateDTO dto) {
-        X509Certificate certificate = certificateService.issueCertificate(dto);
+//        X509Certificate certificate = certificateService.issueCertificate(dto);
+        X509Certificate certificate = certificateService.issueSelfSignedCertificate(dto);
 
 //        System.out.println("-------------------------------------------------------");
 //        System.out.println(certificate.getKeyUsage());
