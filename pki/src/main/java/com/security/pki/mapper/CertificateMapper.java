@@ -21,18 +21,24 @@ public class CertificateMapper {
 	
 	public MyCertificate CertificateDtoToCertificate(CertificateDTO dto) {
 		MyCertificate cert = new MyCertificate();
-		cert.setRevoked(dto.revoked);
-		cert.setValidFrom(dto.validFrom);
-		cert.setValidTo(dto.validTo);
+		cert.setId(dto.getId());
+		cert.setRevoked(dto.getRevoked());
+		cert.setValidFrom(dto.getValidFrom());
+		cert.setValidTo(dto.getValidTo());
+
 		return cert;
 	}
 
 	public CertificateDTO certificateToCertificateDto(MyCertificate certificate) {
 		CertificateDTO dto = new CertificateDTO();
-		dto.revoked = certificate.isRevoked();
-		dto.validFrom = certificate.getValidFrom();
-		dto.validTo = certificate.getValidTo();
-		dto.id = certificate.getId();
+		dto.setRevoked(certificate.isRevoked());
+		dto.setValidFrom(certificate.getValidFrom());
+		dto.setValidTo(certificate.getValidTo());
+		dto.setId(certificate.getId());
+		CertificateDataMapper cdMapper = new CertificateDataMapper();
+		dto.setCertificateDataDTO(cdMapper.certDataToCertDTO(certificate.getCertificateData()));
+		dto.setCertificateType(certificate.getCertificateType().toString());
+		dto.setCertificateUsage(CertificateUsage.DOCUMENT_SIGNING.toString());
 		return dto;
 	}
 
