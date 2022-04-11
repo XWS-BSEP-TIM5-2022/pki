@@ -20,9 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 
-import java.io.File;
 import java.nio.file.FileSystems;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.*;
 import java.security.cert.CertificateEncodingException;
@@ -52,6 +50,7 @@ public class CertificateService {
 
     private CertificateMapper certificateMapper = new CertificateMapper();
 
+    private String password = "pass";
 
     public List<AllCertificatesViewDTO> findAll() {
         List<AllCertificatesViewDTO> dtos  = new ArrayList<>();
@@ -134,7 +133,7 @@ public class CertificateService {
 
             writeCertificate(dto, x509Certificate, keyPairSubject);
 
-            saveCertificate(dto, serialNumber);
+            saveCertificateToDatabase(dto, serialNumber);
             
             //Konvertuje objekat u sertifikat (izvlacenje konkretnog sertifikata)
             return x509Certificate;
@@ -158,7 +157,7 @@ public class CertificateService {
         return null;
     }
 
-    private void saveCertificate(CreateCertificateDTO dto, String serialNumber) throws Exception {
+    private void saveCertificateToDatabase(CreateCertificateDTO dto, String serialNumber) throws Exception {
         User user = userService.findByEmail(dto.getSubjectName());
         if(user == null) {
             throw new Exception();
@@ -170,19 +169,23 @@ public class CertificateService {
 
     private void writeCertificate(CreateCertificateDTO dto, X509Certificate x509Certificate, KeyPair keyPairSubject){
         KeyStoreWriterService ksw = new KeyStoreWriterService();
-        ksw.loadKeyStore(null, "pass".toCharArray());
-        ksw.write(x509Certificate.getSerialNumber().toString(), keyPairSubject.getPrivate(), "pass".toCharArray(), x509Certificate);
+
+        User subject = userService.findByEmail(dto.getSubjectName());
+        User issuer = userService.findByEmail(dto.getIssuerName());
+
+        ksw.loadKeyStore(null, password.toCharArray());
+        ksw.write(x509Certificate.getSerialNumber().toString(), keyPairSubject.getPrivate(), password.toCharArray(), x509Certificate);
 
         if(dto.getCertificateType().equals(CertificateType.END_ENTITY.toString())){
-            ksw.saveKeyStore(getPath("ee.jks"), "pass".toCharArray());
+            ksw.saveKeyStore(getPath("ee.jks"), password.toCharArray());
             readCertificate(x509Certificate, "ee.jks");
         }
         else if(dto.getCertificateType().equals(CertificateType.INTERMEDIATE.toString())){
-            ksw.saveKeyStore(getPath("ca.jks"), "pass".toCharArray());
+            ksw.saveKeyStore(getPath("ca.jks"), password.toCharArray());
             readCertificate(x509Certificate, "ca.jks");
         }
         else if(dto.getCertificateType().equals(CertificateType.SELF_SIGNED.toString())){
-            ksw.saveKeyStore(getPath("root.jks"), "pass".toCharArray());
+            ksw.saveKeyStore(getPath("root.jks"), password.toCharArray());
             readCertificate(x509Certificate, "root.jks");
         }
     }
@@ -190,7 +193,7 @@ public class CertificateService {
 
     private void readCertificate(X509Certificate x509Certificate, String path){
         KeyStoreReaderService ksr = new KeyStoreReaderService();
-        java.security.cert.Certificate c = ksr.readCertificate(getPath(path), "pass",x509Certificate.getSerialNumber().toString());
+        java.security.cert.Certificate c = ksr.readCertificate(getPath(path), password,x509Certificate.getSerialNumber().toString());
         System.out.println("----------------------------------UCITAN--------------------------------------");
         System.out.println(c);
         System.out.println("----------------------------------KRAJ----------------------------------------");
@@ -246,4 +249,18 @@ public class CertificateService {
 
         return true;
     }
+
+//    private PrivateKey findIssuerPrivateKey(CertificationEntity issuer){
+//
+//        String keystorePassword = passwordsService.findPasswordByOrganization(issuer.getOrganization());
+//
+//        // used only to retrieve private key, any issuer certificate will suffice, so we take first
+//        String keystoreFileName = issuer.getCertificates().get(0).getCerFileName();
+//        String certificateAlias = issuer.getCertificates().get(0).getAlias();
+//
+//        keystoreHandler.loadKeyStore(keystoreFileName, keystorePassword.toCharArray());
+//        PrivateKey pk = keystoreHandler.readPrivateKey(keystoreFileName, keystorePassword, certificateAlias, issuer.getPassword());
+//        return pk;
+//    }
+
 }
