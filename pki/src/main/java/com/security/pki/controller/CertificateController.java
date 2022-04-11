@@ -2,6 +2,7 @@ package com.security.pki.controller;
 
 import com.security.pki.dto.AllCertificatesViewDTO;
 import com.security.pki.dto.CreateCertificateDTO;
+import com.security.pki.dto.CreateSelfSignedCertificateDTO;
 import com.security.pki.model.MyCertificate;
 import com.security.pki.service.CertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +37,7 @@ public class CertificateController {
 
     @RequestMapping(value="/create", method = RequestMethod.POST)
     public ResponseEntity<?> issueCertificate(@RequestBody CreateCertificateDTO dto) {
-//        X509Certificate certificate = certificateService.issueCertificate(dto);
-        X509Certificate certificate = certificateService.issueSelfSignedCertificate(dto);
-
+        X509Certificate certificate = certificateService.issueCertificate(dto);
 //        System.out.println("-------------------------------------------------------");
 //        System.out.println(certificate.getKeyUsage());
 //        System.out.println("-------------------------------------------------------");
@@ -52,6 +51,22 @@ public class CertificateController {
 //        System.out.println(certificate);
 //        System.out.println("-------------------------------------------------------");
 
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+
+    @RequestMapping(value="/createSelfSigned", method = RequestMethod.POST)
+    public ResponseEntity<?> createSelfSigned(@RequestBody CreateSelfSignedCertificateDTO dto) {
+        X509Certificate certificate = certificateService.issueSelfSignedCertificate(dto);
+//        System.out.println("-------------------------------------------------------");
+//        System.out.println(certificate.getKeyUsage());
+//        System.out.println("-------------------------------------------------------");
+        if(certificate == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+//        System.out.println("-------------------------------------------------------");
+//        System.out.println(certificate);
+//        System.out.println("-------------------------------------------------------");
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

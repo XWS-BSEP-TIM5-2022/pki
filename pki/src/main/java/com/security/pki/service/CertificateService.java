@@ -2,6 +2,7 @@ package com.security.pki.service;
 
 import com.security.pki.dto.AllCertificatesViewDTO;
 import com.security.pki.dto.CreateCertificateDTO;
+import com.security.pki.dto.CreateSelfSignedCertificateDTO;
 import com.security.pki.enums.CertificateType;
 import com.security.pki.mapper.CertificateMapper;
 import com.security.pki.model.MyCertificate;
@@ -9,7 +10,6 @@ import com.security.pki.model.IssuerData;
 import com.security.pki.model.SubjectData;
 import com.security.pki.model.User;
 import com.security.pki.repository.CertificateRepository;
-import org.bouncycastle.asn1.cmp.CertOrEncCert;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.X500NameBuilder;
 import org.bouncycastle.asn1.x500.style.BCStyle;
@@ -24,7 +24,6 @@ import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import java.nio.file.FileSystems;
 import java.nio.file.Paths;
 import java.security.*;
-import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -88,11 +87,11 @@ public class CertificateService {
         return dtos;
     }
 
-    public X509Certificate issueSelfSignedCertificate(CreateCertificateDTO dto) {
+    public X509Certificate issueSelfSignedCertificate(CreateSelfSignedCertificateDTO dto) {
         Security.addProvider(new BouncyCastleProvider());
         KeyPair keyPair = generateKeyPair();
 
-        SubjectData subjectData = generateSubjectData(dto, keyPair);
+        SubjectData subjectData = generateSubjectDataForSelfSigned(dto, keyPair);
 
         X500Name issuer = new X500NameBuilder().addRDN(BCStyle.E, dto.getIssuerName()).build();
         IssuerData issuerData = new IssuerData(issuer, keyPair.getPrivate());
@@ -139,11 +138,11 @@ public class CertificateService {
 
             X509Certificate x509Certificate = certConverter.getCertificate(certHolder);
 
-            writeCertificate(dto, x509Certificate, keyPair);
+            writeCertificate(dto.getCertificateType(), x509Certificate, keyPair.getPrivate());
 
-            saveIssuerPrivateKey(dto, x509Certificate, keyPair);
+            saveIssuerPrivateKey(x509Certificate, keyPair.getPrivate());
 
-            saveCertificateToDatabase(dto, serialNumber);
+            saveCertificateSelfSignedToDatabase(dto, serialNumber);
             //Konvertuje objekat u sertifikat (izvlacenje konkretnog sertifikata)
             return x509Certificate;
         } catch (CertificateEncodingException e) {
@@ -168,17 +167,15 @@ public class CertificateService {
     }
 
     public X509Certificate issueCertificate(CreateCertificateDTO dto) {
-
         Security.addProvider(new BouncyCastleProvider());
         KeyPair keyPairSubject = generateKeyPair();
 
         SubjectData subjectData = generateSubjectData(dto, keyPairSubject);
-        // X500Name subject = new X500NameBuilder().addRDN(BCStyle.E, dto.getSubjectName()).build();
-        //subjectData.setX500Name(subject);
 
-        KeyPair keyPairIssuer = generateKeyPair();
+        String filename = "issuers.jks";
+        PrivateKey privateKeyIssuer = findPrivateKeyFromKeyStore(getPath(filename), new BigInteger(dto.getIssuerSerialNumber(), 16).toString());  // TODO: mozda ne radi
         X500Name issuer = new X500NameBuilder().addRDN(BCStyle.E, dto.getIssuerName()).build();
-        IssuerData issuerData = new IssuerData(issuer, keyPairIssuer.getPrivate());
+        IssuerData issuerData = new IssuerData(issuer, privateKeyIssuer);
 
         String serialNumber = UUID.randomUUID().toString().replace("-", "").toUpperCase();
 
@@ -222,9 +219,9 @@ public class CertificateService {
 
             X509Certificate x509Certificate = certConverter.getCertificate(certHolder);
 
-            writeCertificate(dto, x509Certificate, keyPairSubject);
+            writeCertificate(dto.getCertificateType(), x509Certificate, keyPairSubject.getPrivate());
 
-            saveIssuerPrivateKey(dto, x509Certificate, keyPairIssuer);
+            saveIssuerPrivateKey(x509Certificate, privateKeyIssuer);
 
             saveCertificateToDatabase(dto, serialNumber);
             //Konvertuje objekat u sertifikat (izvlacenje konkretnog sertifikata)
@@ -249,6 +246,16 @@ public class CertificateService {
         return null;
     }
 
+    private void saveCertificateSelfSignedToDatabase(CreateSelfSignedCertificateDTO dto, String serialNumber) throws Exception {
+        User user = userService.findByEmail(dto.getSubjectName());
+        if (user == null) {
+            throw new Exception();
+        }
+        MyCertificate myCertificate = new CertificateMapper().CreateCertificateDtoToCertificate(dto, user);
+        myCertificate.setSerialNumber(serialNumber);
+        certificateRepository.save(myCertificate);
+    }
+
     private void saveCertificateToDatabase(CreateCertificateDTO dto, String serialNumber) throws Exception {
         User user = userService.findByEmail(dto.getSubjectName());
         if (user == null) {
@@ -259,28 +266,27 @@ public class CertificateService {
         certificateRepository.save(myCertificate);
     }
 
-    private void writeCertificate(CreateCertificateDTO dto, X509Certificate x509Certificate, KeyPair keyPairSubject) {
-
+    private void writeCertificate(String certificateType, X509Certificate x509Certificate, PrivateKey privateKey) {
         ksw.loadKeyStore(null, password.toCharArray());
 
-        ksw.write(x509Certificate.getSerialNumber().toString(), keyPairSubject.getPrivate(), password.toCharArray(), x509Certificate);
+        ksw.write(x509Certificate.getSerialNumber().toString(), privateKey, password.toCharArray(), x509Certificate);
 
-        if (dto.getCertificateType().equals(CertificateType.END_ENTITY.toString())) {
+        if (certificateType.equals(CertificateType.END_ENTITY.toString())) {
             ksw.saveKeyStore(getPath("ee.jks"), password.toCharArray());
             readCertificate(x509Certificate, "ee.jks");
-        } else if (dto.getCertificateType().equals(CertificateType.INTERMEDIATE.toString())) {
+        } else if (certificateType.equals(CertificateType.INTERMEDIATE.toString())) {
             ksw.saveKeyStore(getPath("ca.jks"), password.toCharArray());
             readCertificate(x509Certificate, "ca.jks");
-        } else if (dto.getCertificateType().equals(CertificateType.SELF_SIGNED.toString())) {
+        } else if (certificateType.equals(CertificateType.SELF_SIGNED.toString())) {
             ksw.saveKeyStore(getPath("root.jks"), password.toCharArray());
             readCertificate(x509Certificate, "root.jks");
         }
     }
 
-    private void saveIssuerPrivateKey(CreateCertificateDTO dto, X509Certificate x509Certificate, KeyPair keyPairIssuer) {
+    private void saveIssuerPrivateKey(X509Certificate x509Certificate, PrivateKey privateKeyIssuer) {
 
         ksw.loadKeyStore(null, password.toCharArray());
-        ksw.write(x509Certificate.getSerialNumber().toString(), keyPairIssuer.getPrivate(), password.toCharArray(), x509Certificate);
+        ksw.write(x509Certificate.getSerialNumber().toString(), privateKeyIssuer, password.toCharArray(), x509Certificate);
 
         ksw.saveKeyStore(getPath("issuers.jks"), password.toCharArray());
 
@@ -298,7 +304,7 @@ public class CertificateService {
         return Paths.get(FileSystems.getDefault().getPath("").toAbsolutePath().toString(), "src", "main", "resources", "keystores", path).toString();
     }
 
-    private SubjectData generateSubjectData(CreateCertificateDTO dto, KeyPair keyPairSubject) {
+    private SubjectData generateSubjectDataForSelfSigned(CreateSelfSignedCertificateDTO dto, KeyPair keyPairSubject) {
         //klasa X500NameBuilder pravi X500Name objekat koji predstavlja podatke o vlasniku
         // (konkretno, objekat se napravi nakon poziva metode build nad objektom tipa X500NameBuilder)
         X500NameBuilder builder = new X500NameBuilder(BCStyle.INSTANCE);
@@ -317,6 +323,24 @@ public class CertificateService {
         return new SubjectData(keyPairSubject.getPublic(), builder.build());
     }
 
+
+    private SubjectData generateSubjectData(CreateCertificateDTO dto, KeyPair keyPairSubject) {
+        //klasa X500NameBuilder pravi X500Name objekat koji predstavlja podatke o vlasniku
+        // (konkretno, objekat se napravi nakon poziva metode build nad objektom tipa X500NameBuilder)
+        X500NameBuilder builder = new X500NameBuilder(BCStyle.INSTANCE);
+        builder.addRDN(BCStyle.CN, dto.getCertificateDataDTO().getCommonName());
+        builder.addRDN(BCStyle.SURNAME, dto.getCertificateDataDTO().getSurname());
+        builder.addRDN(BCStyle.GIVENNAME, dto.getCertificateDataDTO().getGivenName());
+        builder.addRDN(BCStyle.O, dto.getCertificateDataDTO().getOrganization());
+        builder.addRDN(BCStyle.OU, dto.getCertificateDataDTO().getOrganizationalUnit());
+        builder.addRDN(BCStyle.POSTAL_CODE, dto.getCertificateDataDTO().getCountryCode());
+        builder.addRDN(BCStyle.E, dto.getCertificateDataDTO().getEmailAddress());
+
+        String id = dto.getCertificateDataDTO().getUserId().toString();
+        builder.addRDN(BCStyle.UID, id);
+
+        return new SubjectData(keyPairSubject.getPublic(), builder.build());
+    }
     private KeyPair generateKeyPair() {
         try {
             KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
