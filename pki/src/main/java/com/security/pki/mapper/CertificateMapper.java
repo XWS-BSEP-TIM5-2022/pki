@@ -58,11 +58,9 @@ public class CertificateMapper {
 		MyCertificate cert = new MyCertificate();
 		cert.setValidFrom(dto.getValidFrom());
 		cert.setValidTo(dto.getValidTo());
-		cert.setSerialNumber(dto.getSerialNumber());
 		setCertificateType(dto, cert);
 		cert.setRevoked(false);
 		cert.setCertificateUsage(CertificateUsage.DOCUMENT_SIGNING); // TODO: Sanja: dogovoriti se za namene sertifikata
-		cert.setSerialNumber(dto.getSerialNumber());
 		cert.setUser(user);
 		cert.setCertificateData(new CertificateDataMapper().CertDataDtoToCertData(dto.getCertificateDataDTO()));
 		return cert;

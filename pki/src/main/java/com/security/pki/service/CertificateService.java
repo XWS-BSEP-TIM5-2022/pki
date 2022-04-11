@@ -39,6 +39,7 @@ import org.bouncycastle.operator.OperatorCreationException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class CertificateService {
@@ -76,7 +77,7 @@ public class CertificateService {
 
     public X509Certificate issueCertificate(CreateCertificateDTO dto) {
 
-        Security.addProvider(new BouncyCastleProvider());       // TODO: premestiti
+        Security.addProvider(new BouncyCastleProvider());
         KeyPair keyPairSubject = generateKeyPair();
 
         SubjectData subjectData = generateSubjectData(dto, keyPairSubject);
@@ -88,6 +89,12 @@ public class CertificateService {
         IssuerData issuerData = new IssuerData(issuer, keyPairIssuer.getPrivate());
 
         //TODO: Generisanje serijskog broja sertifikata, promeniti
+
+        String serialNumber = UUID.randomUUID().toString().replace("-", "").toUpperCase();
+        System.out.println("serijski " + serialNumber);
+        if(!isSerialNumberUnique(serialNumber)){
+            serialNumber = UUID.randomUUID().toString().replace("-", "").toUpperCase();
+        }
 
         try {
             //Posto klasa za generisanje sertifikata ne moze da primi direktno privatni kljuc, pravi se builder za objekat
@@ -103,7 +110,7 @@ public class CertificateService {
             //Postavljaju se podaci za generisanje sertifikata
             X509v3CertificateBuilder certGen = new JcaX509v3CertificateBuilder(
                     issuerData.getX500name(),
-                    new BigInteger(dto.getSerialNumber()),
+                    new BigInteger(serialNumber, 16),
                     dto.getValidFrom(),
                     dto.getValidTo(),
                     subjectData.getX500Name(),
@@ -127,7 +134,7 @@ public class CertificateService {
 
             writeCertificate(dto, x509Certificate, keyPairSubject);
 
-            saveCertificate(dto);
+            saveCertificate(dto, serialNumber);
             
             //Konvertuje objekat u sertifikat (izvlacenje konkretnog sertifikata)
             return x509Certificate;
@@ -151,12 +158,13 @@ public class CertificateService {
         return null;
     }
 
-    private void saveCertificate(CreateCertificateDTO dto) throws Exception {
+    private void saveCertificate(CreateCertificateDTO dto, String serialNumber) throws Exception {
         User user = userService.findByEmail(dto.getSubjectName());
         if(user == null) {
             throw new Exception();
         }
         MyCertificate myCertificate = new CertificateMapper().CreateCertificateDtoToCertificate(dto, user);
+        myCertificate.setSerialNumber(serialNumber);
         certificateRepository.save(myCertificate);
     }
 
@@ -226,5 +234,16 @@ public class CertificateService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private boolean isSerialNumberUnique(String serialNumber){
+
+        for(MyCertificate certificate : certificateRepository.findAll()){
+            if(certificate.getSerialNumber().equals(serialNumber)){
+                return false;
+            }
+        }
+
+        return true;
     }
 }

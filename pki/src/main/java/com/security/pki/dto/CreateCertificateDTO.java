@@ -17,7 +17,6 @@ import java.util.Date;
 public class CreateCertificateDTO {
     private Date validFrom;
     private Date validTo;
-    private String serialNumber;
     private String issuerName;
     private String subjectName;
     private CertificateDataDTO certificateDataDTO;

@@ -48,7 +48,7 @@ public class MyCertificate {
 	private CertificateUsage certificateUsage; 	// namena sertifikata
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "certificateData_id", referencedColumnName = "id")
+	@JoinColumn(name = "certificateData_id", referencedColumnName = "id", nullable = false)
 	private CertificateData certificateData;
 
 }
