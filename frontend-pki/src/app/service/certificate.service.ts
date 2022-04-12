@@ -38,4 +38,8 @@ export class CertificateService {
   findCertificateBySerialNumber(serialNumber: string) {
     return this._http.get<Certificate>(`${this.userPath}/findCertificateBySerialNumber/` + serialNumber)  
   }
+
+  findAllRootAndCAByUser(id: number) {
+    return this._http.get<Certificate[]>(`${this.userPath}/findAllRootAndCAByUser/` + id)  
+  }
 }

@@ -3,9 +3,9 @@ import { Certificate } from "./certificate.model";
 export class User {
     id: number;
     email: string = "";
-	password: string;   // TODO: ne treba ?
+	password: string;  
 	userType: string;
-   // certificate: Certificate[];  // ??
+    certificate: Certificate[] = [];  
 
 //    constructor(id: number, email: string, password: string, userType: string){
 //         this.id = id;
