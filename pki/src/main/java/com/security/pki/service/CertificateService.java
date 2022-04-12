@@ -171,8 +171,16 @@ public class CertificateService {
 
         SubjectData subjectData = generateSubjectData(dto, keyPairSubject);
 
-        String filename = "issuers.jks";
+        MyCertificate issuerCertificate = certificateRepository.findBySerialNumber(dto.getIssuerSerialNumber());
+        String filename = "";
+        if(issuerCertificate.getCertificateType().equals(CertificateType.SELF_SIGNED)){
+            filename = "root.jks";
+        }else{
+            filename = "ca.jks";
+        }
+
         PrivateKey privateKeyIssuer = findPrivateKeyFromKeyStore(getPath(filename), new BigInteger(dto.getIssuerSerialNumber(), 16).toString());  // TODO: mozda ne radi
+
         X500Name issuer = new X500NameBuilder().addRDN(BCStyle.E, dto.getIssuerName()).build();
         IssuerData issuerData = new IssuerData(issuer, privateKeyIssuer);
 
@@ -266,17 +274,24 @@ public class CertificateService {
     }
 
     private void writeCertificate(String certificateType, X509Certificate x509Certificate, PrivateKey privateKey) {
-        ksw.loadKeyStore(null, password.toCharArray());
 
-        ksw.write(x509Certificate.getSerialNumber().toString(), privateKey, password.toCharArray(), x509Certificate);
+        //ksw.loadKeyStore(null, password.toCharArray()); // TODO: load null ako nije kreirano
+
+        //ksw.write(x509Certificate.getSerialNumber().toString(), privateKey, password.toCharArray(), x509Certificate);
 
         if (certificateType.equals(CertificateType.END_ENTITY.toString())) {
+            ksw.loadKeyStore(getPath("ee.jks"), password.toCharArray());
+            ksw.write(x509Certificate.getSerialNumber().toString(), privateKey, password.toCharArray(), x509Certificate);
             ksw.saveKeyStore(getPath("ee.jks"), password.toCharArray());
             readCertificate(x509Certificate, "ee.jks");
         } else if (certificateType.equals(CertificateType.INTERMEDIATE.toString())) {
+            ksw.loadKeyStore(getPath("ca.jks"), password.toCharArray());
+            ksw.write(x509Certificate.getSerialNumber().toString(), privateKey, password.toCharArray(), x509Certificate);
             ksw.saveKeyStore(getPath("ca.jks"), password.toCharArray());
             readCertificate(x509Certificate, "ca.jks");
         } else if (certificateType.equals(CertificateType.SELF_SIGNED.toString())) {
+            ksw.loadKeyStore(getPath("root.jks"), password.toCharArray());
+            ksw.write(x509Certificate.getSerialNumber().toString(), privateKey, password.toCharArray(), x509Certificate);
             ksw.saveKeyStore(getPath("root.jks"), password.toCharArray());
             readCertificate(x509Certificate, "root.jks");
         }
@@ -284,7 +299,8 @@ public class CertificateService {
 
     private void saveIssuerPrivateKey(X509Certificate x509Certificate, PrivateKey privateKeyIssuer) {
 
-        ksw.loadKeyStore(null, password.toCharArray());
+        //ksw.loadKeyStore(null, password.toCharArray());
+        ksw.loadKeyStore(getPath("issuers.jks"), password.toCharArray());
         ksw.write(x509Certificate.getSerialNumber().toString(), privateKeyIssuer, password.toCharArray(), x509Certificate);
 
         ksw.saveKeyStore(getPath("issuers.jks"), password.toCharArray());
@@ -375,5 +391,5 @@ public class CertificateService {
         PrivateKey pk = ksr.readPrivateKey(fileName, password, serialNumber, password);
         return pk;
     }
-
+ 
 }

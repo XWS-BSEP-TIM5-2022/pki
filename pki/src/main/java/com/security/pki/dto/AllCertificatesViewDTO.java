@@ -1,18 +1,29 @@
 package com.security.pki.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.Date;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class AllCertificatesViewDTO {
 
-    public Integer id;
+    private Integer id;
 
-    public String certificateType;
+    private String certificateType;
 
-    public String validFrom;
+    private String validFrom;
 
-    public String validTo;
+    private String validTo;
 
-    public String commonName;
+    private String commonName;
 
-    public String email;
+    private String email;
+
+    private Boolean isValid;
 }
