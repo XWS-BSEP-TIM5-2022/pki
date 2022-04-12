@@ -27,7 +27,8 @@ export class NewCertificateAdminComponent implements OnInit {
 
   ngOnInit(): void {
     this.adminEmail = localStorage.getItem('email')
-    this.adminId = localStorage.getItem('userId')
+    this.adminId = localStorage.getItem('userId');
+ 
 
     this.loadUsers();
     this.loadIssuerCertificates();
@@ -152,6 +153,7 @@ export class NewCertificateAdminComponent implements OnInit {
         }
     } 
     else {
+      alert("All fields must be filled in!")
       console.log('nisu sva polja popunjena');
     }
   }
