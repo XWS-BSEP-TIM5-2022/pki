@@ -63,6 +63,9 @@ export class NewCertificateComponent implements OnInit {
   }
 
   selectIssuer(){
+    this.certificate.validTo = undefined;
+    this.certificate.validFrom = undefined;
+
     this.certificateService.findUserByCertificateSerialNumber(this.certificate.issuerSerialNumber).subscribe(
       (issuer: User) => {
         this.certificate.issuerName = issuer.email;

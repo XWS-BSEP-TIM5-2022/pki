@@ -42,6 +42,7 @@ export class LoginComponent implements OnInit {
     .subscribe(data => {
       this.user = data
       localStorage.setItem('userId', this.user.id);
+      localStorage.setItem('email', this.user.email)
       localStorage.setItem('role', this.user.userType);
       if(this.user.userType == "ADMIN"){
         this.router.navigate(['admin-home'])

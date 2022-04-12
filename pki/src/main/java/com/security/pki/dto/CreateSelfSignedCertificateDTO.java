@@ -1,7 +1,6 @@
 package com.security.pki.dto;
 
 import com.security.pki.enums.CertificateType;
-import com.security.pki.model.CertificateUsage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
