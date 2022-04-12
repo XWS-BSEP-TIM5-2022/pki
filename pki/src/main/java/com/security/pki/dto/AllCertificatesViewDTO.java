@@ -14,16 +14,11 @@ import java.util.Date;
 public class AllCertificatesViewDTO {
 
     private Integer id;
-
     private String certificateType;
-
     private String validFrom;
-
     private String validTo;
-
     private String commonName;
-
     private String email;
-
     private Boolean isValid;
+    private boolean isRevoked;
 }
