@@ -460,8 +460,6 @@ public class CertificateService {
             for(String s: listaZaPovlacenje){
                 List <CertificateChain> pom = certificateChainRepository.findByIssuerSerialNumber(s);
                 for(CertificateChain cc: pom){
-                    System.out.println("OVAJ CE DA BUDE DODAT ZA POVLACENJE: " + cc.getSubjectSerialNumber());
-
                     MyCertificate ms = certificateRepository.findBySerialNumber(cc.getSubjectSerialNumber());
                     ms.setRevoked(true);
                     certificateRepository.save(ms);
@@ -469,12 +467,8 @@ public class CertificateService {
                 }
 
             }
-
             listaZaPovlacenje.clear();
-            System.out.println("VELICINA LISTE: " + listaZaPovlacenje.size());
             listaZaPovlacenje.addAll(pronadjeniZaPovlacenje);
-            System.out.println("VELICINA LISTE: " + listaZaPovlacenje.size());
-
         }
     }
 }
