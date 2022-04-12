@@ -31,11 +31,11 @@ public class PkiApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		User admin = new User(1, "admin@gmail.com", "admin", UserType.ADMIN, null);
-		userRepository.save(admin);
-
-		User user = new User(2, "user@gmail.com", "user", UserType.USER, null);
-		userRepository.save(user);
+//		User admin = new User(1, "admin@gmail.com", "admin", UserType.ADMIN, null);
+//		userRepository.save(admin);
+//
+//		User user = new User(2, "user@gmail.com", "user", UserType.USER, null);
+//		userRepository.save(user);
 
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.YEAR, 2022);

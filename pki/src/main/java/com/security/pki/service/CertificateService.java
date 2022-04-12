@@ -10,6 +10,7 @@ import com.security.pki.model.IssuerData;
 import com.security.pki.model.SubjectData;
 import com.security.pki.model.User;
 import com.security.pki.repository.CertificateRepository;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.X500NameBuilder;
 import org.bouncycastle.asn1.x500.style.BCStyle;
@@ -21,9 +22,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.FileSystems;
 import java.nio.file.Paths;
 import java.security.*;
+import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -171,8 +177,16 @@ public class CertificateService {
 
         SubjectData subjectData = generateSubjectData(dto, keyPairSubject);
 
-        String filename = "issuers.jks";
+        MyCertificate issuerCertificate = certificateRepository.findBySerialNumber(dto.getIssuerSerialNumber());
+        String filename = "";
+        if(issuerCertificate.getCertificateType().equals(CertificateType.SELF_SIGNED)){
+            filename = "root.jks";
+        }else{
+            filename = "ca.jks";
+        }
+
         PrivateKey privateKeyIssuer = findPrivateKeyFromKeyStore(getPath(filename), new BigInteger(dto.getIssuerSerialNumber(), 16).toString());  // TODO: mozda ne radi
+
         X500Name issuer = new X500NameBuilder().addRDN(BCStyle.E, dto.getIssuerName()).build();
         IssuerData issuerData = new IssuerData(issuer, privateKeyIssuer);
 
@@ -266,17 +280,24 @@ public class CertificateService {
     }
 
     private void writeCertificate(String certificateType, X509Certificate x509Certificate, PrivateKey privateKey) {
-        ksw.loadKeyStore(null, password.toCharArray());
 
-        ksw.write(x509Certificate.getSerialNumber().toString(), privateKey, password.toCharArray(), x509Certificate);
+        //ksw.loadKeyStore(null, password.toCharArray()); // TODO: load null ako nije kreirano
+
+        //ksw.write(x509Certificate.getSerialNumber().toString(), privateKey, password.toCharArray(), x509Certificate);
 
         if (certificateType.equals(CertificateType.END_ENTITY.toString())) {
+            ksw.loadKeyStore(getPath("ee.jks"), password.toCharArray());
+            ksw.write(x509Certificate.getSerialNumber().toString(), privateKey, password.toCharArray(), x509Certificate);
             ksw.saveKeyStore(getPath("ee.jks"), password.toCharArray());
             readCertificate(x509Certificate, "ee.jks");
         } else if (certificateType.equals(CertificateType.INTERMEDIATE.toString())) {
+            ksw.loadKeyStore(getPath("ca.jks"), password.toCharArray());
+            ksw.write(x509Certificate.getSerialNumber().toString(), privateKey, password.toCharArray(), x509Certificate);
             ksw.saveKeyStore(getPath("ca.jks"), password.toCharArray());
             readCertificate(x509Certificate, "ca.jks");
         } else if (certificateType.equals(CertificateType.SELF_SIGNED.toString())) {
+            ksw.loadKeyStore(getPath("root.jks"), password.toCharArray());
+            ksw.write(x509Certificate.getSerialNumber().toString(), privateKey, password.toCharArray(), x509Certificate);
             ksw.saveKeyStore(getPath("root.jks"), password.toCharArray());
             readCertificate(x509Certificate, "root.jks");
         }
@@ -284,7 +305,8 @@ public class CertificateService {
 
     private void saveIssuerPrivateKey(X509Certificate x509Certificate, PrivateKey privateKeyIssuer) {
 
-        ksw.loadKeyStore(null, password.toCharArray());
+        //ksw.loadKeyStore(null, password.toCharArray());
+        ksw.loadKeyStore(getPath("issuers.jks"), password.toCharArray());
         ksw.write(x509Certificate.getSerialNumber().toString(), privateKeyIssuer, password.toCharArray(), x509Certificate);
         ksw.saveKeyStore(getPath("issuers.jks"), password.toCharArray());
 
@@ -339,6 +361,7 @@ public class CertificateService {
 
         return new SubjectData(keyPairSubject.getPublic(), builder.build());
     }
+    
     private KeyPair generateKeyPair() {
         try {
             KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
@@ -369,7 +392,6 @@ public class CertificateService {
 
     //findPrivateKeyFromKeyStore(getPath("issuers.jks"), x509Certificate.getSerialNumber().toString()); OVAKO POZIV!!!!!!!!!!!!!
     private PrivateKey findPrivateKeyFromKeyStore(String fileName, String serialNumber) { //TODO: promeniti da se salje pass usera???
-
         ksw.loadKeyStore(fileName, password.toCharArray());
         PrivateKey pk = ksr.readPrivateKey(fileName, password, serialNumber, password);
         return pk;
@@ -377,5 +399,29 @@ public class CertificateService {
 
     public MyCertificate findMyCertificateBySerialNumber(String serialNumber){
         return certificateRepository.findMyCertificateBySerialNumber(serialNumber);
+    }
+
+    public Certificate findCertificateBySerialNumber(String serialNumber, String certType) throws KeyStoreException {
+        KeyStore keyStore = null;
+        if (certType.equals(CertificateType.END_ENTITY.toString())) {
+            keyStore = ksw.getKeyStore(getPath("ee.jks"), password.toCharArray());
+        } else if (certType.equals(CertificateType.INTERMEDIATE.toString())) {
+            keyStore = ksw.getKeyStore(getPath("ca.jks"), password.toCharArray());
+        } else if (certType.equals(CertificateType.SELF_SIGNED.toString())) {
+            keyStore = ksw.getKeyStore(getPath("root.jks"), password.toCharArray());
+        }
+        Certificate certificate = keyStore.getCertificate(new BigInteger(serialNumber, 16).toString());
+        System.out.println("&&&&&&&&&&&&&& certificate &&&&&&&&&&&&&&&&&&&&");
+        System.out.println(certificate.toString());
+        System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+        return certificate;
+    }
+
+    public void downloadCert(Certificate certificate, String serialNumber) throws CertificateEncodingException, IOException {
+        FileOutputStream os = new FileOutputStream(serialNumber + ".cer");
+        os.write("-----BEGIN CERTIFICATE-----\n".getBytes("US-ASCII"));
+        os.write(Base64.encodeBase64(certificate.getEncoded(), true));
+        os.write("-----END CERTIFICATE-----\n".getBytes("US-ASCII"));
+        os.close();
     }
 }

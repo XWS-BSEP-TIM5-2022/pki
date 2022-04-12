@@ -6,11 +6,16 @@ import com.security.pki.dto.CreateSelfSignedCertificateDTO;
 import com.security.pki.model.MyCertificate;
 import com.security.pki.model.User;
 import com.security.pki.service.CertificateService;
+import org.bouncycastle.util.encoders.Base64Encoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.security.KeyStoreException;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import java.util.List;
 
@@ -20,6 +25,8 @@ public class CertificateController {
 
     @Autowired
     private CertificateService certificateService;
+//    @Autowired
+//    private Base64Encoder base64Encoder;
 
     @RequestMapping(value="", method = RequestMethod.GET)
     public List<AllCertificatesViewDTO> getAll() {
@@ -32,9 +39,12 @@ public class CertificateController {
     }
 
     @RequestMapping(value="/downloadCertificate/{id}", method = RequestMethod.GET)
-    public void downloadCertificate(@PathVariable Integer id) {
-//        return this.certificateService.findAllByUser(id);
+    public void downloadCertificate(@PathVariable Integer id) throws KeyStoreException, CertificateEncodingException, IOException {
         System.out.println("TODO DOWNLOAD SERTIFIKATA");
+        MyCertificate cert = certificateService.findById(id);
+        Certificate certificate = certificateService.findCertificateBySerialNumber(cert.getSerialNumber(), cert.getCertificateType().toString());
+        certificateService.downloadCert(certificate, cert.getSerialNumber());
+
     }
 
 

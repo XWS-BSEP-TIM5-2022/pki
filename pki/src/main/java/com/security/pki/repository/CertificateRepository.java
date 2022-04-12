@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface CertificateRepository extends JpaRepository<MyCertificate, Integer> {
 
     MyCertificate findMyCertificateBySerialNumber(String serialNumber);
+
+    MyCertificate findBySerialNumber(String issuerSerialNumber);        // TODO: obrisati jedan
 }

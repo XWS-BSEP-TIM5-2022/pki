@@ -30,7 +30,7 @@ export class CertificateComponent implements OnInit {
   downloadCertificate() {
     this.http.get('http://localhost:8080/api/certificate/downloadCertificate/1')
     .subscribe(data => { 
-      alert('CAOOOOO')
+      alert('Certificate is downloaded')
     });
   }
 }

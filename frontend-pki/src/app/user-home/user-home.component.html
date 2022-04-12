@@ -7,7 +7,8 @@
 
     <div class="card-holder row">
         <mat-card *ngFor="let c of caCert" class="example-card column">
-            <mat-card-title>{{c.commonName}}</mat-card-title>
+            <mat-card-title style="margin-top: 3%">{{c.commonName}} 
+                <label *ngIf="!c.isValid" style="color: red; margin-left: 25%; margin-right: 3px;">EXPIRED</label></mat-card-title>
             <mat-card-subtitle>Common name</mat-card-subtitle>
             <mat-card-content>
             <p><b>Valid from: </b> {{ c.validFrom }}</p>
@@ -28,7 +29,8 @@
 
     <div class="card-holder row">
         <mat-card *ngFor="let c of endEntityCert" class="example-card column">
-            <mat-card-title>{{c.commonName}}</mat-card-title>
+            <mat-card-title style="margin-top: 3%">{{c.commonName}} 
+                <label *ngIf="!c.isValid" style="color: red; margin-left: 25%; margin-right: 3px;">EXPIRED</label></mat-card-title>
             <mat-card-subtitle>Common name</mat-card-subtitle>
             <mat-card-content>
             <p><b>Valid from: </b> {{ c.validFrom }}</p>
