@@ -31,14 +31,11 @@ export class NewCertificateComponent implements OnInit {
     .subscribe(data => {
       this.user = data
       this.userId = this.user.id;
-      console.log(this.userId)
       this.loadedUser = true;
 
       this.loadUsers();
       this.loadIssuerCertificates();
     })
-
-    
   }
 
   loadUsers(){
@@ -48,9 +45,7 @@ export class NewCertificateComponent implements OnInit {
       })
   }
 
-  loadIssuerCertificates(){
-    // TODO: izmeniti, ponuditi samo CA i root serifikate koriskina koji je ulogovan
-    
+  loadIssuerCertificates(){    
     this.certificateService.findAllRootAndCAByUser(this.userId).subscribe(    
       (issuerCertificates: Certificate[]) => {
         this.issuerCertificates = issuerCertificates;
