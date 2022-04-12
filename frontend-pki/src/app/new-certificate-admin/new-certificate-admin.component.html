@@ -29,42 +29,42 @@
             <div class="form-group row">
                 <label for="commonName" style="width: 35%;" class=" col-form-label">Common name:</label>
                 <div class="col-sm-7">
-                    <input type="text" [(ngModel)]="certificate.certificateDataDTO.commonName" name="commonName">
+                    <input type="text" [(ngModel)]="certificate.certificateDataDTO.commonName" name="commonName" required>
                 </div>
             </div> 
 
             <div class="form-group row">
                 <label for="givenName" style="width: 35%;" class=" col-form-label">Given name:</label>
                 <div class="col-sm-7">
-                    <input type="text" [(ngModel)]="certificate.certificateDataDTO.givenName" name="givenName">
+                    <input type="text" [(ngModel)]="certificate.certificateDataDTO.givenName" name="givenName" required>
                 </div>
             </div> 
 
             <div class="form-group row">
                 <label for="surname" style="width: 35%;" class=" col-form-label">Surname:</label>
                 <div class="col-sm-7">
-                    <input type="text" [(ngModel)]="certificate.certificateDataDTO.surname" name="surname">
+                    <input type="text" [(ngModel)]="certificate.certificateDataDTO.surname" name="surname" required>
                 </div>
             </div> 
 
             <div class="form-group row">
                 <label for="organization" style="width: 35%;" class=" col-form-label">Organization:</label>
                 <div class="col-sm-7">
-                    <input type="text" [(ngModel)]="certificate.certificateDataDTO.organization" name="organization">
+                    <input type="text" [(ngModel)]="certificate.certificateDataDTO.organization" name="organization" required>
                 </div>
             </div>
 
             <div class="form-group row">
                 <label for="organizationalUnit" style="width: 35%;" class=" col-form-label">Organizational Unit:</label>
                 <div class="col-sm-7">
-                    <input type="text" [(ngModel)]="certificate.certificateDataDTO.organizationalUnit" name="organizationalUnit">
+                    <input type="text" [(ngModel)]="certificate.certificateDataDTO.organizationalUnit" name="organizationalUnit" required>
                 </div>
             </div> 
 
             <div class="form-group row">
                 <label for="countryCode" style="width: 35%;" class=" col-form-label">Country code:</label>
                 <div class="col-sm-7">
-                    <input type="text" [(ngModel)]="certificate.certificateDataDTO.countryCode" name="countryCode">
+                    <input type="text" [(ngModel)]="certificate.certificateDataDTO.countryCode" name="countryCode" required>
                 </div>
             </div> 
 
@@ -98,14 +98,14 @@
             <div class="form-group row">
                 <label for="validFrom" style="width: 35%;" class="col-sm-2 col-form-label">Valid from:</label>
                 <div class="col-sm-7">
-                    <input type="date" [(ngModel)]="certificate.validFrom" name="validFrom" (change)="checkDates()">
+                    <input type="date" [(ngModel)]="certificate.validFrom" name="validFrom" (change)="checkDates()" required>
                 </div>
             </div>
             
             <div class="form-group row">
                 <label for="validTo" style="width: 35%;" class="col-sm-2 col-form-label">Valid to:</label>
                 <div class="col-sm-7">
-                    <input type="date" [(ngModel)]="certificate.validTo" name="validTo" (change)="checkDates()">
+                    <input type="date" [(ngModel)]="certificate.validTo" name="validTo" (change)="checkDates()" required>
                 </div>
             </div>
 

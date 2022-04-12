@@ -18,6 +18,7 @@ import java.security.KeyStoreException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -50,7 +51,6 @@ public class CertificateController {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
 
     @RequestMapping(value="/findById/{id}", method = RequestMethod.GET)
     public MyCertificate findById(@PathVariable Integer id) {
@@ -107,5 +107,23 @@ public class CertificateController {
     public void revokeCerificate(@PathVariable String serialNumber){
         System.out.println("EVO ME OVDE:" + serialNumber);
         certificateService.revokeCerificate(serialNumber);
+    }
+  
+    @RequestMapping(value="/findCertificateBySerialNumber/{serialNumber}", method = RequestMethod.GET)
+    public MyCertificate findCertificateBySerialNumber(@PathVariable String serialNumber) {
+        return this.certificateService.findMyCertificateBySerialNumber(serialNumber);
+    }
+
+    @RequestMapping(value="/findAllRootAndCAByUser/{id}", method = RequestMethod.GET)
+    public List<MyCertificate> findAllRootAndCAByUser(@PathVariable Integer id) {
+        List<MyCertificate> certificates = new ArrayList<>();
+
+        for (MyCertificate c: this.certificateService.findAllRootsAndCA()) {
+            if(c.getUser().getId() == id){
+                certificates.add(c);
+            }
+        }
+
+        return certificates;
     }
 }

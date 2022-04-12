@@ -69,7 +69,7 @@ public class CertificateService {
         return dtos;
     }
 
-    public List<MyCertificate> findAllRootsAndCA() {
+    public List<MyCertificate> findAllRootsAndCA() {        // TODO: proveriti da li su potpisi validni ?
         List<MyCertificate> certificates = new ArrayList<>();
         for (MyCertificate c : this.certificateRepository.findAll()) {
             if (c.getCertificateType() != CertificateType.END_ENTITY && !c.isRevoked()) {

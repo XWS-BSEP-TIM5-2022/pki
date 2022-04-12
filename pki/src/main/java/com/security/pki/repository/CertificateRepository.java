@@ -10,5 +10,5 @@ public interface CertificateRepository extends JpaRepository<MyCertificate, Inte
 
     MyCertificate findMyCertificateBySerialNumber(String serialNumber);
 
-    MyCertificate findBySerialNumber(String issuerSerialNumber);        // TODO: obrisati jedan
+    MyCertificate findBySerialNumber(String issuerSerialNumber);
 }

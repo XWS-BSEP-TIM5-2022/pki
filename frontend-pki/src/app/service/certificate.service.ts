@@ -38,4 +38,12 @@ export class CertificateService {
   revokeCertificate(serialNumber){
     return this._http.get(`${this.userPath}/revokeCerificate/` + serialNumber)
   }
+  
+  findCertificateBySerialNumber(serialNumber: string) {
+    return this._http.get<Certificate>(`${this.userPath}/findCertificateBySerialNumber/` + serialNumber)  
+  }
+
+  findAllRootAndCAByUser(id: number) {
+    return this._http.get<Certificate[]>(`${this.userPath}/findAllRootAndCAByUser/` + id)  
+  }
 }
