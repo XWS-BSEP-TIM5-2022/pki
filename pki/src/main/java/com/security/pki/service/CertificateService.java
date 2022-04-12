@@ -220,7 +220,10 @@ public class CertificateService {
 
             writeCertificate(dto.getCertificateType(), x509Certificate, keyPairSubject.getPrivate());
 
-            saveIssuerPrivateKey(x509Certificate, privateKeyIssuer);
+            if(findPrivateKeyFromKeyStore(getPath("issuers.jks"), new BigInteger(dto.getIssuerSerialNumber(), 16).toString()) == null){
+                System.out.println("********************************JESTE******************");
+                saveIssuerPrivateKey(x509Certificate, privateKeyIssuer);
+            }
 
             saveCertificateToDatabase(dto, serialNumber);
             //Konvertuje objekat u sertifikat (izvlacenje konkretnog sertifikata)

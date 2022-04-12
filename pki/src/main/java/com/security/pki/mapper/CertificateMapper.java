@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 @NoArgsConstructor
@@ -43,12 +44,16 @@ public class CertificateMapper {
 
 	public AllCertificatesViewDTO certificateWithCommonNameToCertificateDto(MyCertificate certificate) {
 		AllCertificatesViewDTO dto = new AllCertificatesViewDTO();
-		dto.id = certificate.getId();
-		dto.commonName = certificate.getCertificateData().getCommonName();
-		dto.validFrom = convertDateToString(certificate.getValidFrom());
-		dto.validTo = convertDateToString(certificate.getValidTo());
-		dto.email = certificate.getUser().getEmail();
-		dto.certificateType = certificate.getCertificateType().toString();
+		dto.setId(certificate.getId());
+		dto.setCommonName(certificate.getCertificateData().getCommonName());
+		dto.setValidFrom(convertDateToString(certificate.getValidFrom()));
+		dto.setValidTo(convertDateToString(certificate.getValidTo()));
+		dto.setEmail(certificate.getUser().getEmail());
+		dto.setCertificateType(certificate.getCertificateType().toString());
+		Calendar today = Calendar.getInstance();
+		today.clear(Calendar.HOUR); today.clear(Calendar.MINUTE); today.clear(Calendar.SECOND);
+
+		dto.setIsValid(certificate.getValidTo().after(today.getTime()));
 
 		return dto;
 	}
