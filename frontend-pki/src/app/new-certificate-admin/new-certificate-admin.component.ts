@@ -25,9 +25,6 @@ export class NewCertificateAdminComponent implements OnInit {
   ngOnInit(): void {
     this.loadUsers();
     this.loadIssuerCertificates();
-
-    console.log("cao")
-    console.log(this.certificate)
   }
 
   loadUsers(){
@@ -74,29 +71,34 @@ export class NewCertificateAdminComponent implements OnInit {
 
   createNewCertificate(){
 
+    // TODO: nisu pokrivene sve situacije
     if(this.certificate.certificateType != undefined && this.certificate.certificateUsage != undefined &&
-      this.certificate.issuerName != undefined && this.certificate.issuerSerialNumber != undefined &&
-      this.certificate.subjectName != undefined && this.certificate.validFrom != undefined && 
-      this.certificate.validTo != undefined && this.certificate.certificateDataDTO.commonName != undefined &&
-      this.certificate.certificateDataDTO.countryCode != undefined && this.certificate.certificateDataDTO.emailAddress != undefined &&
-      this.certificate.certificateDataDTO.givenName != undefined && this.certificate.certificateDataDTO.organization != undefined &&
-      this.certificate.certificateDataDTO.organizationalUnit != undefined && this.certificate.certificateDataDTO.surname != undefined &&
-      this.certificate.certificateDataDTO.userId != undefined){
+        this.certificate.subjectName != undefined && this.certificate.validFrom != undefined && 
+        this.certificate.validTo != undefined && 
+        this.certificate.certificateDataDTO.commonName != undefined &&
+        this.certificate.certificateDataDTO.countryCode != undefined && this.certificate.certificateDataDTO.emailAddress != undefined &&
+        this.certificate.certificateDataDTO.givenName != undefined && this.certificate.certificateDataDTO.organization != undefined &&
+        this.certificate.certificateDataDTO.organizationalUnit != undefined && this.certificate.certificateDataDTO.surname != undefined &&
+        this.certificate.certificateDataDTO.userId != undefined){
 
-      if(this.certificate.certificateType == "SELF_SIGNED"){
-        this.createSelfSignedCertificate();
+        if(this.certificate.certificateType == "SELF_SIGNED"){
+            this.createSelfSignedCertificate();
 
-        this.certificateService.issueSelfSignedCertificate(this.selfSignedCertificate).subscribe(
-          (cer: CreateSelfSignedCertificate) => {}
-        )
-      } 
-      else {
-        console.log(this.certificate)
+            this.certificateService.issueSelfSignedCertificate(this.selfSignedCertificate).subscribe(
+              (cer: CreateSelfSignedCertificate) => {}
+            )
+        } 
+        else {
+            if(this.certificate.issuerName != undefined && this.certificate.issuerSerialNumber != undefined) {
 
-        this.certificateService.issueCertificate(this.certificate).subscribe(
-          (cer: CreateCertificate) => {}
-        )
-      }
+                this.certificateService.issueCertificate(this.certificate).subscribe(
+                  (cer: CreateCertificate) => {}
+                )
+            }
+            else {
+              console.log('nije izabran issuer');
+            }
+        }
     } 
     else {
       console.log('nisu sva polja popunjena');
