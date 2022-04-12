@@ -3,12 +3,11 @@ package com.security.pki.service;
 import com.security.pki.dto.AllCertificatesViewDTO;
 import com.security.pki.dto.CreateCertificateDTO;
 import com.security.pki.dto.CreateSelfSignedCertificateDTO;
+import com.security.pki.dto.RevokeCertificateDTO;
 import com.security.pki.enums.CertificateType;
 import com.security.pki.mapper.CertificateMapper;
-import com.security.pki.model.MyCertificate;
-import com.security.pki.model.IssuerData;
-import com.security.pki.model.SubjectData;
-import com.security.pki.model.User;
+import com.security.pki.model.*;
+import com.security.pki.repository.CertificateChainRepository;
 import com.security.pki.repository.CertificateRepository;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.bouncycastle.asn1.x500.X500Name;
@@ -51,6 +50,8 @@ public class CertificateService {
 
     @Autowired
     private CertificateRepository certificateRepository;
+    @Autowired
+    private CertificateChainRepository certificateChainRepository;
 
     @Autowired
     private UserService userService;
@@ -148,6 +149,11 @@ public class CertificateService {
             saveIssuerPrivateKey(x509Certificate, keyPair.getPrivate());
 
             saveCertificateSelfSignedToDatabase(dto, serialNumber);
+            CertificateChain cc = new CertificateChain();
+            cc.setIssuerSerialNumber(serialNumber);
+            cc.setSubjectSerialNumber(serialNumber);
+            this.certificateChainRepository.save(cc);
+
             //Konvertuje objekat u sertifikat (izvlacenje konkretnog sertifikata)
             return x509Certificate;
         } catch (CertificateEncodingException e) {
@@ -237,6 +243,10 @@ public class CertificateService {
             saveIssuerPrivateKey(x509Certificate, privateKeyIssuer);
 
             saveCertificateToDatabase(dto, serialNumber);
+            CertificateChain cc = new CertificateChain();
+            cc.setIssuerSerialNumber(dto.getIssuerSerialNumber());
+            cc.setSubjectSerialNumber(serialNumber);
+            this.certificateChainRepository.save(cc);
             //Konvertuje objekat u sertifikat (izvlacenje konkretnog sertifikata)
             return x509Certificate;
 
@@ -424,4 +434,45 @@ public class CertificateService {
         os.write("-----END CERTIFICATE-----\n".getBytes("US-ASCII"));
         os.close();
     }
+
+    public void revokeCerificate(RevokeCertificateDTO dto){
+
+        if(dto.getCertType().equals(CertificateType.END_ENTITY.toString())){
+            revokeEE(dto.getSerialNumber());
+        }
+    }
+
+    private void revokeEE(String serialNumber){
+        for(MyCertificate cc: certificateRepository.findAll()){
+            if(cc.getSerialNumber().toString().equals(serialNumber)){
+                cc.setRevoked(true);
+            }
+        }
+    }
+
+
+    public void newRevoke(String serialNumber){
+        List<String> listaZaPovlacenje = new ArrayList<>();
+        listaZaPovlacenje.add(serialNumber);
+
+        while (listaZaPovlacenje.size() != 0){
+            List<String> pronadjeniZaPovlacenje = new ArrayList<>();
+            for(String s: listaZaPovlacenje){
+                List <CertificateChain> pom = certificateChainRepository.findByIssuerSerialNumber(s);
+                for(CertificateChain cc: pom){
+                    System.out.println("OVAJ CE DA BUDE DODAT ZA POVLACENJE: " + cc.getSubjectSerialNumber());
+                    pronadjeniZaPovlacenje.add(cc.getSubjectSerialNumber());
+                }
+                //povuci ih
+            }
+
+            listaZaPovlacenje.clear();
+            System.out.println("VELICINA LISTE: " + listaZaPovlacenje.size());
+            listaZaPovlacenje.addAll(pronadjeniZaPovlacenje);
+            System.out.println("VELICINA LISTE: " + listaZaPovlacenje.size());
+
+        }
+    }
 }
+
+
