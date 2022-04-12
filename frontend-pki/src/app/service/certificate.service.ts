@@ -34,4 +34,8 @@ export class CertificateService {
   issueSelfSignedCertificate(certificate: CreateSelfSignedCertificate) {
     return this._http.post<CreateSelfSignedCertificate>(`${this.userPath}/createSelfSigned`, certificate)  
   }
+
+  findCertificateBySerialNumber(serialNumber: string) {
+    return this._http.get<Certificate>(`${this.userPath}/findCertificateBySerialNumber/` + serialNumber)  
+  }
 }

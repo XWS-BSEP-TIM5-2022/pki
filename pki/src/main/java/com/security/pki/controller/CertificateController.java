@@ -47,7 +47,6 @@ public class CertificateController {
 
     }
 
-
     @RequestMapping(value="/findById/{id}", method = RequestMethod.GET)
     public MyCertificate findById(@PathVariable Integer id) {
         return this.certificateService.findById(id);
@@ -96,5 +95,10 @@ public class CertificateController {
     public User findUserByCertificateSerialNumber(@PathVariable String serialNumber) {
         MyCertificate certificate = this.certificateService.findMyCertificateBySerialNumber(serialNumber);
         return certificate.getUser();
+    }
+
+    @RequestMapping(value="/findCertificateBySerialNumber/{serialNumber}", method = RequestMethod.GET)
+    public MyCertificate findCertificateBySerialNumber(@PathVariable String serialNumber) {
+        return this.certificateService.findMyCertificateBySerialNumber(serialNumber);
     }
 }
