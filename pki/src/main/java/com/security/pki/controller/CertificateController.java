@@ -103,8 +103,9 @@ public class CertificateController {
     }
 
 
-    @RequestMapping(value="/newRevoke/{serialNumber}", method = RequestMethod.GET)
-    public void newRevoke(@PathVariable String serialNumber){
+    @RequestMapping(value="/revokeCerificate/{serialNumber}", method = RequestMethod.GET)
+    public void revokeCerificate(@PathVariable String serialNumber){
+        System.out.println("EVO ME OVDE:" + serialNumber);
         certificateService.revokeCerificate(serialNumber);
     }
 }

@@ -440,6 +440,10 @@ public class CertificateService {
         List<String> listaZaPovlacenje = new ArrayList<>();
         listaZaPovlacenje.add(serialNumber);
 
+        MyCertificate m = certificateRepository.findBySerialNumber(serialNumber);
+        m.setRevoked(true);
+        certificateRepository.save(m);
+
         while (listaZaPovlacenje.size() != 0){
             List<String> pronadjeniZaPovlacenje = new ArrayList<>();
             for(String s: listaZaPovlacenje){
