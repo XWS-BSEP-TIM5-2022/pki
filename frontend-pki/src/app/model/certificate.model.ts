@@ -3,8 +3,8 @@ import { User } from "./user";
 
 export class Certificate{
     id: number;
-    validFrom?: Date | string;
-    validTo?: Date | string;
+    validFrom: Date | string;
+    validTo: Date | string;
     certificateType : string;	
 	revoked: boolean; 
     serialNumber: string;

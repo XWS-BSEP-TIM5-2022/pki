@@ -21,6 +21,7 @@ export class NewCertificateAdminComponent implements OnInit {
   selfSignedCertificate: CreateSelfSignedCertificate = new CreateSelfSignedCertificate();
   users: User[] = [];
   issuerCertificates: Certificate[]; 
+  selectedIssuerCertificate: Certificate;
 
   ngOnInit(): void {
     this.loadUsers();
@@ -52,12 +53,17 @@ export class NewCertificateAdminComponent implements OnInit {
   }
 
   selectIssuer(){
-    console.log(this.certificate.issuerSerialNumber)
     this.certificateService.findUserByCertificateSerialNumber(this.certificate.issuerSerialNumber).subscribe(
       (issuer: User) => {
         this.certificate.issuerName = issuer.email;
-        console.log(this.certificate.issuerName)
       })
+
+    this.certificateService.findCertificateBySerialNumber(this.certificate.issuerSerialNumber).subscribe(
+      (certificate: Certificate) => {
+        this.selectedIssuerCertificate = certificate;
+      })   
+      
+      this.checkIssuerCertificateDuration();  
   }
 
   checkDates(){
@@ -67,11 +73,39 @@ export class NewCertificateAdminComponent implements OnInit {
         this.certificate.validFrom = undefined;
       }
     }
+
+    this.checkIssuerCertificateDuration();
+  }
+
+  checkIssuerCertificateDuration(){
+    
+    if (this.selectedIssuerCertificate != undefined &&
+        this.certificate.validFrom != undefined && this.certificate.validTo != undefined){
+     
+        let issuerValidFrom = Number(this.selectedIssuerCertificate.validFrom);
+        let issuerValidTo = Number(this.selectedIssuerCertificate.validTo);
+
+        let validFrom: number = new Date(this.certificate.validFrom).getTime();
+        let validTo: number = new Date(this.certificate.validTo).getTime();
+        
+        // console.log(validFrom);   
+        // console.log(validTo);   
+
+        // console.log(issuerValidFrom);  
+        // console.log(issuerValidTo);  
+
+        if ( validFrom < issuerValidFrom || validTo > issuerValidTo){
+          this.certificate.validTo = undefined;
+          this.certificate.validFrom = undefined;
+
+          console.log('datumi od-kad do-kad je sertifikat validan nisu ispravni')
+        }
+    }
   }
 
   createNewCertificate(){
 
-    // TODO: nisu pokrivene sve situacije
+    // TODO: nisu pokrivene sve situacije, npr. ako je neko polje prazan string
     if(this.certificate.certificateType != undefined && this.certificate.certificateUsage != undefined &&
         this.certificate.subjectName != undefined && this.certificate.validFrom != undefined && 
         this.certificate.validTo != undefined && 
