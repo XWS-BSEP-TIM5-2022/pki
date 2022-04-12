@@ -8,6 +8,7 @@ export class Certificate{
     email : string = "undefined";
     certificateType : string = "";
     certificateData : CertificateData;
+    isValid : boolean;
     //user: User;
 
     // constructor(commonName: string, revoked: boolean, validFrom: Date, validTo: Date){
