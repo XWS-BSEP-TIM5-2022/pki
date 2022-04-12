@@ -1,15 +1,18 @@
 import { CertificateData } from "./certificateData.model";
+import { User } from "./user";
 
 export class Certificate{
-    id: number = -1;
-    commonName: string = "undefined";
-    validFrom?: Date | string = "02/03/2022";
-    validTo?: Date | string = "02/03/2022";
-    email : string = "undefined";
-    certificateType : string = "";
-    certificateData : CertificateData;
-    isValid : boolean;
-    //user: User;
+    id: number;
+    validFrom?: Date | string;
+    validTo?: Date | string;
+    certificateType : string;	
+	revoked: boolean; 
+    serialNumber: string;
+    certificateUsage: string;
+    certificateData : CertificateData = new CertificateData();
+    user: User = new User();
+    commonName: string;
+    email: string;
 
     // constructor(commonName: string, revoked: boolean, validFrom: Date, validTo: Date){
     //     this.commonName = commonName;

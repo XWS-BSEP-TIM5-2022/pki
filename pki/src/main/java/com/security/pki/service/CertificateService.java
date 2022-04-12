@@ -128,7 +128,7 @@ public class CertificateService {
                     subjectData.getPublicKey()
             );
 
-            // TODO: sta znaci ekstenzija sertifikata - critical ???
+            // TODO: uzeti certficate usage iz dto
             KeyUsage usage = new KeyUsage(KeyUsage.keyCertSign | KeyUsage.digitalSignature | KeyUsage.keyEncipherment | KeyUsage.dataEncipherment | KeyUsage.cRLSign);
             certGen.addExtension(Extension.keyUsage, true, usage);
 
@@ -308,7 +308,6 @@ public class CertificateService {
         //ksw.loadKeyStore(null, password.toCharArray());
         ksw.loadKeyStore(getPath("issuers.jks"), password.toCharArray());
         ksw.write(x509Certificate.getSerialNumber().toString(), privateKeyIssuer, password.toCharArray(), x509Certificate);
-
         ksw.saveKeyStore(getPath("issuers.jks"), password.toCharArray());
 
         readCertificate(x509Certificate, "issuers.jks");
@@ -362,6 +361,7 @@ public class CertificateService {
 
         return new SubjectData(keyPairSubject.getPublic(), builder.build());
     }
+    
     private KeyPair generateKeyPair() {
         try {
             KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
@@ -397,6 +397,10 @@ public class CertificateService {
         return pk;
     }
 
+    public MyCertificate findMyCertificateBySerialNumber(String serialNumber){
+        return certificateRepository.findMyCertificateBySerialNumber(serialNumber);
+    }
+
     public Certificate findCertificateBySerialNumber(String serialNumber, String certType) throws KeyStoreException {
         KeyStore keyStore = null;
         if (certType.equals(CertificateType.END_ENTITY.toString())) {
@@ -419,6 +423,5 @@ public class CertificateService {
         os.write(Base64.encodeBase64(certificate.getEncoded(), true));
         os.write("-----END CERTIFICATE-----\n".getBytes("US-ASCII"));
         os.close();
-
     }
 }

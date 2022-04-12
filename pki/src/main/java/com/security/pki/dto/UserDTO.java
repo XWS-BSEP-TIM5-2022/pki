@@ -10,8 +10,6 @@ public class UserDTO {
 	public String password;
 	
 	public String userType;
-	
-	public String authorityType;
-	
+
 	public List<CertificateDTO> certificates;
 }

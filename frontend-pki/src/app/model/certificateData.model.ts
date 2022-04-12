@@ -1,4 +1,10 @@
 export class CertificateData{
-  commonName: string = "undefined";
-  email : string = "undefined";
+  commonName: string = "";
+  givenName: string;
+  surname: string;
+  organization: string;
+  organizationalUnit: string;
+  countryCode: string;
+  emailAddress : string;
+  userId: number;
 }
