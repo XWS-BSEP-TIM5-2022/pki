@@ -107,7 +107,6 @@ public class CertificateService {
         X500Name issuer = new X500NameBuilder().addRDN(BCStyle.E, dto.getIssuerName()).build();
         IssuerData issuerData = new IssuerData(issuer, keyPair.getPrivate());
 
-
         String serialNumber = UUID.randomUUID().toString().replace("-", "").toUpperCase();
 
         if (!isSerialNumberUnique(serialNumber)) {
@@ -162,7 +161,7 @@ public class CertificateService {
             }
 
             //KeyUsage usage = new KeyUsage(KeyUsage.keyCertSign | KeyUsage.digitalSignature | KeyUsage.keyEncipherment | KeyUsage.dataEncipherment | KeyUsage.cRLSign);
-            certGen.addExtension(Extension.keyUsage, true, usage);
+            certGen.addExtension(Extension.keyUsage, false, usage);
 
             // keyCertSign, digitalSignature, keyEncipherment, dataEncipherment, cRLSign, keyAgreement, encipherOnly, decipherOnly
 
@@ -176,6 +175,8 @@ public class CertificateService {
             certConverter = certConverter.setProvider("BC");
 
             X509Certificate x509Certificate = certConverter.getCertificate(certHolder);
+
+            x509Certificate.verify(keyPair.getPublic());       // provera digitalnog potpisa
 
             writeCertificate(dto.getCertificateType(), x509Certificate, keyPair.getPrivate());
 
@@ -201,13 +202,14 @@ public class CertificateService {
             e.printStackTrace();
         } catch (CertIOException e) {
             e.printStackTrace();
+        } catch (SignatureException e) {
+            System.out.println("\nValidacija potpisa neuspesna :(");
+            e.printStackTrace();
         } catch (Exception exception) {
             System.out.println(" ********** cuvanje sertifikata u bazu nije uspelo **********");
             exception.printStackTrace();
         }
         return null;
-
-
     }
 
     public X509Certificate issueCertificate(CreateCertificateDTO dto) {
@@ -224,6 +226,7 @@ public class CertificateService {
             filename = "ca.jks";
         }
 
+        java.security.cert.Certificate certificateIssuer = ksr.readCertificate(getPath(filename), password, new BigInteger(dto.getIssuerSerialNumber(), 16).toString());
         PrivateKey privateKeyIssuer = findPrivateKeyFromKeyStore(getPath(filename), new BigInteger(dto.getIssuerSerialNumber(), 16).toString());  // TODO: mozda ne radi
 
         X500Name issuer = new X500NameBuilder().addRDN(BCStyle.E, dto.getIssuerName()).build();
@@ -284,7 +287,7 @@ public class CertificateService {
             }
 
             //KeyUsage usage = new KeyUsage(KeyUsage.keyCertSign | KeyUsage.digitalSignature | KeyUsage.keyEncipherment | KeyUsage.dataEncipherment | KeyUsage.cRLSign);
-            certGen.addExtension(Extension.keyUsage, true, usage);
+            certGen.addExtension(Extension.keyUsage, false, usage);
 
             //Generise se sertifikat
             X509CertificateHolder certHolder = certGen.build(contentSigner);    // povezujuemo sertifikat sa content signer-om (odnosno digitalnim potpisom)
@@ -296,6 +299,9 @@ public class CertificateService {
             certConverter = certConverter.setProvider("BC");
 
             X509Certificate x509Certificate = certConverter.getCertificate(certHolder);
+
+//            KeyPair keyPairSubject111 = generateKeyPair();   koristeno za neuspesnu validaciju digitalnog potpisa
+            x509Certificate.verify(certificateIssuer.getPublicKey());       // provera digitalnog potpisa
 
             writeCertificate(dto.getCertificateType(), x509Certificate, keyPairSubject.getPrivate());
 
@@ -320,6 +326,9 @@ public class CertificateService {
         } catch (CertificateException e) {
             e.printStackTrace();
         } catch (CertIOException e) {
+            e.printStackTrace();
+        } catch (SignatureException e) {
+            System.out.println("\nValidacija potpisa neuspesna :(");
             e.printStackTrace();
         } catch (Exception exception) {
             System.out.println(" ********** cuvanje sertifikata u bazu nije uspelo **********");

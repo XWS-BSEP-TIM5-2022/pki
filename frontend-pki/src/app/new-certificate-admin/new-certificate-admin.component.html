@@ -96,8 +96,8 @@
                     <label for="issuer" style="width: 35%;" class="col-sm-2 col-form-label">Issued by:</label>
                     <select class="col-sm-7" style="width: 35%;" [(ngModel)]="certificate.issuerSerialNumber" name="issuerSerialNumber" (change)="selectIssuer()">
                         <option value="0" selected>select issuer</option>
-                        <option *ngFor="let issuerCert of issuerCertificates"> {{ issuerCert.serialNumber }} </option>   <!-- TODO: polja koja prikazujem -->
-                            <!-- usage: {{ issuerCert.certificateUsage }}, CN: {{ issuerCert.certificateData.commonName }} -->
+                        <option *ngFor="let issuerCert of issuerCertificates" [ngValue]="issuerCert.serialNumber"> {{ issuerCert.certificateData.commonName }} </option>   <!-- TODO: polja koja prikazujem -->
+                        <!-- usage: {{ issuerCert.certificateUsage }}, CN: {{ issuerCert.certificateData.commonName }} -->
                     </select>
                 </div>
             </ng-template>
