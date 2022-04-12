@@ -13,6 +13,7 @@ export class Certificate{
     user: User = new User();
     commonName: string;
     email: string;
+    isValid: boolean;
 
     // constructor(commonName: string, revoked: boolean, validFrom: Date, validTo: Date){
     //     this.commonName = commonName;
