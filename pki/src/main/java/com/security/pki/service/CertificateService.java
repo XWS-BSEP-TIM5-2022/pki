@@ -43,6 +43,7 @@ import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.operator.OperatorCreationException;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -68,10 +69,14 @@ public class CertificateService {
         return dtos;
     }
 
-    public List<MyCertificate> findAllRootsAndCA() {        // TODO: proveriti da li su potpisi validni ?
+    public List<MyCertificate> findAllRootsAndCA() {
         List<MyCertificate> certificates = new ArrayList<>();
         for (MyCertificate c : this.certificateRepository.findAll()) {
-            if (c.getCertificateType() != CertificateType.END_ENTITY && !c.isRevoked()) {
+
+            Calendar today = Calendar.getInstance();
+            today.clear(Calendar.HOUR); today.clear(Calendar.MINUTE); today.clear(Calendar.SECOND);
+
+            if (c.getCertificateType() != CertificateType.END_ENTITY && !c.isRevoked() && c.getValidTo().after(today.getTime())) {
                 certificates.add(c);
             }
         }
@@ -128,9 +133,37 @@ public class CertificateService {
                     subjectData.getPublicKey()
             );
 
-            // TODO: uzeti certficate usage iz dto
-            KeyUsage usage = new KeyUsage(KeyUsage.keyCertSign | KeyUsage.digitalSignature | KeyUsage.keyEncipherment | KeyUsage.dataEncipherment | KeyUsage.cRLSign);
+            KeyUsage usage;
+            switch(dto.getCertificateUsage()) {
+                case "digitalSignature":
+                    usage = new KeyUsage(KeyUsage.digitalSignature);
+                    break;
+                case "keyEncipherment":
+                    usage = new KeyUsage(KeyUsage.keyEncipherment);
+                    break;
+                case "dataEncipherment":
+                    usage = new KeyUsage(KeyUsage.dataEncipherment);
+                    break;
+                case "cRLSign":
+                    usage = new KeyUsage(KeyUsage.cRLSign);
+                    break;
+                case "keyAgreement":
+                    usage = new KeyUsage(KeyUsage.keyAgreement);
+                    break;
+                case "encipherOnly":
+                    usage = new KeyUsage(KeyUsage.encipherOnly);
+                    break;
+                case "decipherOnly":
+                    usage = new KeyUsage(KeyUsage.decipherOnly);
+                    break;
+                default:
+                    usage = new KeyUsage(KeyUsage.keyCertSign);
+            }
+
+            //KeyUsage usage = new KeyUsage(KeyUsage.keyCertSign | KeyUsage.digitalSignature | KeyUsage.keyEncipherment | KeyUsage.dataEncipherment | KeyUsage.cRLSign);
             certGen.addExtension(Extension.keyUsage, true, usage);
+
+            // keyCertSign, digitalSignature, keyEncipherment, dataEncipherment, cRLSign, keyAgreement, encipherOnly, decipherOnly
 
             //Generise se sertifikat
             X509CertificateHolder certHolder = certGen.build(contentSigner);    // povezujuemo sertifikat sa content signer-om (odnosno digitalnim potpisom)
@@ -217,8 +250,34 @@ public class CertificateService {
                     subjectData.getPublicKey()
             );
 
-            // TODO: sta znaci ekstenzija sertifikata - critical ???
-            KeyUsage usage = new KeyUsage(KeyUsage.keyCertSign | KeyUsage.digitalSignature | KeyUsage.keyEncipherment | KeyUsage.dataEncipherment | KeyUsage.cRLSign);
+            KeyUsage usage;
+            switch(dto.getCertificateUsage()) {
+                case "digitalSignature":
+                    usage = new KeyUsage(KeyUsage.digitalSignature);
+                    break;
+                case "keyEncipherment":
+                    usage = new KeyUsage(KeyUsage.keyEncipherment);
+                    break;
+                case "dataEncipherment":
+                    usage = new KeyUsage(KeyUsage.dataEncipherment);
+                    break;
+                case "cRLSign":
+                    usage = new KeyUsage(KeyUsage.cRLSign);
+                    break;
+                case "keyAgreement":
+                    usage = new KeyUsage(KeyUsage.keyAgreement);
+                    break;
+                case "encipherOnly":
+                    usage = new KeyUsage(KeyUsage.encipherOnly);
+                    break;
+                case "decipherOnly":
+                    usage = new KeyUsage(KeyUsage.decipherOnly);
+                    break;
+                default:
+                    usage = new KeyUsage(KeyUsage.keyCertSign);
+            }
+
+            //KeyUsage usage = new KeyUsage(KeyUsage.keyCertSign | KeyUsage.digitalSignature | KeyUsage.keyEncipherment | KeyUsage.dataEncipherment | KeyUsage.cRLSign);
             certGen.addExtension(Extension.keyUsage, true, usage);
 
             //Generise se sertifikat

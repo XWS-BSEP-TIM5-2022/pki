@@ -101,11 +101,15 @@
           <div class="form-group row">
               <label for="certificateUsage" style="width: 35%;" class=" col-form-label">Certificate Usage:</label>
               <select name="certificateUsage" id="certificateUsage" style="width: 35%;" [(ngModel)]="certificate.certificateUsage">
-              <option value="0" selected>select usage</option>
-              <option value="CA">CA</option>
-              <option value="MAIL">MAIL</option>
-              <option value="HTTPS">HTTPS</option>
-              <option value="DOCUMENT_SIGNING">DOCUMENT_SIGNING</option>
+                <option value="0" selected>select usage</option>
+                <option value="keyCertSign">keyCertSign</option>
+                <option value="digitalSignature">digitalSignature</option>
+                <option value="keyEncipherment">keyEncipherment</option>
+                <option value="dataEncipherment">dataEncipherment</option>
+                <option value="cRLSign">cRLSign</option>
+                <option value="keyAgreement">keyAgreement</option>
+                <option value="encipherOnly">encipherOnly</option>
+                <option value="decipherOnly">decipherOnly</option>
               </select>
           </div>
 

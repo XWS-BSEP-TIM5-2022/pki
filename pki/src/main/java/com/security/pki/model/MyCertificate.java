@@ -45,7 +45,7 @@ public class MyCertificate {
 	private String serialNumber;	// potrebno kod OCSP protokola za proveru povucenosti sertifikata
 
 	@Column(name = "certificateUsage", nullable = false)
-	private CertificateUsage certificateUsage; 	// namena sertifikata
+	private String certificateUsage; 	// namena sertifikata
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "certificateData_id", referencedColumnName = "id", nullable = false)

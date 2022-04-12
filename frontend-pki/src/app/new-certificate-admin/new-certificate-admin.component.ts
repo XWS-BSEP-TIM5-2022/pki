@@ -22,8 +22,13 @@ export class NewCertificateAdminComponent implements OnInit {
   users: User[] = [];
   issuerCertificates: Certificate[]; 
   selectedIssuerCertificate: Certificate;
+  adminEmail: any;
+  adminId: any;
 
   ngOnInit(): void {
+    this.adminEmail = localStorage.getItem('email')
+    this.adminId = localStorage.getItem('userId')
+
     this.loadUsers();
     this.loadIssuerCertificates();
   }
@@ -42,6 +47,15 @@ export class NewCertificateAdminComponent implements OnInit {
       })
   }
 
+  selectedCertificateType(){
+    if (this.certificate.certificateType ==="SELF_SIGNED"){
+      this.certificate.certificateDataDTO.emailAddress = this.adminEmail
+      this.certificate.certificateDataDTO.userId = this.adminId;
+      this.certificate.subjectName = this.adminEmail;
+      this.certificate.issuerName = this.adminEmail;
+    }
+  }
+
   selectSubject(){
     this.userService.findByEmail(this.certificate.subjectName).subscribe(
       (user: User) => {
@@ -53,6 +67,9 @@ export class NewCertificateAdminComponent implements OnInit {
   }
 
   selectIssuer(){
+    this.certificate.validTo = undefined;
+    this.certificate.validFrom = undefined;
+
     this.certificateService.findUserByCertificateSerialNumber(this.certificate.issuerSerialNumber).subscribe(
       (issuer: User) => {
         this.certificate.issuerName = issuer.email;

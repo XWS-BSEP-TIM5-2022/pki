@@ -4,7 +4,6 @@ import com.security.pki.dto.AllCertificatesViewDTO;
 import com.security.pki.dto.CreateCertificateDTO;
 import com.security.pki.dto.CreateSelfSignedCertificateDTO;
 import com.security.pki.enums.CertificateType;
-import com.security.pki.model.CertificateUsage;
 import com.security.pki.model.MyCertificate;
 
 import com.security.pki.dto.CertificateDTO;
@@ -38,7 +37,7 @@ public class CertificateMapper {
 		CertificateDataMapper cdMapper = new CertificateDataMapper();
 		dto.setCertificateDataDTO(cdMapper.certDataToCertDTO(certificate.getCertificateData()));
 		dto.setCertificateType(certificate.getCertificateType().toString());
-		dto.setCertificateUsage(CertificateUsage.DOCUMENT_SIGNING.toString());
+		dto.setCertificateUsage(dto.getCertificateUsage());		// TODO
 		return dto;
 	}
 
@@ -49,7 +48,7 @@ public class CertificateMapper {
 		dto.setValidFrom(convertDateToString(certificate.getValidFrom()));
 		dto.setValidTo(convertDateToString(certificate.getValidTo()));
 		dto.setEmail(certificate.getUser().getEmail());
-		dto.setCertificateType(certificate.getCertificateType().toString());
+		dto.setCertificateType(certificate.getCertificateType().toString());		// TODO:
 		Calendar today = Calendar.getInstance();
 		today.clear(Calendar.HOUR); today.clear(Calendar.MINUTE); today.clear(Calendar.SECOND);
 
@@ -70,7 +69,7 @@ public class CertificateMapper {
 		cert.setValidTo(dto.getValidTo());
 		setCertificateType(dto.getCertificateType(), cert);
 		cert.setRevoked(false);
-		cert.setCertificateUsage(CertificateUsage.DOCUMENT_SIGNING); // TODO: Sanja: dogovoriti se za namene sertifikata
+		cert.setCertificateUsage(dto.getCertificateUsage()); // TODO: Sanja: dogovoriti se za namene sertifikata
 		cert.setUser(user);
 		cert.setCertificateData(new CertificateDataMapper().CertDataDtoToCertData(dto.getCertificateDataDTO()));
 		return cert;
@@ -82,7 +81,7 @@ public class CertificateMapper {
 		cert.setValidTo(dto.getValidTo());
 		setCertificateType(dto.getCertificateType(), cert);
 		cert.setRevoked(false);
-		cert.setCertificateUsage(CertificateUsage.DOCUMENT_SIGNING); // TODO: Sanja: dogovoriti se za namene sertifikata
+		cert.setCertificateUsage(dto.getCertificateUsage()); // TODO: Sanja: dogovoriti se za namene sertifikata
 		cert.setUser(user);
 		cert.setCertificateData(new CertificateDataMapper().CertDataDtoToCertData(dto.getCertificateDataDTO()));
 		return cert;
