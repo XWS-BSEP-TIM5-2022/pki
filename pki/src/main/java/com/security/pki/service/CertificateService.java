@@ -435,23 +435,8 @@ public class CertificateService {
         os.close();
     }
 
-    public void revokeCerificate(RevokeCertificateDTO dto){
 
-        if(dto.getCertType().equals(CertificateType.END_ENTITY.toString())){
-            revokeEE(dto.getSerialNumber());
-        }
-    }
-
-    private void revokeEE(String serialNumber){
-        for(MyCertificate cc: certificateRepository.findAll()){
-            if(cc.getSerialNumber().toString().equals(serialNumber)){
-                cc.setRevoked(true);
-            }
-        }
-    }
-
-
-    public void newRevoke(String serialNumber){
+    public void revokeCerificate(String serialNumber){
         List<String> listaZaPovlacenje = new ArrayList<>();
         listaZaPovlacenje.add(serialNumber);
 

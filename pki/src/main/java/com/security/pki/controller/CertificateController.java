@@ -99,13 +99,9 @@ public class CertificateController {
         return certificate.getUser();
     }
 
-    @RequestMapping(value="/revokeCertificate", method = RequestMethod.POST)
-    public void revokeCertificate(@RequestBody RevokeCertificateDTO dto){
-        certificateService.revokeCerificate(dto);
-    }
 
     @RequestMapping(value="/newRevoke/{serialNumber}", method = RequestMethod.GET)
     public void newRevoke(@PathVariable String serialNumber){
-        certificateService.newRevoke(serialNumber);
+        certificateService.revokeCerificate(serialNumber);
     }
 }
