@@ -65,4 +65,26 @@ public class KeyStoreWriterService {
             e.printStackTrace();
         }
     }
+
+    // Created by Sanja
+    public KeyStore getKeyStore(String fileName, char[] password) {
+        try {
+            if(fileName != null) {
+                keyStore.load(new FileInputStream(fileName), password);
+            } else {
+                //Ako je cilj kreirati novi KeyStore poziva se i dalje load, pri cemu je prvi parametar null
+                keyStore.load(null, password);
+            }
+            return keyStore;
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (CertificateException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
