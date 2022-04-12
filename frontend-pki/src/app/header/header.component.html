@@ -9,11 +9,14 @@
                 <span>Home</span>
             </button> 
 
-            <button *ngIf="isAdmin()" mat-button mat-ripple routerLink="/new-certificate">
+            <button *ngIf="isAdmin()" mat-button mat-ripple routerLink="/new-certificate-admin">
                 <span>New Certificate</span>
             </button> 
 
-            
+            <button *ngIf="isClient()" mat-button mat-ripple routerLink="/new-certificate">
+                <span>New Certificate</span>
+            </button> 
+
             <button *ngIf="isAdmin() || isClient()" mat-button mat-ripple (click) = "logout()">
                 <span>Logout</span>
             </button> 

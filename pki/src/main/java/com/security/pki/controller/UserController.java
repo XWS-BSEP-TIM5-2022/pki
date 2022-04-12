@@ -2,6 +2,7 @@ package com.security.pki.controller;
 
 import com.security.pki.dto.LoginDTO;
 import com.security.pki.dto.SignUpUserDTO;
+import com.security.pki.dto.UserDTO;
 import com.security.pki.mapper.UserMapper;
 import com.security.pki.model.User;
 import com.security.pki.repository.UserRepository;
@@ -11,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/users")
@@ -50,4 +53,15 @@ public class UserController {
         return ResponseEntity.ok(user.getId());
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/findAll")
+    public ResponseEntity<List<User>> findAll() {
+        List<User> users = userService.findAll();
+        return ResponseEntity.ok(users);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/getByEmail/{email}")
+    public ResponseEntity<User> findByEmail(@PathVariable String email) {
+        User user = userService.findByEmail(email);
+        return ResponseEntity.ok(user);
+    }
 }

@@ -122,7 +122,7 @@ public class CertificateService {
                     subjectData.getPublicKey()
             );
 
-            // TODO: sta znaci ekstenzija sertifikata - critical ???
+            // TODO: uzeti certficate usage iz dto
             KeyUsage usage = new KeyUsage(KeyUsage.keyCertSign | KeyUsage.digitalSignature | KeyUsage.keyEncipherment | KeyUsage.dataEncipherment | KeyUsage.cRLSign);
             certGen.addExtension(Extension.keyUsage, true, usage);
 
@@ -286,7 +286,6 @@ public class CertificateService {
 
         ksw.loadKeyStore(null, password.toCharArray());
         ksw.write(x509Certificate.getSerialNumber().toString(), privateKeyIssuer, password.toCharArray(), x509Certificate);
-
         ksw.saveKeyStore(getPath("issuers.jks"), password.toCharArray());
 
         readCertificate(x509Certificate, "issuers.jks");
@@ -376,4 +375,7 @@ public class CertificateService {
         return pk;
     }
 
+    public MyCertificate findMyCertificateBySerialNumber(String serialNumber){
+        return certificateRepository.findMyCertificateBySerialNumber(serialNumber);
+    }
 }

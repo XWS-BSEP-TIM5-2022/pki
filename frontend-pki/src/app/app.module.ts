@@ -24,6 +24,7 @@ import { CertificateComponent } from './certificate/certificate.component';
 import { NewAdminComponent } from './new-admin/new-admin.component';
 import { HeaderComponent } from './header/header.component';
 import { NewCertificateComponent } from './new-certificate/new-certificate.component';
+import { NewCertificateAdminComponent } from './new-certificate-admin/new-certificate-admin.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { NewCertificateComponent } from './new-certificate/new-certificate.compo
     NewAdminComponent,
     HeaderComponent,
     NewCertificateComponent,
+    NewCertificateAdminComponent,
   ],
   imports: [
     BrowserModule,

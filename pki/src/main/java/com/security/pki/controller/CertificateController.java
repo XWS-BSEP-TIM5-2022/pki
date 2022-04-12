@@ -4,6 +4,7 @@ import com.security.pki.dto.AllCertificatesViewDTO;
 import com.security.pki.dto.CreateCertificateDTO;
 import com.security.pki.dto.CreateSelfSignedCertificateDTO;
 import com.security.pki.model.MyCertificate;
+import com.security.pki.model.User;
 import com.security.pki.service.CertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -49,7 +50,6 @@ public class CertificateController {
 //        System.out.println(certificate.getKeyUsage());
 //        System.out.println("-------------------------------------------------------");
 
-
         if(certificate == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -75,5 +75,16 @@ public class CertificateController {
 //        System.out.println(certificate);
 //        System.out.println("-------------------------------------------------------");
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value="/findAllRootsAndCA", method = RequestMethod.GET)
+    public List<MyCertificate> findAllRootsAndCA() {
+        return this.certificateService.findAllRootsAndCA();
+    }
+
+    @RequestMapping(value="/findUserByCertificateSerialNumber/{serialNumber}", method = RequestMethod.GET)
+    public User findUserByCertificateSerialNumber(@PathVariable String serialNumber) {
+        MyCertificate certificate = this.certificateService.findMyCertificateBySerialNumber(serialNumber);
+        return certificate.getUser();
     }
 }

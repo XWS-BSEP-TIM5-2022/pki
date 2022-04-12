@@ -30,41 +30,55 @@
       <mat-card  class="example-card column" style="width: 70%;">
           <mat-card-title style="margin-left: 25%;">New Sertificate</mat-card-title>
           <br>
-          <!-- <mat-card-subtitle>Common name</mat-card-subtitle> -->
           <mat-card-content>
             <form style="margin-left: 18%;" #registrationForm = "ngForm" (ngSubmit)="newCertificate()">
+
+
               <div class="form-group row">
-                <label for="staticEmail" style="width: 35%;" class=" col-form-label">Common name:</label>
+                <label for="certificateType" style="width: 35%;" class=" col-form-label">Certificate Type:</label>
                 <div class="col-sm-7">
-                  <input type="text" [ngModel]="certificate.commonName">
+                  <input type="text" [ngModel]="certificate.certificateType" name="certificateType">
                 </div>
               </div>
+
               <div class="form-group row">
-                <label for="inputPassword" style="width: 35%;" class="col-sm-2 col-form-label">Valid from:</label>
+                <label for="commonName" style="width: 35%;" class=" col-form-label">Common name:</label>
                 <div class="col-sm-7">
-                  <input type="date" [ngModel]="certificate.validFrom">
+                  <input type="text" [ngModel]="certificate.certificateData.commonName" name="commonName">
                 </div>
               </div>
+              
               <div class="form-group row">
-                <label for="inputPassword" style="width: 35%;" class="col-sm-2 col-form-label">Valid to:</label>
+                <label for="validFrom" style="width: 35%;" class="col-sm-2 col-form-label">Valid from:</label>
                 <div class="col-sm-7">
-                  <input type="date" [ngModel]="certificate.validTo">
+                  <input type="date" [ngModel]="certificate.validFrom" name="validFrom">
                 </div>
               </div>
+              
               <div class="form-group row">
-                <label for="inputPassword" style="width: 35%;" class="col-sm-2 col-form-label">Issued to:</label>
+                <label for="validTo" style="width: 35%;" class="col-sm-2 col-form-label">Valid to:</label>
                 <div class="col-sm-7">
-                  <label for="staticEmail" class=" col-form-label">Neko</label>
+                  <input type="date" [ngModel]="certificate.validTo" name="validTo">
                 </div>
               </div>
+              
               <div class="form-group row">
-                <label for="inputPassword" style="width: 35%;" class="col-sm-2 col-form-label">Issued by:</label>
+                <label for="subject" style="width: 35%;" class="col-sm-2 col-form-label">Issued to:</label>
+        
+                <select class="col-sm-7" style="width: 35%;">
+                  <option *ngFor="let u of users">{{ u.id }}</option>
+                </select>
+              </div>
+              
+              <div class="form-group row">
+                <label for="issuer" style="width: 35%;" class="col-sm-2 col-form-label">Issued by:</label>
                 <div class="col-sm-7">
-                  <label for="staticEmail" class=" col-form-label">Neko drugi</label>
+                  <label for="issuer" class=" col-form-label">Neko drugi</label>
                 </div>
               </div>
+              
               <mat-card-actions>
-                <button style="margin:2%; margin-left: 40%;" (click)="create()" mat-button>Create</button> 
+                <button style="margin:2%; margin-left: 40%;" mat-button>Create</button> 
                 </mat-card-actions>
             </form>
           </mat-card-content> 

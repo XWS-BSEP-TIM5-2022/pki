@@ -14,6 +14,7 @@ export class UserHomeComponent implements OnInit {
   endEntityCert : Certificate[] = []
   email: string = '';
   user: any;
+  certLoaded: boolean = false;
 
   constructor(private router: Router, private http: HttpClient) { }
 
@@ -46,6 +47,8 @@ export class UserHomeComponent implements OnInit {
           this.endEntityCert.push(c)
         }
       }
+
+      this.certLoaded = true;
     });
   }
 
