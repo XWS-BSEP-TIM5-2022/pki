@@ -52,8 +52,8 @@ public class CertificateMapper {
 		dto.setCertificateType(certificate.getCertificateType().toString());
 		Calendar today = Calendar.getInstance();
 		today.clear(Calendar.HOUR); today.clear(Calendar.MINUTE); today.clear(Calendar.SECOND);
-
 		dto.setIsValid(certificate.getValidTo().after(today.getTime()));
+		dto.setRevoked(certificate.isRevoked());
 
 		return dto;
 	}
