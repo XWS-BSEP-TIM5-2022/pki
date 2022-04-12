@@ -3,6 +3,7 @@ package com.security.pki.controller;
 import com.security.pki.dto.AllCertificatesViewDTO;
 import com.security.pki.dto.CreateCertificateDTO;
 import com.security.pki.dto.CreateSelfSignedCertificateDTO;
+import com.security.pki.dto.RevokeCertificateDTO;
 import com.security.pki.model.MyCertificate;
 import com.security.pki.model.User;
 import com.security.pki.service.CertificateService;
@@ -40,12 +41,15 @@ public class CertificateController {
     }
 
     @RequestMapping(value="/downloadCertificate/{id}", method = RequestMethod.GET)
-    public void downloadCertificate(@PathVariable Integer id) throws KeyStoreException, CertificateEncodingException, IOException {
-        System.out.println("TODO DOWNLOAD SERTIFIKATA");
+    public ResponseEntity<?> downloadCertificate(@PathVariable Integer id) throws KeyStoreException, CertificateEncodingException, IOException {
         MyCertificate cert = certificateService.findById(id);
+        if(cert.isRevoked()){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         Certificate certificate = certificateService.findCertificateBySerialNumber(cert.getSerialNumber(), cert.getCertificateType().toString());
         certificateService.downloadCert(certificate, cert.getSerialNumber());
 
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @RequestMapping(value="/findById/{id}", method = RequestMethod.GET)
@@ -98,6 +102,13 @@ public class CertificateController {
         return certificate.getUser();
     }
 
+
+    @RequestMapping(value="/revokeCerificate/{serialNumber}", method = RequestMethod.GET)
+    public void revokeCerificate(@PathVariable String serialNumber){
+        System.out.println("EVO ME OVDE:" + serialNumber);
+        certificateService.revokeCerificate(serialNumber);
+    }
+  
     @RequestMapping(value="/findCertificateBySerialNumber/{serialNumber}", method = RequestMethod.GET)
     public MyCertificate findCertificateBySerialNumber(@PathVariable String serialNumber) {
         return this.certificateService.findMyCertificateBySerialNumber(serialNumber);
