@@ -25,6 +25,9 @@ export class NewCertificateAdminComponent implements OnInit {
   ngOnInit(): void {
     this.loadUsers();
     this.loadIssuerCertificates();
+
+    console.log("cao")
+    console.log(this.certificate)
   }
 
   loadUsers(){
@@ -49,16 +52,6 @@ export class NewCertificateAdminComponent implements OnInit {
       })
 
       this.certificate.certificateDataDTO.emailAddress = this.certificate.subjectName
-
-      // TODO:
-      // this.allowedIssuerCertificates();
-      // // ako se promeni subject (user) kome se sertifikat izdaje, mora opet proveriti lista sertifikata za potpisivanje
-      // this.certificate.issuerName = "";
-      // this.certificate.issuerSerialNumber = "";
-  }
-
-  allowedIssuerCertificates(){
-
   }
 
   selectIssuer(){
@@ -70,28 +63,53 @@ export class NewCertificateAdminComponent implements OnInit {
       })
   }
 
-  createNewCertificate(){
-
-    if(this.certificate.certificateType == "SELF_SIGNED"){
-      this.selfSignedCertificate.certificateDataDTO = this.certificate.certificateDataDTO;
-      this.selfSignedCertificate.certificateType = this.certificate.certificateType;
-      this.selfSignedCertificate.certificateUsage = this.certificate.certificateUsage;
-      this.selfSignedCertificate.issuerName = this.certificate.subjectName;   // jer je self-signed
-      this.selfSignedCertificate.subjectName = this.certificate.subjectName;
-      this.selfSignedCertificate.validFrom = this.certificate.validFrom;
-      this.selfSignedCertificate.validTo = this.certificate.validTo;
-
-      this.certificateService.issueSelfSignedCertificate(this.selfSignedCertificate).subscribe(
-        (cer: CreateSelfSignedCertificate) => {}
-      )
-    } 
-    else {
-      console.log(this.certificate)
-
-      this.certificateService.issueCertificate(this.certificate).subscribe(
-        (cer: CreateCertificate) => {}
-      )
+  checkDates(){
+    if(this.certificate.validFrom != undefined && this.certificate.validTo != undefined){
+      if(this.certificate.validFrom > this.certificate.validTo){
+        this.certificate.validTo = undefined;
+        this.certificate.validFrom = undefined;
+      }
     }
   }
 
+  createNewCertificate(){
+
+    if(this.certificate.certificateType != undefined && this.certificate.certificateUsage != undefined &&
+      this.certificate.issuerName != undefined && this.certificate.issuerSerialNumber != undefined &&
+      this.certificate.subjectName != undefined && this.certificate.validFrom != undefined && 
+      this.certificate.validTo != undefined && this.certificate.certificateDataDTO.commonName != undefined &&
+      this.certificate.certificateDataDTO.countryCode != undefined && this.certificate.certificateDataDTO.emailAddress != undefined &&
+      this.certificate.certificateDataDTO.givenName != undefined && this.certificate.certificateDataDTO.organization != undefined &&
+      this.certificate.certificateDataDTO.organizationalUnit != undefined && this.certificate.certificateDataDTO.surname != undefined &&
+      this.certificate.certificateDataDTO.userId != undefined){
+
+      if(this.certificate.certificateType == "SELF_SIGNED"){
+        this.createSelfSignedCertificate();
+
+        this.certificateService.issueSelfSignedCertificate(this.selfSignedCertificate).subscribe(
+          (cer: CreateSelfSignedCertificate) => {}
+        )
+      } 
+      else {
+        console.log(this.certificate)
+
+        this.certificateService.issueCertificate(this.certificate).subscribe(
+          (cer: CreateCertificate) => {}
+        )
+      }
+    } 
+    else {
+      console.log('nisu sva polja popunjena');
+    }
+  }
+
+  createSelfSignedCertificate(){
+    this.selfSignedCertificate.certificateDataDTO = this.certificate.certificateDataDTO;
+    this.selfSignedCertificate.certificateType = this.certificate.certificateType;
+    this.selfSignedCertificate.certificateUsage = this.certificate.certificateUsage;
+    this.selfSignedCertificate.issuerName = this.certificate.subjectName;   // jer je self-signed
+    this.selfSignedCertificate.subjectName = this.certificate.subjectName;
+    this.selfSignedCertificate.validFrom = this.certificate.validFrom;
+    this.selfSignedCertificate.validTo = this.certificate.validTo;
+  }
 }

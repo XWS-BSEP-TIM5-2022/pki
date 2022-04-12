@@ -7,7 +7,7 @@
 
     <div class="card-holder row">
         <mat-card *ngFor="let c of caCert" class="example-card column">
-            <!-- <mat-card-title>{{c.certificateData.commonName}}</mat-card-title> -->
+            <mat-card-title>{{c.certificateData.commonName}}</mat-card-title>
             <mat-card-subtitle>Common name</mat-card-subtitle>
             <mat-card-content>
             <p><b>Valid from: </b> {{ c.validFrom }}</p>
