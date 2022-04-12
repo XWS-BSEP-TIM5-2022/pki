@@ -461,9 +461,13 @@ public class CertificateService {
                 List <CertificateChain> pom = certificateChainRepository.findByIssuerSerialNumber(s);
                 for(CertificateChain cc: pom){
                     System.out.println("OVAJ CE DA BUDE DODAT ZA POVLACENJE: " + cc.getSubjectSerialNumber());
+
+                    MyCertificate ms = certificateRepository.findBySerialNumber(cc.getSubjectSerialNumber());
+                    ms.setRevoked(true);
+                    certificateRepository.save(ms);
                     pronadjeniZaPovlacenje.add(cc.getSubjectSerialNumber());
                 }
-                //povuci ih
+
             }
 
             listaZaPovlacenje.clear();
