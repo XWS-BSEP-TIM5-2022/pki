@@ -11,6 +11,8 @@ export class Certificate{
     certificateUsage: string;
     certificateData : CertificateData = new CertificateData();
     user: User = new User();
+    commonName: string;
+    email: string;
 
     // constructor(commonName: string, revoked: boolean, validFrom: Date, validTo: Date){
     //     this.commonName = commonName;

@@ -1,13 +1,13 @@
 
 
-<section *ngIf="certLoaded">
+<section>
     <h1>CA certificates of {{email}}</h1>
 
     <mat-divider></mat-divider>
 
     <div class="card-holder row">
         <mat-card *ngFor="let c of caCert" class="example-card column">
-            <mat-card-title>{{c.certificateData.commonName}}</mat-card-title>
+            <mat-card-title>{{c.commonName}}</mat-card-title>
             <mat-card-subtitle>Common name</mat-card-subtitle>
             <mat-card-content>
             <p><b>Valid from: </b> {{ c.validFrom }}</p>
@@ -21,14 +21,14 @@
 
 </section>
 
-<section *ngIf="certLoaded">
+<section>
     <h1>End Entity certificates</h1>
 
     <mat-divider></mat-divider>  
 
     <div class="card-holder row">
         <mat-card *ngFor="let c of endEntityCert" class="example-card column">
-            <mat-card-title>{{c.certificateData.commonName}}</mat-card-title>
+            <mat-card-title>{{c.commonName}}</mat-card-title>
             <mat-card-subtitle>Common name</mat-card-subtitle>
             <mat-card-content>
             <p><b>Valid from: </b> {{ c.validFrom }}</p>
