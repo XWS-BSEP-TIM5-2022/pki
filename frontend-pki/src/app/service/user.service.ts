@@ -14,6 +14,10 @@ export class UserService {
     return this._http.get<User[]>(`${this.userPath}/findAll`)  
   }
 
+  findAllClients() {
+    return this._http.get<User[]>(`${this.userPath}/findAllClients`)  
+  }
+
   findById(id: number) {
     return this._http.get<User>(`${this.userPath}/getById/` + id)    
   }

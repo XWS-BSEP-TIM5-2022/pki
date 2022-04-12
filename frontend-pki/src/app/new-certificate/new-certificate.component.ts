@@ -39,7 +39,7 @@ export class NewCertificateComponent implements OnInit {
   }
 
   loadUsers(){
-    this.userService.findAll().subscribe(
+    this.userService.findAllClients().subscribe(
       (users: User[]) => {
         this.users = users;
       })
