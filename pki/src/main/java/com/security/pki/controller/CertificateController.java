@@ -40,12 +40,15 @@ public class CertificateController {
     }
 
     @RequestMapping(value="/downloadCertificate/{id}", method = RequestMethod.GET)
-    public void downloadCertificate(@PathVariable Integer id) throws KeyStoreException, CertificateEncodingException, IOException {
-        System.out.println("TODO DOWNLOAD SERTIFIKATA");
+    public ResponseEntity<?> downloadCertificate(@PathVariable Integer id) throws KeyStoreException, CertificateEncodingException, IOException {
         MyCertificate cert = certificateService.findById(id);
+        if(cert.isRevoked()){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         Certificate certificate = certificateService.findCertificateBySerialNumber(cert.getSerialNumber(), cert.getCertificateType().toString());
         certificateService.downloadCert(certificate, cert.getSerialNumber());
 
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
