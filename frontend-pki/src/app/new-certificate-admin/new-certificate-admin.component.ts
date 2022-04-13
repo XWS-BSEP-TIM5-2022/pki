@@ -7,8 +7,8 @@ import { CreateCertificate } from '../model/create-certificate';
 import { CreateSelfSignedCertificate } from '../model/create-self-signed-certificate';
 import { User } from '../model/user';
 import { CertificateService } from '../service/certificate.service';
-import { UserService } from '../service/user.service';
-
+import { UserService } from '../service/user.service'; 
+ 
 @Component({
   selector: 'app-new-certificate-admin',
   templateUrl: './new-certificate-admin.component.html',
@@ -16,7 +16,10 @@ import { UserService } from '../service/user.service';
 })
 export class NewCertificateAdminComponent implements OnInit {
 
-  constructor(private http: HttpClient, private userService: UserService, private certificateService: CertificateService, private router: Router) { }
+  constructor(private http: HttpClient, 
+     private userService: UserService,
+     private certificateService: CertificateService,
+     private router : Router) { }
 
   certificate: CreateCertificate = new CreateCertificate();
   selfSignedCertificate: CreateSelfSignedCertificate = new CreateSelfSignedCertificate();
@@ -169,7 +172,7 @@ export class NewCertificateAdminComponent implements OnInit {
               (cer: CreateSelfSignedCertificate) => {
                 alert("Certificate created successfully!")
                 this.certificate = new CreateCertificate()
-                this.ngOnInit()}
+                this.router.navigate(['admin-home'])}
             )
         } 
         else {
@@ -178,8 +181,9 @@ export class NewCertificateAdminComponent implements OnInit {
                 this.certificateService.issueCertificate(this.certificate).subscribe(
                   (cer: CreateCertificate) => { 
                     alert("Certificate created successfully!")
-                    this.certificate = new CreateCertificate()
-                    this.ngOnInit()}
+                    this.certificate = new CreateCertificate() 
+                    this.router.navigate(['admin-home'])
+                    }
                 )
             }
             else {

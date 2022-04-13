@@ -2,11 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Certificate } from '../model/certificate.model';
-import { CreateCertificate } from '../model/create-certificate';
-import { CreateSelfSignedCertificate } from '../model/create-self-signed-certificate';
+import { CreateCertificate } from '../model/create-certificate'; 
 import { User } from '../model/user';
 import { CertificateService } from '../service/certificate.service';
-import { UserService } from '../service/user.service';
+import { UserService } from '../service/user.service'; 
+
 
 @Component({
   selector: 'app-new-certificate',
@@ -15,7 +15,10 @@ import { UserService } from '../service/user.service';
 })
 export class NewCertificateComponent implements OnInit {
 
-  constructor(private http: HttpClient, private userService: UserService, private certificateService: CertificateService, private router: Router) { }
+  constructor(private http: HttpClient, 
+    private userService: UserService, 
+    private certificateService: CertificateService,
+    private router : Router) { }
 
   certificate: CreateCertificate = new CreateCertificate();
   users: User[] = [];
@@ -163,7 +166,8 @@ export class NewCertificateComponent implements OnInit {
         (cer: CreateCertificate) => { 
           alert("Certificate created successfully!")
           this.certificate = new CreateCertificate()
-          this.ngOnInit()}
+          this.router.navigate(['user-home'])
+        }
       )      
     } 
     else {

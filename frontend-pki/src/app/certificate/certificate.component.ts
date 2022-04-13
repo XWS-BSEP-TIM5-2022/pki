@@ -22,6 +22,8 @@ export class CertificateComponent implements OnInit {
   }
   userId: any;
   found: boolean;
+  expired: boolean = false;
+  serialNum : string;
 
   constructor(private route: ActivatedRoute,
     private router: Router,
@@ -59,6 +61,7 @@ export class CertificateComponent implements OnInit {
 
     this.certificateService.findById(this.id).subscribe((data) => {
       this.certificate = data;
+      this.serialNum = data.serialNumber
       console.log(this.certificate)
       this.dto.certType = data.certificateType;
       this.dto.serialNumber = data.serialNumber;
@@ -78,6 +81,15 @@ export class CertificateComponent implements OnInit {
       this.certificateService.findIssuerEmailBySerialNumber(dto).subscribe((data) => {
         this.issuer = data;
       });
+
+      this.certificateService.findBySerialNumber(this.serialNum).subscribe(
+        (issuer: Certificate) => {
+  
+          let date = <string> issuer.validTo
+          let dateFinal =  date.substring(6) + '-' + date.substring(3,5) + '-' + date.substring(0,2)
+          let maxDate = new Date(dateFinal)  
+          this.expired = (maxDate < new Date) 
+        }) 
 
     });
 
