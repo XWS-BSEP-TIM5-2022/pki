@@ -511,12 +511,14 @@ public class CertificateService {
         MyCertificate m = certificateRepository.findBySerialNumber(serialNumber);
         m.setRevoked(true);
         certificateRepository.save(m);
-
         while (listaZaPovlacenje.size() != 0){
             List<String> pronadjeniZaPovlacenje = new ArrayList<>();
             for(String s: listaZaPovlacenje){
                 List <CertificateChain> pom = certificateChainRepository.findByIssuerSerialNumber(s);
                 for(CertificateChain cc: pom){
+                    if(cc.getSubjectSerialNumber().equals(serialNumber)) {
+                        break;
+                    }
                     MyCertificate ms = certificateRepository.findBySerialNumber(cc.getSubjectSerialNumber());
                     ms.setRevoked(true);
                     certificateRepository.save(ms);

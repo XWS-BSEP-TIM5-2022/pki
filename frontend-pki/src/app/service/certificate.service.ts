@@ -50,4 +50,8 @@ export class CertificateService {
   findAllRootAndCAByUser(id: number) {
     return this._http.get<Certificate[]>(`${this.userPath}/findAllRootAndCAByUser/` + id)  
   }
+
+  downloadCertificate(id: number){
+    return this._http.get(`${this.userPath}/downloadCertificate/` + id);
+  }
 }

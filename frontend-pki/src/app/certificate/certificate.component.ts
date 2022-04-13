@@ -35,9 +35,13 @@ export class CertificateComponent implements OnInit {
   }
 
   downloadCertificate() {
-    this.http.get('http://localhost:8080/api/certificate/downloadCertificate/' + this.id)
+    // this.http.get('http://localhost:8080/api/certificate/downloadCertificate/' + this.id)
+    this.certificateService.downloadCertificate(this.id)
     .subscribe(data => { 
       alert('Certificate is downloaded')
+    },
+    err => {
+      alert('Certificate is revoked, cannot be downloaded')
     });
   }
 
