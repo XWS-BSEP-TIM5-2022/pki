@@ -7,7 +7,9 @@ import { CreateSelfSignedCertificate } from '../model/create-self-signed-certifi
 import { User } from '../model/user';
 import { CertificateService } from '../service/certificate.service';
 import { UserService } from '../service/user.service';
+import { Router } from '@angular/router';
 
+ 
 @Component({
   selector: 'app-new-certificate-admin',
   templateUrl: './new-certificate-admin.component.html',
@@ -15,7 +17,10 @@ import { UserService } from '../service/user.service';
 })
 export class NewCertificateAdminComponent implements OnInit {
 
-  constructor(private http: HttpClient, private userService: UserService, private certificateService: CertificateService) { }
+  constructor(private http: HttpClient, 
+     private userService: UserService,
+     private certificateService: CertificateService,
+     private router : Router) { }
 
   certificate: CreateCertificate = new CreateCertificate();
   selfSignedCertificate: CreateSelfSignedCertificate = new CreateSelfSignedCertificate();
@@ -159,7 +164,7 @@ export class NewCertificateAdminComponent implements OnInit {
               (cer: CreateSelfSignedCertificate) => {
                 alert("Certificate created successfully!")
                 this.certificate = new CreateCertificate()
-                this.ngOnInit()}
+                this.router.navigate(['admin-home'])}
             )
         } 
         else {
@@ -168,8 +173,9 @@ export class NewCertificateAdminComponent implements OnInit {
                 this.certificateService.issueCertificate(this.certificate).subscribe(
                   (cer: CreateCertificate) => { 
                     alert("Certificate created successfully!")
-                    this.certificate = new CreateCertificate()
-                    this.ngOnInit()}
+                    this.certificate = new CreateCertificate() 
+                    this.router.navigate(['admin-home'])
+                    }
                 )
             }
             else {

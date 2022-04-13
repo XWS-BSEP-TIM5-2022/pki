@@ -12,7 +12,10 @@ import { Component, OnInit } from '@angular/core';
 export class CertificateComponent implements OnInit {
 
   certificate : any;
-  id:any;
+  id:any; 
+  expired: boolean = false;
+  serialNum : string;
+
   constructor(private route: ActivatedRoute,
      private router: Router,
     private http : HttpClient,
@@ -23,8 +26,21 @@ export class CertificateComponent implements OnInit {
 
     this.certificateService.findById(this.id).subscribe((data) => {
       this.certificate = data;
+      this.serialNum = data.serialNumber
       console.log(this.certificate)
+
+      
+    this.certificateService.findBySerialNumber(this.serialNum).subscribe(
+      (issuer: Certificate) => {
+
+        let date = <string> issuer.validTo
+        let dateFinal =  date.substring(6) + '-' + date.substring(3,5) + '-' + date.substring(0,2)
+        let maxDate = new Date(dateFinal)  
+        this.expired = (maxDate < new Date) 
+      })
+  
     });
+   
   }
 
   downloadCertificate() {
