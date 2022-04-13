@@ -51,8 +51,8 @@ public class CertificateController {
     }
 
     @RequestMapping(value="/findById/{id}", method = RequestMethod.GET)
-    public MyCertificate findById(@PathVariable Integer id) {
-        return this.certificateService.findById(id);
+    public CertificateReviewDTO findById(@PathVariable Integer id) {
+        return this.certificateService.findDtoById(id);
     }
 
     @RequestMapping(value="/create", method = RequestMethod.POST)
@@ -126,11 +126,12 @@ public class CertificateController {
     }
 
     @RequestMapping(value="/findIssuerEmailBySerialNumber", method = RequestMethod.POST)
-    public ResponseEntity<?> findIssuerEmailBySerialNumber(@RequestBody RevokeCertificateDTO serialNumber){
-        if(certificateService.findIssuerEmailBySerialNumber(serialNumber) == null){
+    public ResponseEntity<?> findIssuerEmailBySerialNumber(@RequestBody RevokeCertificateDTO dto){
+        System.out.println("VRACAMOOO: " + certificateService.findIssuerEmailBySerialNumber(dto));
+        if(certificateService.findIssuerEmailBySerialNumber(dto) == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(certificateService.findIssuerEmailBySerialNumber(serialNumber), HttpStatus.OK);
+        return new ResponseEntity<>(certificateService.findIssuerEmailBySerialNumber(dto), HttpStatus.OK);
     }
 
     @RequestMapping(value="/findBySerialNumber/{serialNumber}", method = RequestMethod.GET)
