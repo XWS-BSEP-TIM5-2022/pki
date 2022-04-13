@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Certificate } from './../model/certificate.model';
 import { Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common'
+import { ThisReceiver } from '@angular/compiler';
 
 @Component({
   selector: 'app-certificate',
@@ -32,11 +33,18 @@ export class CertificateComponent implements OnInit {
       console.log(this.certificate)
       this.dto.certType = data.certificateType;
       this.dto.serialNumber = data.serialNumber;
-
       var dto = {
         'serialNumber': data.serialNumber,
         'certType': data.certificateType
       }
+
+      if(this.certificate.certificateType == "SELF_SIGNED"){
+        this.certificate.certificateType = "SELF SIGNED"
+      }  
+      else if(this.certificate.certificateType == "END_ENTITY"){
+        this.certificate.certificateType = "END ENTITY"
+      }
+    
       // let body = JSON.stringify(dto) 
       this.certificateService.findIssuerEmailBySerialNumber(dto).subscribe((data) => {
         this.issuer = data;
@@ -72,6 +80,5 @@ export class CertificateComponent implements OnInit {
       alert('Certificate is revoked')
     });
     this.router.navigate(['admin-home'])
-
   }
 }
