@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Certificate } from '../model/certificate.model';
 import { CreateCertificate } from '../model/create-certificate';
 import { CreateSelfSignedCertificate } from '../model/create-self-signed-certificate';
@@ -14,7 +15,7 @@ import { UserService } from '../service/user.service';
 })
 export class NewCertificateComponent implements OnInit {
 
-  constructor(private http: HttpClient, private userService: UserService, private certificateService: CertificateService) { }
+  constructor(private http: HttpClient, private userService: UserService, private certificateService: CertificateService, private router: Router) { }
 
   certificate: CreateCertificate = new CreateCertificate();
   users: User[] = [];
@@ -27,6 +28,16 @@ export class NewCertificateComponent implements OnInit {
   maxDate: Date;
 
   ngOnInit(): void {
+
+    let role = localStorage.getItem('role');
+    if (role == "ADMIN"){
+      this.router.navigate(['/admin-home'])
+      return;
+    } 
+    else if (role != "USER" && role!= "ADMIN"){
+      this.router.navigate(['/login'])
+      return;
+    }
 
     let idLocalStorage = localStorage.getItem('userId')
     this.http.get('http://localhost:8080/api/users/getById/' + idLocalStorage)

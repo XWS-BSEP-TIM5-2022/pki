@@ -14,11 +14,18 @@ export class CertificateComponent implements OnInit {
   certificate : any;
   id:any;
   constructor(private route: ActivatedRoute,
-     private router: Router,
+    private router: Router,
     private http : HttpClient,
     private certificateService: CertificateService) { }
 
   ngOnInit(): void {
+
+    let role = localStorage.getItem('role');
+    if (role != "USER" && role!= "ADMIN"){
+      this.router.navigate(['/login'])
+      return;
+    }
+
     this.id = +this.route.snapshot.paramMap.get('id')!;
 
     this.certificateService.findById(this.id).subscribe((data) => {

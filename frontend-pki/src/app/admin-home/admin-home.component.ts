@@ -18,6 +18,14 @@ export class AdminHomeComponent implements OnInit {
 
   ngOnInit(): void { 
 
+    let role = localStorage.getItem('role');
+    if (role == "USER"){
+      this.router.navigate(['/user-home'])
+    } 
+    else if (role != "USER" && role!= "ADMIN"){
+      this.router.navigate(['/login'])
+    }
+
     this.http.get<Certificate[]>('http://localhost:8080/api/certificate')
     .subscribe(data => {
       var allCertificates : Certificate[] = data   
