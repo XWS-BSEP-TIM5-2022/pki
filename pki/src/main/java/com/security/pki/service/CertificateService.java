@@ -1,9 +1,6 @@
 package com.security.pki.service;
 
-import com.security.pki.dto.AllCertificatesViewDTO;
-import com.security.pki.dto.CreateCertificateDTO;
-import com.security.pki.dto.CreateSelfSignedCertificateDTO;
-import com.security.pki.dto.RevokeCertificateDTO;
+import com.security.pki.dto.*;
 import com.security.pki.enums.CertificateType;
 import com.security.pki.mapper.CertificateMapper;
 import com.security.pki.model.*;
@@ -86,6 +83,11 @@ public class CertificateService {
 
     public MyCertificate findById(Integer id) {
         return this.certificateRepository.findById(id).orElseGet(null);
+    }
+
+    public CertificateReviewDTO findDtoById(Integer id) {
+        MyCertificate mc = this.certificateRepository.findById(id).orElseGet(null);
+        return new CertificateReviewDTO(mc);
     }
 
     public List<AllCertificatesViewDTO> findAllByUser(Integer id) {
@@ -537,8 +539,14 @@ public class CertificateService {
 
     public String findIssuerEmailBySerialNumber(RevokeCertificateDTO dto){
         if(dto.getCertType().equals(CertificateType.SELF_SIGNED.toString())){
+            System.out.println("U SS SAM");
+
             List<X509Certificate> roots= ksr.getCertificatesInKeyStore(getPath("root.jks"), password);
             for(X509Certificate c: roots){
+                String serial = new BigInteger(dto.getSerialNumber(), 16).toString();
+                String serijski = c.getSerialNumber().toString();
+                System.out.println("SERIJSKI SA FRONTA: " + serial);
+                System.out.println("SERIJSKI SA BEKA: " + serijski);
                 if(c.getSerialNumber().toString().equals(new BigInteger(dto.getSerialNumber(), 16).toString())){
                     System.out.println("ISSUER: " + c.getIssuerX500Principal().toString().split("=")[1]);
                     return c.getIssuerX500Principal().toString().split("=")[1];
@@ -546,6 +554,8 @@ public class CertificateService {
             }
         }
         else   if(dto.getCertType().equals(CertificateType.INTERMEDIATE.toString())){
+            System.out.println("U CA SAM");
+
             List<X509Certificate> roots= ksr.getCertificatesInKeyStore(getPath("ca.jks"), password);
             for(X509Certificate c: roots){
                 if(c.getSerialNumber().toString().equals(new BigInteger(dto.getSerialNumber(), 16).toString())){
@@ -555,6 +565,8 @@ public class CertificateService {
             }
         }
         else   if(dto.getCertType().equals(CertificateType.END_ENTITY.toString())){
+            System.out.println("U EE SAM");
+
             List<X509Certificate> roots= ksr.getCertificatesInKeyStore(getPath("ee.jks"), password);
             for(X509Certificate c: roots){
                 if(c.getSerialNumber().toString().equals(new BigInteger(dto.getSerialNumber(), 16).toString())){

@@ -78,6 +78,7 @@ export class CertificateComponent implements OnInit {
       }
     
       // let body = JSON.stringify(dto) 
+      console.log(dto)
       this.certificateService.findIssuerEmailBySerialNumber(dto).subscribe((data) => {
         this.issuer = data;
       });
