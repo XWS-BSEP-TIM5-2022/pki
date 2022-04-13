@@ -20,6 +20,16 @@ export class UserHomeComponent implements OnInit {
 
   ngOnInit(): void {
 
+    let role = localStorage.getItem('role');
+    if (role == "ADMIN"){
+      this.router.navigate(['/admin-home'])
+      return;
+    } 
+    else if (role != "USER" && role!= "ADMIN"){
+      this.router.navigate(['/login'])
+      return;
+    }
+
     let idLocalStorage = localStorage.getItem('userId')
     this.http.get('http://localhost:8080/api/users/getById/' + idLocalStorage)
     .subscribe(data => {
@@ -41,7 +51,7 @@ export class UserHomeComponent implements OnInit {
       var allCertificates : Certificate[] = data
       for(var c of allCertificates){
         if(c.certificateType === "INTERMEDIATE"){
-          console.log(c)
+          // console.log(c)
           this.caCert.push(c);
         }else if (c.certificateType === "END_ENTITY"){
           this.endEntityCert.push(c)

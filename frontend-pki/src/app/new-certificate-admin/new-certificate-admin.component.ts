@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Certificate } from '../model/certificate.model';
 import { CertificateData } from '../model/certificateData.model';
 import { CreateCertificate } from '../model/create-certificate';
@@ -15,7 +16,7 @@ import { UserService } from '../service/user.service';
 })
 export class NewCertificateAdminComponent implements OnInit {
 
-  constructor(private http: HttpClient, private userService: UserService, private certificateService: CertificateService) { }
+  constructor(private http: HttpClient, private userService: UserService, private certificateService: CertificateService, private router: Router) { }
 
   certificate: CreateCertificate = new CreateCertificate();
   selfSignedCertificate: CreateSelfSignedCertificate = new CreateSelfSignedCertificate();
@@ -24,11 +25,24 @@ export class NewCertificateAdminComponent implements OnInit {
   selectedIssuerCertificate: Certificate;
   adminEmail: any;
   adminId: any;
+  minDate: Date = new Date()
+  maxDate: Date;
 
   ngOnInit(): void {
-    this.adminEmail = localStorage.getItem('email')
-    this.adminId = localStorage.getItem('userId')
+    
+    let role = localStorage.getItem('role');
+    if (role == "USER"){
+      this.router.navigate(['/user-home'])
+      return;
+    } 
+    else if (role != "USER" && role!= "ADMIN"){
+      this.router.navigate(['/login'])
+      return;
+    }
 
+    this.adminEmail = localStorage.getItem('email')
+    this.adminId = localStorage.getItem('userId');
+ 
     this.loadUsers();
     this.loadIssuerCertificates();
   }
@@ -69,6 +83,22 @@ export class NewCertificateAdminComponent implements OnInit {
   selectIssuer(){
     this.certificate.validTo = undefined;
     this.certificate.validFrom = undefined;
+
+    this.certificateService.findBySerialNumber(this.certificate.issuerSerialNumber).subscribe(
+      (issuer: Certificate) => {
+        let dateFrom = <string> issuer.validFrom
+        let dateFromFinal =  new Date(dateFrom.substring(6) + '-' + dateFrom.substring(3,5) + '-' + dateFrom.substring(0,2))
+        this.minDate = new Date()
+        if ( this.minDate < dateFromFinal){
+
+          this.minDate = dateFromFinal
+        } 
+        
+        let date = <string> issuer.validTo
+        let dateFinal =  date.substring(6) + '-' + date.substring(3,5) + '-' + date.substring(0,2)
+        this.maxDate = new Date(dateFinal)  
+      })
+
 
     this.certificateService.findUserByCertificateSerialNumber(this.certificate.issuerSerialNumber).subscribe(
       (issuer: User) => {
@@ -136,14 +166,20 @@ export class NewCertificateAdminComponent implements OnInit {
             this.createSelfSignedCertificate();
 
             this.certificateService.issueSelfSignedCertificate(this.selfSignedCertificate).subscribe(
-              (cer: CreateSelfSignedCertificate) => {}
+              (cer: CreateSelfSignedCertificate) => {
+                alert("Certificate created successfully!")
+                this.certificate = new CreateCertificate()
+                this.ngOnInit()}
             )
         } 
         else {
             if(this.certificate.issuerName != undefined && this.certificate.issuerSerialNumber != undefined) {
 
                 this.certificateService.issueCertificate(this.certificate).subscribe(
-                  (cer: CreateCertificate) => {}
+                  (cer: CreateCertificate) => { 
+                    alert("Certificate created successfully!")
+                    this.certificate = new CreateCertificate()
+                    this.ngOnInit()}
                 )
             }
             else {
@@ -152,6 +188,7 @@ export class NewCertificateAdminComponent implements OnInit {
         }
     } 
     else {
+      alert("All fields must be filled in!")
       console.log('nisu sva polja popunjena');
     }
   }
@@ -166,3 +203,7 @@ export class NewCertificateAdminComponent implements OnInit {
     this.selfSignedCertificate.validTo = this.certificate.validTo;
   }
 }
+function moment(dateString: any, arg1: string): Date {
+  throw new Error('Function not implemented.');
+}
+

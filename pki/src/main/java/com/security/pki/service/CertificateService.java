@@ -517,6 +517,9 @@ public class CertificateService {
             for(String s: revokeList){
                 List <CertificateChain> pom = certificateChainRepository.findByIssuerSerialNumber(s);
                 for(CertificateChain cc: pom){
+                    if(cc.getSubjectSerialNumber().equals(serialNumber)) {
+                        break;
+                    }
                     MyCertificate ms = certificateRepository.findBySerialNumber(cc.getSubjectSerialNumber());
                     ms.setRevoked(true);
                     certificateRepository.save(ms);

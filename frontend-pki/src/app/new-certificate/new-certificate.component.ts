@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Certificate } from '../model/certificate.model';
 import { CreateCertificate } from '../model/create-certificate';
 import { CreateSelfSignedCertificate } from '../model/create-self-signed-certificate';
@@ -14,7 +15,7 @@ import { UserService } from '../service/user.service';
 })
 export class NewCertificateComponent implements OnInit {
 
-  constructor(private http: HttpClient, private userService: UserService, private certificateService: CertificateService) { }
+  constructor(private http: HttpClient, private userService: UserService, private certificateService: CertificateService, private router: Router) { }
 
   certificate: CreateCertificate = new CreateCertificate();
   users: User[] = [];
@@ -23,8 +24,20 @@ export class NewCertificateComponent implements OnInit {
   user: any = new User();
   userId: number; 
   loadedUser: boolean = false;
+  minDate: Date = new Date();
+  maxDate: Date;
 
   ngOnInit(): void {
+
+    let role = localStorage.getItem('role');
+    if (role == "ADMIN"){
+      this.router.navigate(['/admin-home'])
+      return;
+    } 
+    else if (role != "USER" && role!= "ADMIN"){
+      this.router.navigate(['/login'])
+      return;
+    }
 
     let idLocalStorage = localStorage.getItem('userId')
     this.http.get('http://localhost:8080/api/users/getById/' + idLocalStorage)
@@ -65,6 +78,23 @@ export class NewCertificateComponent implements OnInit {
   selectIssuer(){
     this.certificate.validTo = undefined;
     this.certificate.validFrom = undefined;
+
+    this.certificateService.findBySerialNumber(this.certificate.issuerSerialNumber).subscribe(
+      (issuer: Certificate) => {
+        
+        let dateFrom = <string> issuer.validFrom
+        let dateFromFinal =  new Date(dateFrom.substring(6) + '-' + dateFrom.substring(3,5) + '-' + dateFrom.substring(0,2))
+        this.minDate = new Date()
+        if ( this.minDate < dateFromFinal){
+
+          this.minDate = dateFromFinal
+        } 
+
+        let date = <string> issuer.validTo
+        let dateToFinal =  date.substring(6) + '-' + date.substring(3,5) + '-' + date.substring(0,2)
+        this.maxDate = new Date(dateToFinal)  
+      })
+
 
     this.certificateService.findUserByCertificateSerialNumber(this.certificate.issuerSerialNumber).subscribe(
       (issuer: User) => {
@@ -130,10 +160,14 @@ export class NewCertificateComponent implements OnInit {
         this.certificate.certificateDataDTO.userId != undefined){
 
       this.certificateService.issueCertificate(this.certificate).subscribe(
-        (cer: CreateCertificate) => {}
+        (cer: CreateCertificate) => { 
+          alert("Certificate created successfully!")
+          this.certificate = new CreateCertificate()
+          this.ngOnInit()}
       )      
     } 
     else {
+      alert("All fields must be filled in!")
       console.log('nisu sva polja popunjena');
     }
   }

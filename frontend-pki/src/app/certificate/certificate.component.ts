@@ -20,13 +20,42 @@ export class CertificateComponent implements OnInit {
     "serialNumber": "",
     "certType": ""
   }
+  userId: any;
+  found: boolean;
+
   constructor(private route: ActivatedRoute,
-     private router: Router,
+    private router: Router,
     private http : HttpClient,
     private certificateService: CertificateService) { }
 
   ngOnInit(): void {
+
+    let role = localStorage.getItem('role');
+    if (role != "USER" && role!= "ADMIN"){
+      this.router.navigate(['/login'])
+      return;
+    }
+
     this.id = +this.route.snapshot.paramMap.get('id')!;
+    this.userId = localStorage.getItem('userId');
+
+    if (role == "USER") {
+      this.certificateService.findAllByUserId(this.userId).subscribe(
+        (certificates: Certificate[]) => {
+
+          for(let cer of certificates){
+            if (cer.id == this.id){
+              this.found = true;
+            }
+          }
+    
+          if (!this.found) {
+              this.router.navigate(['/user-home'])
+              return;
+          }
+        }
+      );
+    }  
 
     this.certificateService.findById(this.id).subscribe((data) => {
       this.certificate = data;
@@ -50,7 +79,6 @@ export class CertificateComponent implements OnInit {
         this.issuer = data;
       });
 
-
     });
 
 
@@ -59,9 +87,13 @@ export class CertificateComponent implements OnInit {
   }
 
   downloadCertificate() {
-    this.http.get('http://localhost:8080/api/certificate/downloadCertificate/' + this.id)
+    // this.http.get('http://localhost:8080/api/certificate/downloadCertificate/' + this.id)
+    this.certificateService.downloadCertificate(this.id)
     .subscribe(data => { 
       alert('Certificate is downloaded')
+    },
+    err => {
+      alert('Certificate is revoked, cannot be downloaded')
     });
   }
 

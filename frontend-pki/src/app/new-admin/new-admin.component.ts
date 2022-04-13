@@ -13,6 +13,15 @@ export class NewAdminComponent implements OnInit {
   constructor(private http: HttpClient, private router: Router) { }
 
   ngOnInit(): void {
+    let role = localStorage.getItem('role');
+    if (role == "USER"){
+      this.router.navigate(['/user-home'])
+      return;
+    } 
+    else if (role != "USER" && role!= "ADMIN"){
+      this.router.navigate(['/login'])
+      return;
+    }
   }
 
   email = new FormControl('', [Validators.required, Validators.email]);

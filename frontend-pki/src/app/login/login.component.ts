@@ -40,14 +40,20 @@ export class LoginComponent implements OnInit {
     const headers = { 'content-type': 'application/json'}
     this.http.post('http://localhost:8080/api/users/login', body, {'headers': headers })
     .subscribe(data => {
-      this.user = data
-      localStorage.setItem('userId', this.user.id);
-      localStorage.setItem('email', this.user.email)
-      localStorage.setItem('role', this.user.userType);
-      if(this.user.userType == "ADMIN"){
-        this.router.navigate(['admin-home'])
-      } else {
-        this.router.navigate(['user-home'])
+
+      if(data == "NOT_FOUND"){
+        alert('Invalid email and/or password')
+      } 
+      else{
+        this.user = data
+        localStorage.setItem('userId', this.user.id);
+        localStorage.setItem('email', this.user.email)
+        localStorage.setItem('role', this.user.userType);
+        if(this.user.userType == "ADMIN"){
+          this.router.navigate(['admin-home'])
+        } else {
+          this.router.navigate(['user-home'])
+        }
       }
     },
     err => {

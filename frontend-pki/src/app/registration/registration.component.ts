@@ -62,6 +62,7 @@ export class RegistrationComponent implements OnInit {
     this.http.post('http://localhost:8080/api/users/signup', body, {'headers': headers })
     .subscribe(data => {
       localStorage.setItem('userId', JSON.stringify(data))
+      localStorage.setItem('role', "USER");
       this.router.navigate(['user-home'])
     })
   }

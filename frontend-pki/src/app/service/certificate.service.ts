@@ -21,6 +21,10 @@ export class CertificateService {
     return this._http.get<Certificate>(`${this.userPath}/findById/` + id)  
   }
 
+  findBySerialNumber(id:any) {
+    return this._http.get<Certificate>(`${this.userPath}/findBySerialNumber/` + id)  
+  }
+
   findAllRootsAndCA() {
     return this._http.get<Certificate[]>(`${this.userPath}/findAllRootsAndCA`)  
   }
@@ -53,4 +57,11 @@ export class CertificateService {
     return this._http.post('http://localhost:8080/api/certificate/findIssuerEmailBySerialNumber', dto, {responseType: 'text'})
   } 
 
+  downloadCertificate(id: number){
+    return this._http.get(`${this.userPath}/downloadCertificate/` + id);
+  }
+
+  findAllByUserId(id: number) {
+    return this._http.get<Certificate[]>(`${this.userPath}/getAllByUser/` + id)  
+  }
 }
