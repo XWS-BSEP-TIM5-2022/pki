@@ -126,4 +126,10 @@ public class CertificateController {
 
         return certificates;
     }
+
+    @RequestMapping(value="/findIssuerEmailBySerialNumber", method = RequestMethod.GET)
+    public String findIssuerEmailBySerialNumber(@RequestBody RevokeCertificateDTO serialNumber){
+        return certificateService.findIssuerEmailBySerialNumber(serialNumber);
+    }
+
 }
