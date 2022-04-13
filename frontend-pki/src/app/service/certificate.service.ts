@@ -54,4 +54,8 @@ export class CertificateService {
   downloadCertificate(id: number){
     return this._http.get(`${this.userPath}/downloadCertificate/` + id);
   }
+
+  findAllByUserId(id: number) {
+    return this._http.get<Certificate[]>(`${this.userPath}/getAllByUser/` + id)  
+  }
 }

@@ -13,6 +13,9 @@ export class CertificateComponent implements OnInit {
 
   certificate : any;
   id:any;
+  userId: any;
+  found: boolean;
+
   constructor(private route: ActivatedRoute,
     private router: Router,
     private http : HttpClient,
@@ -27,10 +30,29 @@ export class CertificateComponent implements OnInit {
     }
 
     this.id = +this.route.snapshot.paramMap.get('id')!;
+    this.userId = localStorage.getItem('userId');
+
+    if (role == "USER") {
+      this.certificateService.findAllByUserId(this.userId).subscribe(
+        (certificates: Certificate[]) => {
+
+          for(let cer of certificates){
+            if (cer.id == this.id){
+              this.found = true;
+            }
+          }
+    
+          if (!this.found) {
+              this.router.navigate(['/user-home'])
+              return;
+          }
+        }
+      );
+    }  
 
     this.certificateService.findById(this.id).subscribe((data) => {
       this.certificate = data;
-      console.log(this.certificate)
+      //console.log(this.certificate)
     });
   }
 

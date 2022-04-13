@@ -51,7 +51,7 @@ export class UserHomeComponent implements OnInit {
       var allCertificates : Certificate[] = data
       for(var c of allCertificates){
         if(c.certificateType === "INTERMEDIATE"){
-          console.log(c)
+          // console.log(c)
           this.caCert.push(c);
         }else if (c.certificateType === "END_ENTITY"){
           this.endEntityCert.push(c)
