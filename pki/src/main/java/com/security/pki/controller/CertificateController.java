@@ -1,9 +1,7 @@
 package com.security.pki.controller;
 
-import com.security.pki.dto.AllCertificatesViewDTO;
-import com.security.pki.dto.CreateCertificateDTO;
-import com.security.pki.dto.CreateSelfSignedCertificateDTO;
-import com.security.pki.dto.RevokeCertificateDTO;
+import com.security.pki.dto.*;
+import com.security.pki.mapper.CertificateMapper;
 import com.security.pki.model.MyCertificate;
 import com.security.pki.model.User;
 import com.security.pki.service.CertificateService;
@@ -125,5 +123,11 @@ public class CertificateController {
         }
 
         return certificates;
+    }
+
+    @RequestMapping(value="/findBySerialNumber/{serialNumber}", method = RequestMethod.GET)
+    public AllCertificatesViewDTO findBySerialNumber(@PathVariable String serialNumber) {
+        CertificateMapper certificateMapper = new CertificateMapper();
+        return certificateMapper.certificateWithCommonNameToCertificateDto(this.certificateService.findMyCertificateBySerialNumber(serialNumber));
     }
 }

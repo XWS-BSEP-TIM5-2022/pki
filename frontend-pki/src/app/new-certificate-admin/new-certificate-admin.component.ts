@@ -24,8 +24,11 @@ export class NewCertificateAdminComponent implements OnInit {
   selectedIssuerCertificate: Certificate;
   adminEmail: any;
   adminId: any;
+  minDate: Date = new Date()
+  maxDate: Date;
 
   ngOnInit(): void {
+    
     this.adminEmail = localStorage.getItem('email')
     this.adminId = localStorage.getItem('userId');
  
@@ -70,6 +73,22 @@ export class NewCertificateAdminComponent implements OnInit {
   selectIssuer(){
     this.certificate.validTo = undefined;
     this.certificate.validFrom = undefined;
+
+    this.certificateService.findBySerialNumber(this.certificate.issuerSerialNumber).subscribe(
+      (issuer: Certificate) => {
+        let dateFrom = <string> issuer.validFrom
+        let dateFromFinal =  new Date(dateFrom.substring(6) + '-' + dateFrom.substring(3,5) + '-' + dateFrom.substring(0,2))
+        this.minDate = new Date()
+        if ( this.minDate < dateFromFinal){
+
+          this.minDate = dateFromFinal
+        } 
+        
+        let date = <string> issuer.validTo
+        let dateFinal =  date.substring(6) + '-' + date.substring(3,5) + '-' + date.substring(0,2)
+        this.maxDate = new Date(dateFinal)  
+      })
+
 
     this.certificateService.findUserByCertificateSerialNumber(this.certificate.issuerSerialNumber).subscribe(
       (issuer: User) => {
@@ -137,14 +156,20 @@ export class NewCertificateAdminComponent implements OnInit {
             this.createSelfSignedCertificate();
 
             this.certificateService.issueSelfSignedCertificate(this.selfSignedCertificate).subscribe(
-              (cer: CreateSelfSignedCertificate) => {}
+              (cer: CreateSelfSignedCertificate) => {
+                alert("Certificate created successfully!")
+                this.certificate = new CreateCertificate()
+                this.ngOnInit()}
             )
         } 
         else {
             if(this.certificate.issuerName != undefined && this.certificate.issuerSerialNumber != undefined) {
 
                 this.certificateService.issueCertificate(this.certificate).subscribe(
-                  (cer: CreateCertificate) => {}
+                  (cer: CreateCertificate) => { 
+                    alert("Certificate created successfully!")
+                    this.certificate = new CreateCertificate()
+                    this.ngOnInit()}
                 )
             }
             else {
@@ -168,3 +193,7 @@ export class NewCertificateAdminComponent implements OnInit {
     this.selfSignedCertificate.validTo = this.certificate.validTo;
   }
 }
+function moment(dateString: any, arg1: string): Date {
+  throw new Error('Function not implemented.');
+}
+
