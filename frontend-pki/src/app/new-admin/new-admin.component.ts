@@ -16,9 +16,11 @@ export class NewAdminComponent implements OnInit {
     let role = localStorage.getItem('role');
     if (role == "USER"){
       this.router.navigate(['/user-home'])
+      return;
     } 
     else if (role != "USER" && role!= "ADMIN"){
       this.router.navigate(['/login'])
+      return;
     }
   }
 
