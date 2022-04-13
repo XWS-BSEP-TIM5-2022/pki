@@ -125,6 +125,14 @@ public class CertificateController {
         return certificates;
     }
 
+    @RequestMapping(value="/findIssuerEmailBySerialNumber", method = RequestMethod.POST)
+    public ResponseEntity<?> findIssuerEmailBySerialNumber(@RequestBody RevokeCertificateDTO serialNumber){
+        if(certificateService.findIssuerEmailBySerialNumber(serialNumber) == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(certificateService.findIssuerEmailBySerialNumber(serialNumber), HttpStatus.OK);
+    }
+
     @RequestMapping(value="/findBySerialNumber/{serialNumber}", method = RequestMethod.GET)
     public AllCertificatesViewDTO findBySerialNumber(@PathVariable String serialNumber) {
         CertificateMapper certificateMapper = new CertificateMapper();

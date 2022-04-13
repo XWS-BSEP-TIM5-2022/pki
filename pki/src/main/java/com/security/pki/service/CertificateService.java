@@ -505,15 +505,16 @@ public class CertificateService {
 
 
     public void revokeCerificate(String serialNumber){
-        List<String> listaZaPovlacenje = new ArrayList<>();
-        listaZaPovlacenje.add(serialNumber);
+        List<String> revokeList = new ArrayList<>();
+        revokeList.add(serialNumber);
 
         MyCertificate m = certificateRepository.findBySerialNumber(serialNumber);
         m.setRevoked(true);
         certificateRepository.save(m);
-        while (listaZaPovlacenje.size() != 0){
-            List<String> pronadjeniZaPovlacenje = new ArrayList<>();
-            for(String s: listaZaPovlacenje){
+
+        while (revokeList.size() != 0){
+            List<String> findForRevoke = new ArrayList<>();
+            for(String s: revokeList){
                 List <CertificateChain> pom = certificateChainRepository.findByIssuerSerialNumber(s);
                 for(CertificateChain cc: pom){
                     if(cc.getSubjectSerialNumber().equals(serialNumber)) {
@@ -522,13 +523,45 @@ public class CertificateService {
                     MyCertificate ms = certificateRepository.findBySerialNumber(cc.getSubjectSerialNumber());
                     ms.setRevoked(true);
                     certificateRepository.save(ms);
-                    pronadjeniZaPovlacenje.add(cc.getSubjectSerialNumber());
+                    findForRevoke.add(cc.getSubjectSerialNumber());
                 }
 
             }
-            listaZaPovlacenje.clear();
-            listaZaPovlacenje.addAll(pronadjeniZaPovlacenje);
+            revokeList.clear();
+            revokeList.addAll(findForRevoke);
         }
+    }
+
+
+    public String findIssuerEmailBySerialNumber(RevokeCertificateDTO dto){
+        if(dto.getCertType().equals(CertificateType.SELF_SIGNED.toString())){
+            List<X509Certificate> roots= ksr.getCertificatesInKeyStore(getPath("root.jks"), password);
+            for(X509Certificate c: roots){
+                if(c.getSerialNumber().toString().equals(new BigInteger(dto.getSerialNumber(), 16).toString())){
+                    System.out.println("ISSUER: " + c.getIssuerX500Principal().toString().split("=")[1]);
+                    return c.getIssuerX500Principal().toString().split("=")[1];
+                }
+            }
+        }
+        else   if(dto.getCertType().equals(CertificateType.INTERMEDIATE.toString())){
+            List<X509Certificate> roots= ksr.getCertificatesInKeyStore(getPath("ca.jks"), password);
+            for(X509Certificate c: roots){
+                if(c.getSerialNumber().toString().equals(new BigInteger(dto.getSerialNumber(), 16).toString())){
+                    System.out.println("ISSUER: " + c.getIssuerX500Principal().toString().split("=")[1]);
+                    return c.getIssuerX500Principal().toString().split("=")[1];
+                }
+            }
+        }
+        else   if(dto.getCertType().equals(CertificateType.END_ENTITY.toString())){
+            List<X509Certificate> roots= ksr.getCertificatesInKeyStore(getPath("ee.jks"), password);
+            for(X509Certificate c: roots){
+                if(c.getSerialNumber().toString().equals(new BigInteger(dto.getSerialNumber(), 16).toString())){
+                    System.out.println("ISSUER: " + c.getIssuerX500Principal().toString().split("=")[1]);
+                    return c.getIssuerX500Principal().toString().split("=")[1];
+                }
+            }
+        }
+        return null;
     }
 }
 
