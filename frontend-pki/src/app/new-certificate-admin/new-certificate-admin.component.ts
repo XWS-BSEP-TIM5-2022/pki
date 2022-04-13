@@ -1,14 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Certificate } from '../model/certificate.model';
 import { CertificateData } from '../model/certificateData.model';
 import { CreateCertificate } from '../model/create-certificate';
 import { CreateSelfSignedCertificate } from '../model/create-self-signed-certificate';
 import { User } from '../model/user';
 import { CertificateService } from '../service/certificate.service';
-import { UserService } from '../service/user.service';
-import { Router } from '@angular/router';
-
+import { UserService } from '../service/user.service'; 
  
 @Component({
   selector: 'app-new-certificate-admin',
@@ -34,10 +33,19 @@ export class NewCertificateAdminComponent implements OnInit {
 
   ngOnInit(): void {
     
+    let role = localStorage.getItem('role');
+    if (role == "USER"){
+      this.router.navigate(['/user-home'])
+      return;
+    } 
+    else if (role != "USER" && role!= "ADMIN"){
+      this.router.navigate(['/login'])
+      return;
+    }
+
     this.adminEmail = localStorage.getItem('email')
     this.adminId = localStorage.getItem('userId');
  
-
     this.loadUsers();
     this.loadIssuerCertificates();
   }

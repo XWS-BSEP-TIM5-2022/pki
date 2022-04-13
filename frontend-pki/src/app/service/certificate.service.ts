@@ -5,6 +5,8 @@ import { Certificate } from '../model/certificate.model';
 import { User } from '../model/user';
 import { CreateCertificate } from '../model/create-certificate';
 import { CreateSelfSignedCertificate } from '../model/create-self-signed-certificate';
+import {map} from 'rxjs/operators';   
+
 
 @Injectable({
   providedIn: 'root'
@@ -49,5 +51,17 @@ export class CertificateService {
 
   findAllRootAndCAByUser(id: number) {
     return this._http.get<Certificate[]>(`${this.userPath}/findAllRootAndCAByUser/` + id)  
+  }
+
+  findIssuerEmailBySerialNumber(dto){
+    return this._http.post('http://localhost:8080/api/certificate/findIssuerEmailBySerialNumber', dto, {responseType: 'text'})
+  } 
+
+  downloadCertificate(id: number){
+    return this._http.get(`${this.userPath}/downloadCertificate/` + id);
+  }
+
+  findAllByUserId(id: number) {
+    return this._http.get<Certificate[]>(`${this.userPath}/getAllByUser/` + id)  
   }
 }
