@@ -37,11 +37,10 @@ export class CertificateComponent implements OnInit {
         'serialNumber': data.serialNumber,
         'certType': data.certificateType
       }
-          
-     this.certificateService.findIssuerEmailBySerialNumber(this.dto).subscribe((data) => {
-       this.issuer = data;
-     });
-
+      // let body = JSON.stringify(dto) 
+      this.certificateService.findIssuerEmailBySerialNumber(dto).subscribe((data) => {
+        this.issuer = data;
+      });
 
 
     });

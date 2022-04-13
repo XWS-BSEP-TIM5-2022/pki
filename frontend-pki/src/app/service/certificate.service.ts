@@ -50,12 +50,7 @@ export class CertificateService {
   }
 
   findIssuerEmailBySerialNumber(dto){
-    return this._http.get<String>(`${this.userPath}/findIssuerEmailBySerialNumber`, dto)
+    return this._http.post('http://localhost:8080/api/certificate/findIssuerEmailBySerialNumber', dto, {responseType: 'text'})
   } 
 
-  //   return this._http.get("http://localhost:8080/api/certificate/findIssuerEmailBySerialNumber", dto)
-  //   .pipe(map(issuer => { 
-  //       return issuer;
-  //     }));
-  // }
 }
