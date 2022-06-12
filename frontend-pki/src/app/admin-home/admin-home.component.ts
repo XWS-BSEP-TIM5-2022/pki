@@ -19,11 +19,11 @@ export class AdminHomeComponent implements OnInit {
   ngOnInit(): void { 
 
     let role = localStorage.getItem('role');
-    if (role == "USER"){
+    if (role == "ROLE_USER"){
       this.router.navigate(['/user-home'])
       return;
     } 
-    else if (role != "USER" && role!= "ADMIN"){
+    else if (role != "ROLE_USER" && role!= "ROLE_ADMIN"){
       this.router.navigate(['/login'])
       return;
     }

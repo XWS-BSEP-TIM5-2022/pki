@@ -33,7 +33,7 @@ export class CertificateComponent implements OnInit {
   ngOnInit(): void {
 
     let role = localStorage.getItem('role');
-    if (role != "USER" && role!= "ADMIN"){
+    if (role != "ROLE_USER" && role!= "ROLE_ADMIN"){
       this.router.navigate(['/login'])
       return;
     }
@@ -41,7 +41,7 @@ export class CertificateComponent implements OnInit {
     this.id = +this.route.snapshot.paramMap.get('id')!;
     this.userId = localStorage.getItem('userId');
 
-    if (role == "USER") {
+    if (role == "ROLE_USER") {
       this.certificateService.findAllByUserId(this.userId).subscribe(
         (certificates: Certificate[]) => {
 
@@ -111,7 +111,7 @@ export class CertificateComponent implements OnInit {
   }
 
   isAdmin(){
-    if(localStorage.getItem('role') == "ADMIN"){
+    if(localStorage.getItem('role') == "ROLE_ADMIN"){
       return true;
     } else {
       return false;

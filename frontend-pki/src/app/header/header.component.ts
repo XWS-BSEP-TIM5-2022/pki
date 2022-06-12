@@ -14,7 +14,7 @@ export class HeaderComponent implements OnInit {
   }
 
   isAdmin(){
-    if(localStorage.getItem('role') == "ADMIN"){
+    if(localStorage.getItem('role') == "ROLE_ADMIN"){
       return true;
     } else {
       return false;

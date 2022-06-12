@@ -33,11 +33,11 @@ export class NewCertificateComponent implements OnInit {
   ngOnInit(): void {
 
     let role = localStorage.getItem('role');
-    if (role == "ADMIN"){
+    if (role == "ROLE_ADMIN"){
       this.router.navigate(['/admin-home'])
       return;
     } 
-    else if (role != "USER" && role!= "ADMIN"){
+    else if (role != "ROLE_USER" && role!= "ROLE_ADMIN"){
       this.router.navigate(['/login'])
       return;
     }

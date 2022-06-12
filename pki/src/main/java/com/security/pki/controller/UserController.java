@@ -25,27 +25,10 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, value = "/auth/signup")
-    public ResponseEntity<?> user(@RequestBody SignUpUserDTO dto) throws Exception {
-        User user = userService.register(dto);
-        if(user == null) {
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return ResponseEntity.ok(user.getId());
-    }
 
     @RequestMapping(method = RequestMethod.GET, value = "/getById/{id}")
     public ResponseEntity getUserById(@PathVariable Integer id) {
         User user = userService.findUserById(id);
-        if(user == null) {
-            return ResponseEntity.ok(HttpStatus.NOT_FOUND);
-        }
-        return ResponseEntity.ok(new UserMapper().UserToUserDto(user));
-    }
-
-    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, value = "/auth/login")
-    public ResponseEntity<?> login(@RequestBody LoginDTO dto) {
-        User user = userService.login(dto.getEmail(), dto.getPassword());
         if(user == null) {
             return ResponseEntity.ok(HttpStatus.NOT_FOUND);
         }

@@ -14,11 +14,11 @@ export class NewAdminComponent implements OnInit {
 
   ngOnInit(): void {
     let role = localStorage.getItem('role');
-    if (role == "USER"){
+    if (role == "ROLE_USER"){
       this.router.navigate(['/user-home'])
       return;
     } 
-    else if (role != "USER" && role!= "ADMIN"){
+    else if (role != "ROLE_USER" && role!= "ROLE_ADMIN"){
       this.router.navigate(['/login'])
       return;
     }
@@ -63,7 +63,7 @@ export class NewAdminComponent implements OnInit {
     let user = {
       'email': this.email.value,
       'password': this.password.value,
-      'userType': "ADMIN",
+      'userType': "ROLE_ADMIN",
       'authorityType': "ROOT" // da li je admin i root?
     }
     let body = JSON.stringify(user)

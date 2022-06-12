@@ -21,7 +21,7 @@ const routes: Routes = [
   {path: "new-admin", component: NewAdminComponent},
   {path: "new-certificate", component: NewCertificateComponent},
   {path: "new-certificate-admin", component: NewCertificateAdminComponent},
-  {path: "activate-account", component: AccountActivationComponent},
+  {path: "activate-account/:token", component: AccountActivationComponent},
 
 ];
 

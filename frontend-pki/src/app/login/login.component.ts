@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from '../service/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -10,7 +11,7 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router, private authService: AuthService) { }
 
   ngOnInit(): void {
   }
@@ -36,25 +37,16 @@ export class LoginComponent implements OnInit {
       'email': this.email.value,
       'password': this.password.value
     }
-    let body = JSON.stringify(u)
-    const headers = { 'content-type': 'application/json'}
-    this.http.post('http://localhost:9000/auth/login', body, {'headers': headers })
-    .subscribe(data => {
 
-      if(data == "NOT_FOUND"){
-        alert('Invalid email and/or password')
-      } 
-      else{
-        this.user = data
-        localStorage.setItem('userId', this.user.id);
-        localStorage.setItem('email', this.user.email)
-        localStorage.setItem('role', this.user.userType);
-        if(this.user.userType == "ADMIN"){
+    this.authService.login(u)
+    .subscribe(data => {
+      console.log(data)
+        let role = localStorage.getItem('role');
+        if(role == "ROLE_ADMIN"){
           this.router.navigate(['admin-home'])
         } else {
           this.router.navigate(['user-home'])
         }
-      }
     },
     err => {
       alert('Invalid email and/or password')
