@@ -26,8 +26,11 @@ public class UserController {
     private UserService userService;
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, value = "/signup")
-    public ResponseEntity<?> user(@RequestBody SignUpUserDTO dto) {
+    public ResponseEntity<?> user(@RequestBody SignUpUserDTO dto) throws Exception {
         User user = userService.register(dto);
+        if(user == null) {
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         return ResponseEntity.ok(user.getId());
     }
 
@@ -50,7 +53,8 @@ public class UserController {
     }
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, value = "/addAdmin")
-    public ResponseEntity<?> addAdmin(@RequestBody SignUpUserDTO dto) {
+    public ResponseEntity<?> addAdmin(@RequestBody SignUpUserDTO dto) throws Exception {
+        // TODO SD: regiserAdmin
         User user = userService.register(dto);
         return ResponseEntity.ok(user.getId());
     }

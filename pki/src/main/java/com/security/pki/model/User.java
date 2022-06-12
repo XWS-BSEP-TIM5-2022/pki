@@ -5,7 +5,6 @@ import java.util.List;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.security.pki.enums.UserType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,7 +26,9 @@ public class User {
 	private String email;
 	
 	private String password;
-	
+
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+	@JoinColumn(name = "role_id")
 	private UserType userType;
 	
 	//private AuthorityType authorityType;		// TODO: mozda izbrisati
@@ -36,5 +37,6 @@ public class User {
 	@JsonBackReference
 	private List<MyCertificate> certificates;
 
+	private Boolean isActive;
 
 }

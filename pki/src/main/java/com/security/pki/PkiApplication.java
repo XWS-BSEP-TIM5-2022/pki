@@ -1,15 +1,15 @@
 package com.security.pki;
 
 
+import com.security.pki.model.UserType;
 import com.security.pki.repository.CertificateRepository;
+import com.security.pki.repository.UserTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.security.pki.model.User;
-import com.security.pki.enums.UserType;
-
 import com.security.pki.repository.UserRepository;
 
 import java.util.Calendar;
@@ -24,6 +24,8 @@ public class PkiApplication implements CommandLineRunner {
 	@Autowired
 	private CertificateRepository certificateRepository;
 
+	@Autowired
+	private UserTypeRepository userTypeRepository;
 
 	public static void main(String[] args)  {
 		SpringApplication.run(PkiApplication.class, args);
@@ -31,10 +33,19 @@ public class PkiApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		User admin = new User(1, "admin@gmail.com", "admin", UserType.ADMIN, null);
+
+		UserType userRole = new UserType();
+		userRole.setName("ROLE_USER");
+		userTypeRepository.save(userRole);
+
+		UserType adminRole = new UserType();
+		adminRole.setName("ROLE_ADMIN");
+		userTypeRepository.save(adminRole);
+
+		User admin = new User(1, "admin@gmail.com", "admin", adminRole, null, true);
 		userRepository.save(admin);
 
-		User user = new User(2, "user@gmail.com", "user", UserType.USER, null);
+		User user = new User(2, "user@gmail.com", "user", userRole, null, true);
 		userRepository.save(user);
 
 		Calendar cal = Calendar.getInstance();

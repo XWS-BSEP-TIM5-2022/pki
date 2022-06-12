@@ -19,7 +19,8 @@ public class UserMapper {
 		User user = new User();
 		user.setEmail(dto.email);
 		user.setPassword(dto.password);
-		setUserType(dto.userType, user);
+		// TODO SD: roles
+//		setUserType(dto.userType, user);
 //		setAuthorityType(dto.authorityType, user);
 		List<MyCertificate> certificates = new ArrayList<MyCertificate>();
 		for(CertificateDTO certDtos: dto.certificates) {
@@ -41,11 +42,11 @@ public class UserMapper {
 //	}
 
 	private void setUserType(String userType, User user) {
-		if(userType.equals("ADMIN")) {
-			user.setUserType(UserType.ADMIN);
-		} else {
-			user.setUserType(UserType.USER);
-		}
+//		if(userType.equals("ADMIN")) {
+//			user.setUserType(UserType.ADMIN);
+//		} else {
+//			user.setUserType(UserType.USER);
+//		}
 	}
 
 
@@ -53,7 +54,8 @@ public class UserMapper {
 		User user = new User();
 		user.setEmail(dto.email);
 		user.setPassword(dto.password);
-		setUserType(dto.userType, user);
+		// TODO SD: roles!
+//		setUserType(dto.userType, user);
 //		setAuthorityType(dto.authorityType, user);
 		user.setCertificates(new ArrayList<>());
 		return user;
@@ -62,8 +64,7 @@ public class UserMapper {
 	public UserDTO UserToUserDto(User user) {
 		UserDTO dto = new UserDTO();
 		dto.id = user.getId();
-		// TODO Sanja: ispraviti userType i authorityType
-		dto.userType = user.getUserType().toString();
+		dto.userType = user.getUserType().getName();
 //		dto.authorityType = user.getAuthorityType().toString();
 		dto.email = user.getEmail();
 		dto.password = user.getPassword();
