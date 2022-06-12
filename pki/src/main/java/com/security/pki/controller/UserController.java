@@ -14,6 +14,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +26,7 @@ public class UserController {
     private UserRepository userRepository;
     @Autowired
     private UserService userService;
+    Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, value = "/signup")
     public ResponseEntity<?> user(@RequestBody SignUpUserDTO dto) {
@@ -42,6 +45,15 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, value = "/login")
     public ResponseEntity<?> login(@RequestBody LoginDTO dto) {
+        Logger analytics = LoggerFactory.getLogger("info");
+        Logger analytics2 = LoggerFactory.getLogger("fatal");
+
+        System.out.println("cao");
+        analytics.info("FATAL ERROR");
+        analytics2.trace("FATAL ERROR");
+        logger.warn("FATAL ERROR");
+        logger.trace("FATAL ERROR");
+
         User user = userService.login(dto.email, dto.password);
         if(user == null) {
             return ResponseEntity.ok(HttpStatus.NOT_FOUND);
