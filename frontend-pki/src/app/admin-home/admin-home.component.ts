@@ -28,7 +28,7 @@ export class AdminHomeComponent implements OnInit {
       return;
     }
 
-    this.http.get<Certificate[]>('http://localhost:8080/api/certificate')
+    this.http.get<Certificate[]>('http://localhost:9000/api/certificate')
     .subscribe(data => {
       var allCertificates : Certificate[] = data   
       for(var c of allCertificates){

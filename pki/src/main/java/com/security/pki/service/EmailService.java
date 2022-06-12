@@ -34,7 +34,7 @@ public class EmailService {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
-            helper.setSubject("Agent application - Account activation");
+            helper.setSubject("Public key infrastructure application - Account activation");
             helper.setFrom(env.getProperty("spring.mail.username"));
             helper.setTo(emailTo);
             helper.setText(accountActivationMessage(token), true);
@@ -46,8 +46,8 @@ public class EmailService {
     }
 
     public String accountActivationMessage(String token) {
-//        String url = "http://localhost:" + env.getProperty("frontend.port") + "/activate-account/" + token;
-        String url = "http://localhost:" + env.getProperty("server.port") + "/auth/activateAccount?token=" + token;
+        String url = "http://localhost:" + env.getProperty("frontend.port") + "/activate-account/" + token;
+//        String url = "http://localhost:" + env.getProperty("server.port") + "/auth/activateAccount?token=" + token;
         String message = "<html><body style=\"background-color: #f4f4f4; margin: 0 !important; padding: 0 !important;\">\n" +
                 "    <!-- HIDDEN PREHEADER TEXT -->\n" +
                 "    <div style=\"display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: 'Lato', Helvetica, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;\"> We're thrilled to have you here! Get ready to dive into your new account.\n" +

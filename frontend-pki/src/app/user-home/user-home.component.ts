@@ -31,7 +31,7 @@ export class UserHomeComponent implements OnInit {
     }
 
     let idLocalStorage = localStorage.getItem('userId')
-    this.http.get('http://localhost:8080/api/users/getById/' + idLocalStorage)
+    this.http.get('http://localhost:9000/api/users/getById/' + idLocalStorage)
     .subscribe(data => {
       this.user = data
       this.email = this.user.email
@@ -46,7 +46,7 @@ export class UserHomeComponent implements OnInit {
 
   getCertificates(){
 
-    this.http.get<Certificate[]>('http://localhost:8080/api/certificate/getAllByUser/' + localStorage.getItem('userId'))
+    this.http.get<Certificate[]>('http://localhost:9000/api/certificate/getAllByUser/' + localStorage.getItem('userId'))
     .subscribe(data => {
       var allCertificates : Certificate[] = data
       for(var c of allCertificates){

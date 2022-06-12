@@ -16,7 +16,7 @@ export class TestComponent implements OnInit {
 
   sendRequest() {
     //const headers = { 'content-type': 'application/json'}  
-    this.http.get('http://localhost:8080/api/test'/*, {'headers':headers}*/)
+    this.http.get('http://localhost:9000/api/test'/*, {'headers':headers}*/)
     .subscribe(data => { alert(data) })
   }
 }

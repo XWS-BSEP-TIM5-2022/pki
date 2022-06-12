@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit {
     }
     let body = JSON.stringify(u)
     const headers = { 'content-type': 'application/json'}
-    this.http.post('http://localhost:8080/api/users/login', body, {'headers': headers })
+    this.http.post('http://localhost:9000/auth/login', body, {'headers': headers })
     .subscribe(data => {
 
       if(data == "NOT_FOUND"){

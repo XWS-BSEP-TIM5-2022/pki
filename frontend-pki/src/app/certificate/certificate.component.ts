@@ -100,7 +100,7 @@ export class CertificateComponent implements OnInit {
   }
 
   downloadCertificate() {
-    // this.http.get('http://localhost:8080/api/certificate/downloadCertificate/' + this.id)
+    // this.http.get('http://localhost:9000/api/certificate/downloadCertificate/' + this.id)
     this.certificateService.downloadCertificate(this.id)
     .subscribe(data => { 
       alert('Certificate is downloaded')
@@ -120,7 +120,7 @@ export class CertificateComponent implements OnInit {
 
   revokeCertificate(serialNumber){
     console.log(serialNumber)
-    this.http.get('http://localhost:8080/api/certificate/revokeCerificate/' + serialNumber)
+    this.http.get('http://localhost:9000/api/certificate/revokeCerificate/' + serialNumber)
     .subscribe(data => { 
       alert('Certificate is revoked')
     });
