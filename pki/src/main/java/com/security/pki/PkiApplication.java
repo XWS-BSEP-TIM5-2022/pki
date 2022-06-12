@@ -11,7 +11,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.security.pki.model.User;
 import com.security.pki.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Calendar;
 
 
@@ -26,6 +29,9 @@ public class PkiApplication implements CommandLineRunner {
 
 	@Autowired
 	private UserTypeRepository userTypeRepository;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	public static void main(String[] args)  {
 		SpringApplication.run(PkiApplication.class, args);
@@ -42,10 +48,10 @@ public class PkiApplication implements CommandLineRunner {
 		adminRole.setName("ROLE_ADMIN");
 		userTypeRepository.save(adminRole);
 
-		User admin = new User(1, "admin@gmail.com", "admin", adminRole, null, true);
+		User admin = new User(1, "admin@gmail.com", passwordEncoder.encode("admin"), adminRole, null, true, Timestamp.from(Instant.now()));
 		userRepository.save(admin);
 
-		User user = new User(2, "user@gmail.com", "user", userRole, null, true);
+		User user = new User(2, "user@gmail.com", passwordEncoder.encode("user"), userRole, null, true, Timestamp.from(Instant.now()));
 		userRepository.save(user);
 
 		Calendar cal = Calendar.getInstance();

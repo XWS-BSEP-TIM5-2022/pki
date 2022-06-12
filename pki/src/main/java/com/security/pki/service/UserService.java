@@ -13,4 +13,5 @@ public interface UserService {
     User findByEmail(String subjectName);
     List<User> findAll();
     boolean checkPasswordCriteria(String password);
+    boolean verifyUserAccount(String verificationToken);
 }

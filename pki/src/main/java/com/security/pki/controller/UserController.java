@@ -25,7 +25,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, value = "/signup")
+    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, value = "/auth/signup")
     public ResponseEntity<?> user(@RequestBody SignUpUserDTO dto) throws Exception {
         User user = userService.register(dto);
         if(user == null) {
@@ -43,9 +43,9 @@ public class UserController {
         return ResponseEntity.ok(new UserMapper().UserToUserDto(user));
     }
 
-    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, value = "/login")
+    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, value = "/auth/login")
     public ResponseEntity<?> login(@RequestBody LoginDTO dto) {
-        User user = userService.login(dto.email, dto.password);
+        User user = userService.login(dto.getEmail(), dto.getPassword());
         if(user == null) {
             return ResponseEntity.ok(HttpStatus.NOT_FOUND);
         }
