@@ -188,6 +188,9 @@ public class UserServiceImpl implements UserService {
         }
 
         User user = userRepository.findByEmail(userEmail);
+        if(!user.getIsActive()){
+            throw new Exception("Account is not activated");
+        }
         if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
             throw new Exception("Old password does not match the current password");
         }

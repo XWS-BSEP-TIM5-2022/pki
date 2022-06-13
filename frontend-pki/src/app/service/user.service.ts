@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { User } from '../model/user';
 
@@ -24,5 +24,15 @@ export class UserService {
 
   findByEmail(email: string) {
     return this._http.get<User>(`${this.userPath}/getByEmail/` + email)    
+  }
+
+  changePassword(body: any){
+    const headers = new HttpHeaders({
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      // 'responseType': 'text',
+    });
+    console.log(body)
+    return this._http.post(`${this.userPath}/changePassword`, JSON.stringify(body), {'headers': headers})
   }
 }

@@ -66,14 +66,14 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, value = "/changePassword")
+    @RequestMapping(method = RequestMethod.POST,value = "/changePassword",
+            consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDTO dto, Principal user) throws Exception {
         try {
             userService.changePassword(dto, user.getName());
-            return ResponseEntity.ok("Password successfully changed");
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 }

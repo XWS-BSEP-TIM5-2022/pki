@@ -51,4 +51,8 @@ export class AdminHomeComponent implements OnInit {
     this.router.navigate(['/new-admin'])
   }
 
+  changePassword() {
+    this.router.navigate(['change-password'])
+  }
+
 }
