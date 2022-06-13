@@ -25,11 +25,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, value = "/signup")
-    public ResponseEntity<?> user(@RequestBody SignUpUserDTO dto) {
-        User user = userService.register(dto);
-        return ResponseEntity.ok(user.getId());
-    }
 
     @RequestMapping(method = RequestMethod.GET, value = "/getById/{id}")
     public ResponseEntity getUserById(@PathVariable Integer id) {
@@ -40,18 +35,9 @@ public class UserController {
         return ResponseEntity.ok(new UserMapper().UserToUserDto(user));
     }
 
-    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, value = "/login")
-    public ResponseEntity<?> login(@RequestBody LoginDTO dto) {
-        User user = userService.login(dto.email, dto.password);
-        if(user == null) {
-            return ResponseEntity.ok(HttpStatus.NOT_FOUND);
-        }
-        return ResponseEntity.ok(new UserMapper().UserToUserDto(user));
-    }
-
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, value = "/addAdmin")
-    public ResponseEntity<?> addAdmin(@RequestBody SignUpUserDTO dto) {
-        User user = userService.register(dto);
+    public ResponseEntity<?> addAdmin(@RequestBody SignUpUserDTO dto) throws Exception {
+        User user = userService.registerAdmin(dto);
         return ResponseEntity.ok(user.getId());
     }
 

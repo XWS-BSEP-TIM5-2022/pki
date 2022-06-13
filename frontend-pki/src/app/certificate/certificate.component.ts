@@ -33,7 +33,7 @@ export class CertificateComponent implements OnInit {
   ngOnInit(): void {
 
     let role = localStorage.getItem('role');
-    if (role != "USER" && role!= "ADMIN"){
+    if (role != "ROLE_USER" && role!= "ROLE_ADMIN"){
       this.router.navigate(['/login'])
       return;
     }
@@ -41,7 +41,7 @@ export class CertificateComponent implements OnInit {
     this.id = +this.route.snapshot.paramMap.get('id')!;
     this.userId = localStorage.getItem('userId');
 
-    if (role == "USER") {
+    if (role == "ROLE_USER") {
       this.certificateService.findAllByUserId(this.userId).subscribe(
         (certificates: Certificate[]) => {
 
@@ -100,7 +100,7 @@ export class CertificateComponent implements OnInit {
   }
 
   downloadCertificate() {
-    // this.http.get('http://localhost:8080/api/certificate/downloadCertificate/' + this.id)
+    // this.http.get('http://localhost:9000/api/certificate/downloadCertificate/' + this.id)
     this.certificateService.downloadCertificate(this.id)
     .subscribe(data => { 
       alert('Certificate is downloaded')
@@ -111,7 +111,7 @@ export class CertificateComponent implements OnInit {
   }
 
   isAdmin(){
-    if(localStorage.getItem('role') == "ADMIN"){
+    if(localStorage.getItem('role') == "ROLE_ADMIN"){
       return true;
     } else {
       return false;
@@ -120,7 +120,7 @@ export class CertificateComponent implements OnInit {
 
   revokeCertificate(serialNumber){
     console.log(serialNumber)
-    this.http.get('http://localhost:8080/api/certificate/revokeCerificate/' + serialNumber)
+    this.http.get('http://localhost:9000/api/certificate/revokeCerificate/' + serialNumber)
     .subscribe(data => { 
       alert('Certificate is revoked')
     });

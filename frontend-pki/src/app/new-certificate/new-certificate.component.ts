@@ -33,17 +33,17 @@ export class NewCertificateComponent implements OnInit {
   ngOnInit(): void {
 
     let role = localStorage.getItem('role');
-    if (role == "ADMIN"){
+    if (role == "ROLE_ADMIN"){
       this.router.navigate(['/admin-home'])
       return;
     } 
-    else if (role != "USER" && role!= "ADMIN"){
+    else if (role != "ROLE_USER" && role!= "ROLE_ADMIN"){
       this.router.navigate(['/login'])
       return;
     }
 
     let idLocalStorage = localStorage.getItem('userId')
-    this.http.get('http://localhost:8080/api/users/getById/' + idLocalStorage)
+    this.http.get('http://localhost:9000/api/users/getById/' + idLocalStorage)
     .subscribe(data => {
       this.user = data
       this.userId = this.user.id;

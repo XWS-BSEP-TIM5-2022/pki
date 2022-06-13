@@ -54,16 +54,18 @@ export class RegistrationComponent implements OnInit {
     let user = {
       'email': this.email.value,
       'password': this.password.value,
-      'userType': "USER",
+      'userType': "ROLE_USER",
       'authorityType': "END-ENTITY"
     }
     let body = JSON.stringify(user)
     const headers = { 'content-type': 'application/json'}
-    this.http.post('http://localhost:8080/api/users/signup', body, {'headers': headers })
+    this.http.post('http://localhost:9000/auth/register', body, {'headers': headers })
     .subscribe(data => {
-      localStorage.setItem('userId', JSON.stringify(data))
-      localStorage.setItem('role', "USER");
-      this.router.navigate(['user-home'])
+      localStorage.setItem('userId', JSON.stringify(data["id"]))
+      localStorage.setItem('role', "ROLE_USER");
+      // this.router.navigate(['user-home'])
+      alert('Email to activate account sent. Check inbox.')
+      this.router.navigate(['login'])
     })
   }
 

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MatDividerModule} from '@angular/material/divider';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -25,6 +25,8 @@ import { NewAdminComponent } from './new-admin/new-admin.component';
 import { HeaderComponent } from './header/header.component';
 import { NewCertificateComponent } from './new-certificate/new-certificate.component';
 import { NewCertificateAdminComponent } from './new-certificate-admin/new-certificate-admin.component';
+import { AccountActivationComponent } from './account-activation/account-activation.component';
+import { TokenInterceptor } from './interceptor/token-interceptor';
 
 @NgModule({
   declarations: [
@@ -39,6 +41,7 @@ import { NewCertificateAdminComponent } from './new-certificate-admin/new-certif
     HeaderComponent,
     NewCertificateComponent,
     NewCertificateAdminComponent,
+    AccountActivationComponent,
   ],
   imports: [
     BrowserModule,
@@ -58,7 +61,13 @@ import { NewCertificateAdminComponent } from './new-certificate-admin/new-certif
     MatInputModule,
     MatSelectModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+      }, 
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
