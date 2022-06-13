@@ -1,5 +1,6 @@
 package com.security.pki.controller;
 
+import com.security.pki.dto.ChangePasswordDTO;
 import com.security.pki.dto.LoginDTO;
 import com.security.pki.dto.SignUpUserDTO;
 import com.security.pki.dto.UserDTO;
@@ -14,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,4 +65,15 @@ public class UserController {
         }
         return ResponseEntity.ok(users);
     }
+
+    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, value = "/changePassword")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDTO dto, Principal user) throws Exception {
+        try {
+            userService.changePassword(dto, user.getName());
+            return ResponseEntity.ok("Password successfully changed");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }
