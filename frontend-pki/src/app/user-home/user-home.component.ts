@@ -35,7 +35,7 @@ export class UserHomeComponent implements OnInit {
     .subscribe(data => {
       this.user = data
       this.email = this.user.email
-      alert(this.user.id)
+      // alert(this.user.id)
     })
 
     this.getCertificates();

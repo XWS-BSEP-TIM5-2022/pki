@@ -27,6 +27,7 @@ import { NewCertificateComponent } from './new-certificate/new-certificate.compo
 import { NewCertificateAdminComponent } from './new-certificate-admin/new-certificate-admin.component';
 import { AccountActivationComponent } from './account-activation/account-activation.component';
 import { TokenInterceptor } from './interceptor/token-interceptor';
+import { ChangePasswordComponent } from './change-password/change-password.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { TokenInterceptor } from './interceptor/token-interceptor';
     NewCertificateComponent,
     NewCertificateAdminComponent,
     AccountActivationComponent,
+    ChangePasswordComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,5 +1,6 @@
 package com.security.pki.service.impl;
 
+import com.security.pki.dto.ChangePasswordDTO;
 import com.security.pki.dto.LoginDTO;
 import com.security.pki.dto.SignUpUserDTO;
 import com.security.pki.mapper.UserMapper;
@@ -172,5 +173,33 @@ public class UserServiceImpl implements UserService {
         VerificationToken verificationToken = new VerificationToken(newUser);
         verificationTokenService.saveVerificationToken(verificationToken);
         return userRepository.findByEmail(newUser.getEmail());
+    }
+
+    @Override
+    public void changePassword(ChangePasswordDTO dto, String userEmail) throws Exception {
+        String pswdError = "Password must contain minimum eight characters, at least one uppercase " +
+                "letter, one lowercase letter, one number and one special character and " +
+                "must not contain white spaces";
+        if (!checkPasswordCriteria(dto.getNewPassword())) {
+            throw new Exception(pswdError);
+        }
+        if (!checkPasswordCriteria(dto.getReenteredPassword())) {
+            throw new Exception(pswdError);
+        }
+
+        User user = userRepository.findByEmail(userEmail);
+        if(!user.getIsActive()){
+            throw new Exception("Account is not activated");
+        }
+        if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
+            throw new Exception("Old password does not match the current password");
+        }
+        if (!dto.getNewPassword().equals(dto.getReenteredPassword())) {
+            throw new Exception("New passwords do not match");
+        }
+
+        user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+        user.setLastPasswordResetDate(Timestamp.from(Instant.now()));
+        userRepository.save(user);
     }
 }
