@@ -144,4 +144,33 @@ public class UserServiceImpl implements UserService {
             return false;
         }
     }
+
+    @Override
+    public User registerAdmin(SignUpUserDTO dto) throws Exception {
+        for(User user: userRepository.findAll()){
+            if(user.getEmail().equals(dto.email)){
+                throw new Exception("Email is not unique");
+            }
+        }
+        if (!checkPasswordCriteria(dto.password)) {
+            String pswdError = "Password must contain minimum eight characters, at least one uppercase " +
+                    "letter, one lowercase letter, one number and one special character and " +
+                    "must not contain white spaces";
+            System.out.println(pswdError);
+            throw new Exception(pswdError);
+        }
+        User newUser = new UserMapper().SignUpUserDtoToUser(dto);
+        newUser.setIsActive(true);
+        newUser.setLastPasswordResetDate(Timestamp.from(Instant.now()));
+        UserType role = userTypeService.findUserTypeByName("ROLE_ADMIN");
+        if (role == null) {
+            throw new Exception("Role does not exist");
+        }
+        newUser.setUserType(role);
+        newUser.setPassword(passwordEncoder.encode(dto.password));
+        userRepository.save(newUser);
+        VerificationToken verificationToken = new VerificationToken(newUser);
+        verificationTokenService.saveVerificationToken(verificationToken);
+        return userRepository.findByEmail(newUser.getEmail());
+    }
 }

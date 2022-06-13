@@ -59,4 +59,31 @@ export class AuthService {
     }));
   }
 
+  tokenIsPresent() {
+    return localStorage.getItem("jwt") != undefined && localStorage.getItem("jwt") != null;
+  }
+
+  roleIsPresent(){
+    return localStorage.getItem("role")!= undefined && localStorage.getItem("role") != null;
+  }
+
+  tokenIsExpired(){
+    if (localStorage.getItem("jwt") != undefined && localStorage.getItem("jwt") != null)  {
+      let locStorageToken = localStorage.getItem("jwt")
+      if (!locStorageToken){
+        return true;
+      }
+      if(this.jwtHelper.isTokenExpired(locStorageToken)) {
+        console.log("Token je istekao")
+      }
+      return this.jwtHelper.isTokenExpired(locStorageToken);
+    }
+    return true;
+  }
+
+  getToken() {
+    return this.access_token;
+  }
+
+
 }

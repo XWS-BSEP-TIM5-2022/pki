@@ -35,10 +35,11 @@ public class UserController {
         return ResponseEntity.ok(new UserMapper().UserToUserDto(user));
     }
 
+    // TODO SD: ispraviti kada se sredi interceptor na frontu
+    @CrossOrigin("http://localhost:4200")
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, value = "/addAdmin")
     public ResponseEntity<?> addAdmin(@RequestBody SignUpUserDTO dto) throws Exception {
-        // TODO SD: regiserAdmin
-        User user = userService.register(dto);
+        User user = userService.registerAdmin(dto);
         return ResponseEntity.ok(user.getId());
     }
 

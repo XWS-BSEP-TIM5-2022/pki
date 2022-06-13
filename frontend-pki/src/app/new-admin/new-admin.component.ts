@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -67,7 +67,10 @@ export class NewAdminComponent implements OnInit {
       'authorityType': "ROOT" // da li je admin i root?
     }
     let body = JSON.stringify(user)
-    const headers = { 'content-type': 'application/json'} 
+    const headers = new HttpHeaders({
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+   });
     this.http.post('http://localhost:9000/api/users/addAdmin', body, {'headers': headers })
     .subscribe(data => {
       this.router.navigate(['admin-home'])
