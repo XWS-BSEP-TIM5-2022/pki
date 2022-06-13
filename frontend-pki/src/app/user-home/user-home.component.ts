@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Certificate } from '../model/certificate.model';
+import { User } from '../model/user';
 
 @Component({
   selector: 'app-user-home',
@@ -35,19 +36,21 @@ export class UserHomeComponent implements OnInit {
     .subscribe(data => {
       this.user = data
       this.email = this.user.email
-      // alert(this.user.id)
+      // alert()
+      this.getCertificates(this.user.id);
     })
 
-    this.getCertificates();
+    // this.getCertificates();s
   }
 
   review(id: any){
     this.router.navigate(['/certificate-review/'+ id]);
   }
 
-  getCertificates(){
+  getCertificates(id: number){
 
-    this.http.get<Certificate[]>('http://localhost:9000/api/certificate/getAllByUser/' + localStorage.getItem('userId'))
+
+    this.http.get<Certificate[]>('http://localhost:9000/api/certificate/getAllByUser/' + id)
     .subscribe(data => {
       var allCertificates : Certificate[] = data
       for(var c of allCertificates){

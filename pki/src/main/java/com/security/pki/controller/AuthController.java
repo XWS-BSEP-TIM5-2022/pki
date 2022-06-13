@@ -3,9 +3,12 @@ package com.security.pki.controller;
 import com.security.pki.dto.LoginDTO;
 import com.security.pki.dto.SignUpUserDTO;
 import com.security.pki.dto.UserTokenStateDTO;
+import com.security.pki.model.Permission;
 import com.security.pki.model.User;
+import com.security.pki.model.UserType;
 import com.security.pki.security.util.TokenUtils;
 import com.security.pki.service.UserService;
+import com.security.pki.service.UserTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,6 +20,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashSet;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -27,6 +32,8 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
     @Autowired
     private TokenUtils tokenUtils;
+    @Autowired
+    private UserTypeService userTypeService;
 
     @RequestMapping(method = RequestMethod.POST, value = "/register")
     public ResponseEntity<?> registerUser(@RequestBody SignUpUserDTO dto) throws Exception {
@@ -67,7 +74,8 @@ public class AuthController {
         if (!user.getIsActive()) {
             return new ResponseEntity("User is not activated", HttpStatus.BAD_REQUEST);
         }
-        String jwt = tokenUtils.generateToken(user.getUsername(), user.getUserType().getName());
+
+        String jwt = tokenUtils.generateToken(user.getUsername(), user.getUserType().getName(), user.getUserType().getPermissions());
         int expiresIn = tokenUtils.getExpiredIn();
 
         return ResponseEntity.ok(new UserTokenStateDTO(jwt, expiresIn));

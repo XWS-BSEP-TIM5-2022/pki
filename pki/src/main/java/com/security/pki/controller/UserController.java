@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -29,6 +30,7 @@ public class UserController {
 
 
     @RequestMapping(method = RequestMethod.GET, value = "/getById/{id}")
+    @PreAuthorize("hasAuthority('getUserById')")
     public ResponseEntity getUserById(@PathVariable Integer id) {
         User user = userService.findUserById(id);
         if(user == null) {
@@ -38,24 +40,28 @@ public class UserController {
     }
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, value = "/addAdmin")
+    @PreAuthorize("hasAuthority('addAdmin')")
     public ResponseEntity<?> addAdmin(@RequestBody SignUpUserDTO dto) throws Exception {
         User user = userService.registerAdmin(dto);
         return ResponseEntity.ok(user.getId());
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/findAll")
+    @PreAuthorize("hasAuthority('findAll')")
     public ResponseEntity<List<User>> findAll() {
         List<User> users = userService.findAll();
         return ResponseEntity.ok(users);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/getByEmail/{email}")
+    @PreAuthorize("hasAuthority('findUserByEmail')")
     public ResponseEntity<User> findByEmail(@PathVariable String email) {
         User user = userService.findByEmail(email);
         return ResponseEntity.ok(user);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/findAllClients")
+    @PreAuthorize("hasAuthority('findAllClients')")
     public ResponseEntity<List<User>> findAllClients() {
         List<User> users = new ArrayList<>();
         for (User u: userService.findAll()) {
@@ -68,6 +74,7 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.POST,value = "/changePassword",
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('changePassword')")
     public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDTO dto, Principal user) throws Exception {
         try {
             userService.changePassword(dto, user.getName());

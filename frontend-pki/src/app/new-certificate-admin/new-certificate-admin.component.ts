@@ -43,16 +43,24 @@ export class NewCertificateAdminComponent implements OnInit {
       return;
     }
 
-    this.adminEmail = localStorage.getItem('email')
-    this.adminId = localStorage.getItem('userId');
- 
+    this.adminEmail = localStorage.getItem('user');
+    this.loadUserInfo();
+    // this.adminId = localStorage.getItem('userId');
+    
     this.loadUsers();
     this.loadIssuerCertificates();
   }
 
+  loadUserInfo() {
+    this.userService.findByEmail(this.adminEmail).subscribe(data => {
+      this.adminId = data["id"]
+    })
+  }
   loadUsers(){
     this.userService.findAll().subscribe(
       (users: User[]) => {
+        console.log("USERS: " )
+        console.log(users)
         this.users = users;
       })
   }
@@ -60,6 +68,8 @@ export class NewCertificateAdminComponent implements OnInit {
   loadIssuerCertificates(){
     this.certificateService.findAllRootsAndCA().subscribe(
       (issuerCertificates: Certificate[]) => {
+        console.log("issuerCertificates: " )
+        console.log(issuerCertificates)
         this.issuerCertificates = issuerCertificates;
       })
   }
@@ -154,7 +164,20 @@ export class NewCertificateAdminComponent implements OnInit {
   }
 
   createNewCertificate(){
-
+    console.log(this.certificate.certificateType)
+    console.log(this.certificate.certificateUsage)
+    console.log(this.certificate.subjectName)
+    console.log(this.certificate.validFrom)
+    console.log(this.certificate.validTo)
+    console.log(this.certificate.certificateDataDTO.commonName)
+    console.log(this.certificate.certificateDataDTO.givenName)
+    console.log(this.certificate.certificateDataDTO.organizationalUnit)
+    console.log(this.certificate.certificateDataDTO.emailAddress)
+    console.log(this.certificate.certificateDataDTO.countryCode)
+    console.log(this.certificate.certificateDataDTO.organization)
+    console.log(this.certificate.certificateDataDTO.surname)
+    console.log(this.certificate.certificateDataDTO.userId)
+    console.log()
     // TODO: nisu pokrivene sve situacije, npr. ako je neko polje prazan string
     if(this.certificate.certificateType != undefined && this.certificate.certificateUsage != undefined &&
         this.certificate.subjectName != undefined && this.certificate.validFrom != undefined && 
@@ -164,6 +187,7 @@ export class NewCertificateAdminComponent implements OnInit {
         this.certificate.certificateDataDTO.givenName != undefined && this.certificate.certificateDataDTO.organization != undefined &&
         this.certificate.certificateDataDTO.organizationalUnit != undefined && this.certificate.certificateDataDTO.surname != undefined &&
         this.certificate.certificateDataDTO.userId != undefined){
+         
 
         if(this.certificate.certificateType == "SELF_SIGNED"){
             this.createSelfSignedCertificate();

@@ -5,6 +5,7 @@ import { Certificate } from './../model/certificate.model';
 import { Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common'
 import { ThisReceiver } from '@angular/compiler';
+import { UserService } from '../service/user.service';
 
 @Component({
   selector: 'app-certificate',
@@ -28,7 +29,8 @@ export class CertificateComponent implements OnInit {
   constructor(private route: ActivatedRoute,
     private router: Router,
     private http : HttpClient,
-    private certificateService: CertificateService) { }
+    private certificateService: CertificateService,
+    private userService: UserService) { }
 
   ngOnInit(): void {
 
@@ -39,7 +41,10 @@ export class CertificateComponent implements OnInit {
     }
 
     this.id = +this.route.snapshot.paramMap.get('id')!;
-    this.userId = localStorage.getItem('userId');
+    this.userService.findByEmail(localStorage.getItem('user')!).subscribe(data => {
+      this.userId = data["id"]
+    })
+    // this.userId = localStorage.getItem('userId');
 
     if (role == "ROLE_USER") {
       this.certificateService.findAllByUserId(this.userId).subscribe(

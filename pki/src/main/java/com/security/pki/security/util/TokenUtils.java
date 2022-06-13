@@ -1,5 +1,6 @@
 package com.security.pki.security.util;
 
+import com.security.pki.model.Permission;
 import com.security.pki.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -10,7 +11,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Set;
 
 
 @Component
@@ -52,11 +55,12 @@ public class TokenUtils {
      * @param username Korisničko ime korisnika kojem se token izdaje
      * @return JWT token
      */
-    public String generateToken(String username, String roleName) {
+    public String generateToken(String username, String roleName, Collection<Permission> permissions) {
         return Jwts.builder()
                 .setIssuer(APP_NAME)
                 .setSubject(username)
                 .claim("role", roleName)
+                .claim("permissions", permissions)
                 .setAudience(generateAudience())
                 .setIssuedAt(new Date())
                 .setExpiration(generateExpirationDate())
