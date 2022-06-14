@@ -1,5 +1,7 @@
 package com.security.pki.security.auth;
 
+import com.security.pki.service.impl.UserServiceImpl;
+import org.apache.log4j.Logger;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
@@ -10,11 +12,16 @@ import java.io.IOException;
 
 @Component
 public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
+
+    static Logger log = Logger.getLogger(RestAuthenticationEntryPoint.class.getName());
+
+
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, org.springframework.security.core.AuthenticationException authException) throws IOException, ServletException {
         //Metoda koja se izvrsava ukoliko za prosledjene kredencijale korisnik pokusa da pristupi zasticenom REST servisu
         //Metoda vraca 401 Unauthorized response, ukoliko postoji Login Page u aplikaciji, pozeljno je da se korisnik redirektuje na tu stranicu
         // TODO: uraditi logovanje
+        log.warn("Unauthorized access to" + request.getMethod() + ":" + request.getRequestURI() + ". From:" + request.getRemoteAddr());
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
     }
 }

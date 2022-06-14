@@ -1,5 +1,6 @@
 package com.security.pki.service.impl;
 
+import com.security.pki.controller.UserController;
 import com.security.pki.dto.ChangePasswordDTO;
 import com.security.pki.dto.LoginDTO;
 import com.security.pki.dto.SignUpUserDTO;
@@ -13,8 +14,10 @@ import com.security.pki.service.EmailService;
 import com.security.pki.service.UserService;
 import com.security.pki.service.UserTypeService;
 import com.security.pki.service.VerificationTokenService;
+import org.apache.log4j.Logger;
 import org.passay.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -47,11 +50,13 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private VerificationTokenRepository verificationTokenRepository;
+    static Logger log = Logger.getLogger(UserServiceImpl.class.getName());
 
     @Override
     public User register(SignUpUserDTO dto) throws Exception {
         for(User user: userRepository.findAll()){
             if(user.getEmail().equals(dto.email)){
+                log.error("User with email: " + SecurityContextHolder.getContext().getAuthentication().getName() + "can't change password because email is not unique");
                 throw new Exception("Email is not unique");
             }
         }
@@ -60,6 +65,8 @@ public class UserServiceImpl implements UserService {
                     "letter, one lowercase letter, one number and one special character and " +
                     "must not contain white spaces";
             System.out.println(pswdError);
+            log.error("User with email: " + SecurityContextHolder.getContext().getAuthentication().getName() + "can't change password because: Format of password is invalid" );
+
             throw new Exception(pswdError);
         }
         User newUser = new UserMapper().SignUpUserDtoToUser(dto);
@@ -67,6 +74,7 @@ public class UserServiceImpl implements UserService {
         newUser.setLastPasswordResetDate(Timestamp.from(Instant.now()));
         UserType role = userTypeService.findUserTypeByName("ROLE_USER");
         if (role == null) {
+            log.error("User with email: " + SecurityContextHolder.getContext().getAuthentication().getName() + "can't change password because: Role does not exist!" );
             throw new Exception("Role does not exist");
         }
         newUser.setUserType(role);
@@ -75,8 +83,10 @@ public class UserServiceImpl implements UserService {
         // TODO SD: slanje emaila
         VerificationToken verificationToken = new VerificationToken(newUser);
         if (!emailService.sendAccountActivationMail(verificationToken.getToken(), newUser.getEmail())) {
+            log.error("User with email: " + SecurityContextHolder.getContext().getAuthentication().getName() + "can't change password because: Email for account verification not sent!");
             throw new Exception("Email for account verification not sent, try again");
         }
+        log.info("Verification email is sent!");
         userRepository.save(newUser);
         User registeredUser = userRepository.findByEmail(newUser.getEmail());
         verificationTokenService.saveVerificationToken(verificationToken);
@@ -150,6 +160,7 @@ public class UserServiceImpl implements UserService {
     public User registerAdmin(SignUpUserDTO dto) throws Exception {
         for(User user: userRepository.findAll()){
             if(user.getEmail().equals(dto.email)){
+                log.error("User with email: " + SecurityContextHolder.getContext().getAuthentication().getName() + "can't add new admin because: Email is not unique!");
                 throw new Exception("Email is not unique");
             }
         }
@@ -157,6 +168,8 @@ public class UserServiceImpl implements UserService {
             String pswdError = "Password must contain minimum eight characters, at least one uppercase " +
                     "letter, one lowercase letter, one number and one special character and " +
                     "must not contain white spaces";
+            log.error("User with email: " + SecurityContextHolder.getContext().getAuthentication().getName() + "can't add new admin because: Format of password is invalid" );
+
             System.out.println(pswdError);
             throw new Exception(pswdError);
         }
@@ -165,6 +178,7 @@ public class UserServiceImpl implements UserService {
         newUser.setLastPasswordResetDate(Timestamp.from(Instant.now()));
         UserType role = userTypeService.findUserTypeByName("ROLE_ADMIN");
         if (role == null) {
+            log.error("User with email: " + SecurityContextHolder.getContext().getAuthentication().getName() + "can't add new admin because: Role does not exist!");
             throw new Exception("Role does not exist");
         }
         newUser.setUserType(role);
@@ -181,20 +195,25 @@ public class UserServiceImpl implements UserService {
                 "letter, one lowercase letter, one number and one special character and " +
                 "must not contain white spaces";
         if (!checkPasswordCriteria(dto.getNewPassword())) {
+            log.error("User with email: " + SecurityContextHolder.getContext().getAuthentication().getName() + "can't change password because:: Format of password is invalid" );
             throw new Exception(pswdError);
         }
         if (!checkPasswordCriteria(dto.getReenteredPassword())) {
+            log.error("User with email: " + SecurityContextHolder.getContext().getAuthentication().getName() + "can't change password because:: Format of password is invalid" );
             throw new Exception(pswdError);
         }
 
         User user = userRepository.findByEmail(userEmail);
         if(!user.getIsActive()){
+            log.error("User with email: " + SecurityContextHolder.getContext().getAuthentication().getName() + "can't change password because: Account is not activated");
             throw new Exception("Account is not activated");
         }
         if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
+            log.error("User with email: " + SecurityContextHolder.getContext().getAuthentication().getName() + "can't change password because: Old password does not match the current password");
             throw new Exception("Old password does not match the current password");
         }
         if (!dto.getNewPassword().equals(dto.getReenteredPassword())) {
+            log.error("User with email: " + SecurityContextHolder.getContext().getAuthentication().getName() + "can't change password because: New passwords do not match");
             throw new Exception("New passwords do not match");
         }
 
