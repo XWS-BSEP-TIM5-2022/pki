@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
                     "letter, one lowercase letter, one number and one special character and " +
                     "must not contain white spaces";
             System.out.println(pswdError);
-            log.error("User with email: " + SecurityContextHolder.getContext().getAuthentication().getName() + "can't change password because:" + pswdError);
+            log.error("User with email: " + SecurityContextHolder.getContext().getAuthentication().getName() + "can't change password because: Format of password is invalid" );
 
             throw new Exception(pswdError);
         }
@@ -168,7 +168,7 @@ public class UserServiceImpl implements UserService {
             String pswdError = "Password must contain minimum eight characters, at least one uppercase " +
                     "letter, one lowercase letter, one number and one special character and " +
                     "must not contain white spaces";
-            log.error("User with email: " + SecurityContextHolder.getContext().getAuthentication().getName() + "can't add new admin because:" + pswdError);
+            log.error("User with email: " + SecurityContextHolder.getContext().getAuthentication().getName() + "can't add new admin because: Format of password is invalid" );
 
             System.out.println(pswdError);
             throw new Exception(pswdError);
@@ -195,11 +195,11 @@ public class UserServiceImpl implements UserService {
                 "letter, one lowercase letter, one number and one special character and " +
                 "must not contain white spaces";
         if (!checkPasswordCriteria(dto.getNewPassword())) {
-            log.error("User with email: " + SecurityContextHolder.getContext().getAuthentication().getName() + "can't change password because:" + pswdError);
+            log.error("User with email: " + SecurityContextHolder.getContext().getAuthentication().getName() + "can't change password because:: Format of password is invalid" );
             throw new Exception(pswdError);
         }
         if (!checkPasswordCriteria(dto.getReenteredPassword())) {
-            log.error("User with email: " + SecurityContextHolder.getContext().getAuthentication().getName() + "can't change password because:" + pswdError);
+            log.error("User with email: " + SecurityContextHolder.getContext().getAuthentication().getName() + "can't change password because:: Format of password is invalid" );
             throw new Exception(pswdError);
         }
 
