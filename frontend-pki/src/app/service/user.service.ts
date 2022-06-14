@@ -8,7 +8,7 @@ import { User } from '../model/user';
 export class UserService {
 
   constructor(private _http: HttpClient) { }
-  private readonly userPath = 'http://localhost:9000/api/users';
+  private readonly userPath = 'https://localhost:9000/api/users';
 
   findAll() {
     return this._http.get<User[]>(`${this.userPath}/findAll`)  
