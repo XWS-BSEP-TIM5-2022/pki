@@ -1,2 +1,69 @@
 2022-06-14 02:05:52 INFO  CertificateController:100 - Successfully created certificate: admin@gmail.com
+    2022-06-14 19:24:18 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-14 19:25:05 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-14 19:26:19 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-14 19:27:13 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-14 19:35:52 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-14 19:38:38 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-14 19:41:07 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-14 19:41:19 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-14 19:42:49 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-14 19:44:23 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-14 19:46:29 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-14 19:46:32 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-14 19:46:32 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-14 19:46:33 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-14 19:46:34 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-14 19:46:35 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-14 19:46:35 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-14 21:39:59 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-14 21:40:56 INFO  CertificateController:102 - Successfully found all roots and ca certificates by user: admin@gmail.com
+    2022-06-14 21:40:56 INFO  UserController:60 - Successfully found all users by user: admin@gmail.com
+    2022-06-14 21:40:56 INFO  UserController:68 - Successfully found user with email: admin@gmail.com
+    2022-06-14 21:41:19 INFO  CertificateController:94 - Successfully created self signed certificate! Logged user: admin@gmail.com
+    2022-06-14 21:41:26 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-14 21:41:44 INFO  UserController:68 - Successfully found user with email: admin@gmail.com
+    2022-06-14 21:41:44 INFO  CertificateController:102 - Successfully found all roots and ca certificates by user: admin@gmail.com
+    2022-06-14 21:41:45 INFO  UserController:60 - Successfully found all users by user: admin@gmail.com
+    2022-06-14 21:41:46 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-14 21:44:38 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-14 21:44:55 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-14 21:45:51 INFO  CertificateController:102 - Successfully found all roots and ca certificates by user: admin@gmail.com
+    2022-06-14 21:45:51 INFO  UserController:68 - Successfully found user with email: admin@gmail.com
+    2022-06-14 21:45:51 INFO  UserController:60 - Successfully found all users by user: admin@gmail.com
+    2022-06-14 21:45:56 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-14 21:46:01 INFO  UserController:68 - Successfully found user with email: admin@gmail.com
+    2022-06-14 21:46:01 INFO  CertificateController:102 - Successfully found all roots and ca certificates by user: admin@gmail.com
+    2022-06-14 21:46:01 INFO  UserController:60 - Successfully found all users by user: admin@gmail.com
+    2022-06-14 21:46:20 INFO  CertificateController:94 - Successfully created self signed certificate! Logged user: admin@gmail.com
+    2022-06-14 21:46:22 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-14 21:47:50 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-14 21:47:52 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-14 21:47:57 INFO  CertificateController:102 - Successfully found all roots and ca certificates by user: admin@gmail.com
+    2022-06-14 21:47:57 INFO  UserController:68 - Successfully found user with email: admin@gmail.com
+    2022-06-14 21:47:57 INFO  UserController:60 - Successfully found all users by user: admin@gmail.com
+    2022-06-14 22:53:03 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-14 22:53:12 INFO  UserController:68 - Successfully found user with email: admin@gmail.com
+    2022-06-14 22:53:12 INFO  CertificateController:102 - Successfully found all roots and ca certificates by user: admin@gmail.com
+    2022-06-14 22:53:12 INFO  UserController:60 - Successfully found all users by user: admin@gmail.com
+    2022-06-14 22:53:35 INFO  CertificateController:94 - Successfully created self signed certificate! Logged user: admin@gmail.com
+    2022-06-14 22:53:37 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-14 22:53:39 INFO  CertificateController:66 - Successfully found certificate with id: 1by user: admin@gmail.com
+    2022-06-14 22:53:39 INFO  UserController:68 - Successfully found user with email: admin@gmail.com
+    2022-06-14 22:53:39 INFO  CertificateController:160 - Successfully found certificate with serialNumber1171A0B26D0941308114387EAD32FCCE  by user: admin@gmail.com
+    2022-06-14 22:53:39 INFO  CertificateController:152 - Successfully found issuer email with serialNumber1171A0B26D0941308114387EAD32FCCE  by user: admin@gmail.com
+    2022-06-14 23:00:35 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-14 23:01:22 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-14 23:02:57 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-14 23:04:18 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-14 23:21:05 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-14 23:33:40 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-14 23:36:53 INFO  CertificateController:102 - Successfully found all roots and ca certificates by user: admin@gmail.com
+    2022-06-14 23:36:53 INFO  UserController:60 - Successfully found all users by user: admin@gmail.com
+    2022-06-14 23:36:53 INFO  UserController:68 - Successfully found user with email: admin@gmail.com
+    2022-06-14 23:37:28 INFO  CertificateController:94 - Successfully created self signed certificate! Logged user: admin@gmail.com
+    2022-06-14 23:37:30 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-14 23:37:32 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-15 00:05:10 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-15 00:05:36 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
     

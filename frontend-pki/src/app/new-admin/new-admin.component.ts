@@ -71,7 +71,7 @@ export class NewAdminComponent implements OnInit {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
    });
-    this.http.post('http://localhost:9000/api/users/addAdmin', body, {'headers': headers })
+    this.http.post('https://localhost:9000/api/users/addAdmin', body, {'headers': headers })
     .subscribe(data => {
       this.router.navigate(['admin-home'])
     })

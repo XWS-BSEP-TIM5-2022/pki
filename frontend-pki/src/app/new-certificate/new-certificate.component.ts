@@ -43,7 +43,7 @@ export class NewCertificateComponent implements OnInit {
     }
 
     let idLocalStorage = localStorage.getItem('userId')
-    this.http.get('http://localhost:9000/api/users/getById/' + idLocalStorage)
+    this.http.get('https://localhost:9000/api/users/getById/' + idLocalStorage)
     .subscribe(data => {
       this.user = data
       this.userId = this.user.id;

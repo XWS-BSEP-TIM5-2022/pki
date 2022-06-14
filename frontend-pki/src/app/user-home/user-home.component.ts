@@ -32,7 +32,7 @@ export class UserHomeComponent implements OnInit {
     }
 
     this.email = localStorage.getItem('user') || ""
-    this.http.get('http://localhost:9000/api/users/getByEmail/' + this.email)
+    this.http.get('https://localhost:9000/api/users/getByEmail/' + this.email)
     .subscribe(data => {
       this.user = data
       this.email = this.user.email
@@ -50,7 +50,7 @@ export class UserHomeComponent implements OnInit {
   getCertificates(id: number){
 
 
-    this.http.get<Certificate[]>('http://localhost:9000/api/certificate/getAllByUser/' + id)
+    this.http.get<Certificate[]>('https://localhost:9000/api/certificate/getAllByUser/' + id)
     .subscribe(data => {
       var allCertificates : Certificate[] = data
       for(var c of allCertificates){
