@@ -78,8 +78,8 @@
         "serve": {
           "options": {
             "ssl": true,
-            "sslKey": "ssl/server.key",
-            "sslCert": "ssl/server.crt"
+            "sslKey": "ssl/pki-front.key",
+            "sslCert": "ssl/pki-front.crt"
         },
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
