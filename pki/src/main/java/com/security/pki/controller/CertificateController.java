@@ -35,14 +35,14 @@ public class CertificateController {
     @RequestMapping(value="", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('getAllCertificates')")
     public List<AllCertificatesViewDTO> getAll() {
-        log.info("Successfully found all certificates!");
+        log.info("Successfully found all certificates by user: " + SecurityContextHolder.getContext().getAuthentication().getName());
         return this.certificateService.findAll();
     }
 
     @RequestMapping(value="/getAllByUser/{id}", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('getAllCertificatesByUser')")
     public List<AllCertificatesViewDTO> getAllByUser(@PathVariable Integer id) {
-        log.info("Successfully found all certificates by user: " + SecurityContextHolder.getContext().getAuthentication().getName());
+        log.info("Successfully found all certificates" + "for user with id:" + id + "by user: " + SecurityContextHolder.getContext().getAuthentication().getName());
         return this.certificateService.findAllByUser(id);
     }
 
