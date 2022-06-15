@@ -1,5 +1,8 @@
 package com.security.pki.dto;
 
+import lombok.Getter;
+
+@Getter
 public class SignUpUserDTO {
     public String email;
 

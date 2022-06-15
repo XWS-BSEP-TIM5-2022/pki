@@ -25,8 +25,8 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
-import java.util.regex.Matcher;
+import java.util.List; 
+import java.util.regex.Matcher; 
 import java.util.regex.Pattern;
 
 @Service
@@ -54,11 +54,20 @@ public class UserServiceImpl implements UserService {
     private VerificationTokenRepository verificationTokenRepository;
     static Logger log = Logger.getLogger(UserServiceImpl.class.getName());
 
+    public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
+            Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+
     @Override
     public User register(SignUpUserDTO dto) throws Exception {
+
+        if(!VALID_EMAIL_ADDRESS_REGEX.matcher(dto.getEmail()).find()){
+            log.error("Registration failed. Email invalid");
+            throw new Exception("Email invalid");
+        }
+
         for(User user: userRepository.findAll()){
-            if(user.getEmail().equals(dto.email)){
-                log.error("User with email: " + SecurityContextHolder.getContext().getAuthentication().getName() + "can't change password because email is not unique");
+            if(user.getEmail().equals(dto.email)){ 
+                log.error("Registration failed. Email " + user.getEmail() + " not unique");
                 throw new Exception("Email is not unique");
             }
         }
@@ -67,8 +76,7 @@ public class UserServiceImpl implements UserService {
                     "letter, one lowercase letter, one number and one special character and " +
                     "must not contain white spaces";
             System.out.println(pswdError);
-            log.error("User with email: " + SecurityContextHolder.getContext().getAuthentication().getName() + "can't change password because: Format of password is invalid" );
-
+            log.error("Registration failed for user with email " + dto.getEmail() + ". Password does not match criteria.");
             throw new Exception(pswdError);
         }
         User newUser = new UserMapper().SignUpUserDtoToUser(dto);
@@ -76,7 +84,8 @@ public class UserServiceImpl implements UserService {
         newUser.setLastPasswordResetDate(Timestamp.from(Instant.now()));
         UserType role = userTypeService.findUserTypeByName("ROLE_USER");
         if (role == null) {
-            log.error("User with email: " + SecurityContextHolder.getContext().getAuthentication().getName() + "can't change password because: Role does not exist!" );
+
+            log.error("Registration failed for user with email " + dto.getEmail() + " . There is no role with name: ROLE_USER");
             throw new Exception("Role does not exist");
         }
         newUser.setUserType(role);
@@ -85,7 +94,7 @@ public class UserServiceImpl implements UserService {
         // TODO SD: slanje emaila
         VerificationToken verificationToken = new VerificationToken(newUser);
         if (!emailService.sendAccountActivationMail(verificationToken.getToken(), newUser.getEmail())) {
-            log.error("User with email: " + SecurityContextHolder.getContext().getAuthentication().getName() + "can't change password because: Email for account verification not sent!");
+            log.error("Registration failed. Verification email not sent to mail: " + newUser.getEmail());
             throw new Exception("Email for account verification not sent, try again");
         }
         log.info("Verification email is sent!");
