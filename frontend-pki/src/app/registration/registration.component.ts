@@ -59,7 +59,7 @@ export class RegistrationComponent implements OnInit {
     }
     let body = JSON.stringify(user)
     const headers = { 'content-type': 'application/json'}
-    this.http.post('http://localhost:9000/auth/register', body, {'headers': headers })
+    this.http.post('https://localhost:9000/auth/register', body, {'headers': headers })
     .subscribe(data => {
       localStorage.setItem('userId', JSON.stringify(data["id"]))
       localStorage.setItem('role', "ROLE_USER");

@@ -8,9 +8,9 @@ import jwt_decode from "jwt-decode";
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly activateAccountPath = /*environment.backend_api + */'http://localhost:9000/auth/activateAccount?token=';
-  private readonly loginPath = /*environment.backend_api + */'http://localhost:9000/auth/login';
-  private readonly registerPath = /*environment.backend_api + */'http://localhost:9000/auth/register';
+  private readonly activateAccountPath = /*environment.backend_api + */'https://localhost:9000/auth/activateAccount?token=';
+  private readonly loginPath = /*environment.backend_api + */'https://localhost:9000/auth/login';
+  private readonly registerPath = /*environment.backend_api + */'https://localhost:9000/auth/register';
 
   constructor(private http: HttpClient) { }
 
