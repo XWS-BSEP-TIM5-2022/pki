@@ -42,4 +42,5 @@
    2022-06-15 00:00:31 WARN  RestAuthenticationEntryPoint:24 - Unauthorized access toGET:/api/certificate. From:0:0:0:0:0:0:0:1
    2022-06-15 00:01:01 WARN  RestAuthenticationEntryPoint:24 - Unauthorized access toGET:/api/certificate. From:0:0:0:0:0:0:0:1
    2022-06-15 00:04:31 WARN  RestAuthenticationEntryPoint:24 - Unauthorized access toGET:/api/certificate. From:0:0:0:0:0:0:0:1
+   2022-06-15 15:06:11 WARN  RestAuthenticationEntryPoint:24 - Unauthorized access toGET:/error. From:0:0:0:0:0:0:0:1
    
