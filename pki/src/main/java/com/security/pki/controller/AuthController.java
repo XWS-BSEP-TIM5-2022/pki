@@ -25,6 +25,8 @@ import javax.validation.Valid;
 
 import org.apache.log4j.Logger;
 
+import java.util.regex.Pattern;
+
 @RestController
 @RequestMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AuthController {
@@ -42,6 +44,8 @@ public class AuthController {
     private static final String WHITESPACE = " ";
 
     static Logger log = Logger.getLogger(AuthController.class.getName());
+    public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
+            Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
     @RequestMapping(method = RequestMethod.POST, value = "/register")
     public ResponseEntity<?> registerUser(@RequestBody SignUpUserDTO dto) throws Exception {
@@ -55,7 +59,13 @@ public class AuthController {
 
             return new ResponseEntity(user, HttpStatus.CREATED);
         } catch (Exception e) {
-            log.error("Registration failed for user with email: " + dto.getEmail());
+
+            if(!VALID_EMAIL_ADDRESS_REGEX.matcher( dto.getEmail()).find()){
+                log.error("Registration failed for user - email invalid");
+
+            }else{
+                log.error("Registration failed for user with email: " +  dto.getEmail());
+            }
             return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -64,6 +74,10 @@ public class AuthController {
     public ResponseEntity<?> activateAccount(@RequestParam("token")String verificationToken, HttpServletRequest request) {
         if(userService.verifyUserAccount(verificationToken)) {
             String email = verificationTokenRepository.findVerificationTokenByToken(verificationToken).getUser().getEmail();
+            if(!VALID_EMAIL_ADDRESS_REGEX.matcher(email).find()){
+                log.error("Tried account activation with invalid token. From ip address: " + request.getRemoteAddr());
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
             log.info("Successfully activated account by user with email: " + email);
             return new ResponseEntity<>(HttpStatus.OK);
         }
@@ -74,6 +88,12 @@ public class AuthController {
     @RequestMapping(method = RequestMethod.POST, value = "/login")
     public ResponseEntity<UserTokenStateDTO> login(@RequestBody @Valid LoginDTO loginDTO, HttpServletRequest request) {
         Authentication authentication;
+
+        if(!VALID_EMAIL_ADDRESS_REGEX.matcher(loginDTO.getEmail()).find()){
+            log.error("Login failed. Email invalid. From ip address: " + request.getRemoteAddr());
+            return new ResponseEntity("Email invalid", HttpStatus.BAD_REQUEST);
+        }
+
         try {
             authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     loginDTO.getEmail(), loginDTO.getPassword()));

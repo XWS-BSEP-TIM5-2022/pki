@@ -26,6 +26,7 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -52,8 +53,17 @@ public class UserServiceImpl implements UserService {
     private VerificationTokenRepository verificationTokenRepository;
     static Logger log = Logger.getLogger(UserServiceImpl.class.getName());
 
+    public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
+            Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+
     @Override
     public User register(SignUpUserDTO dto) throws Exception {
+
+        if(!VALID_EMAIL_ADDRESS_REGEX.matcher(dto.getEmail()).find()){
+            log.error("Registration failed. Email invalid");
+            throw new Exception("Email invalid");
+        }
+
         for(User user: userRepository.findAll()){
             if(user.getEmail().equals(dto.email)){ 
                 log.error("Registration failed. Email " + user.getEmail() + " not unique");
