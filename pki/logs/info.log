@@ -66,4 +66,20 @@
     2022-06-14 23:37:32 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
     2022-06-15 00:05:10 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
     2022-06-15 00:05:36 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-15 14:37:59 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-15 14:38:23 INFO  CertificateController:102 - Successfully found all roots and ca certificates by user: admin@gmail.com
+    2022-06-15 14:38:23 INFO  UserController:60 - Successfully found all users by user: admin@gmail.com
+    2022-06-15 14:38:23 INFO  UserController:68 - Successfully found user with email: admin@gmail.com
+    2022-06-15 15:07:57 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-15 15:08:26 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-15 15:41:54 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-15 15:41:57 INFO  CertificateController:102 - Successfully found all roots and ca certificates by user: admin@gmail.com
+    2022-06-15 15:41:57 INFO  UserController:68 - Successfully found user with email: admin@gmail.com
+    2022-06-15 15:41:57 INFO  UserController:60 - Successfully found all users by user: admin@gmail.com
+    2022-06-15 15:42:10 INFO  CertificateController:94 - Successfully created self signed certificate! Logged user: admin@gmail.com
+    2022-06-15 15:42:12 INFO  CertificateController:38 - Successfully found all certificates by user: admin@gmail.com
+    2022-06-15 15:42:13 INFO  CertificateController:66 - Successfully found certificate with id: 1by user: admin@gmail.com
+    2022-06-15 15:42:13 INFO  UserController:68 - Successfully found user with email: admin@gmail.com
+    2022-06-15 15:42:13 INFO  CertificateController:160 - Successfully found certificate with serialNumberF286FAE4F2124BF9BCA3A3F47E0FB0F6  by user: admin@gmail.com
+    2022-06-15 15:42:13 INFO  CertificateController:152 - Successfully found issuer email with serialNumberF286FAE4F2124BF9BCA3A3F47E0FB0F6  by user: admin@gmail.com
     
