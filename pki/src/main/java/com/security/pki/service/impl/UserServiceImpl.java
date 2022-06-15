@@ -26,6 +26,8 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -126,16 +128,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean checkPasswordCriteria(String password) {
-        PasswordValidator validator = new PasswordValidator(Arrays.asList(
-                new LengthRule(8, 100),
-                new UppercaseCharacterRule(1),
-                new LowercaseCharacterRule(1),
-                new DigitCharacterRule(1),
-                new SpecialCharacterRule(1),
-                new WhitespaceRule()));
-
-        RuleResult result = validator.validate(new PasswordData(password));
-        return result.isValid();
+        Pattern pattern = Pattern.compile("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[-+_!@#$%^&*.,?:;<>=`~)({}|/])(?=\\S+$).{8,}$");
+        Matcher passMatcher = pattern.matcher(password);
+        return passMatcher.matches();
     }
 
     @Override
@@ -204,6 +199,7 @@ public class UserServiceImpl implements UserService {
         }
 
         User user = userRepository.findByEmail(userEmail);
+
         if(!user.getIsActive()){
             log.error("User with email: " + SecurityContextHolder.getContext().getAuthentication().getName() + "can't change password because: Account is not activated");
             throw new Exception("Account is not activated");
