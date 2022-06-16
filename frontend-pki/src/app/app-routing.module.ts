@@ -11,19 +11,64 @@ import { NewCertificateComponent } from './new-certificate/new-certificate.compo
 import { NewCertificateAdminComponent } from './new-certificate-admin/new-certificate-admin.component';
 import { AccountActivationComponent } from './account-activation/account-activation.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
+import { AuthentificationGuard } from './authentification.guard'
+import { RoleguardService as RoleGuard } from './service/roleguard.service';
 
 const routes: Routes = [
   {path: "", redirectTo: '/login', pathMatch: 'full'},
   {path: "login", component: LoginComponent},
   {path: "registration", component: RegistrationComponent},
-  {path: "admin-home", component: AdminHomeComponent},
-  {path: "user-home", component: UserHomeComponent},
-  {path: "certificate-review/:id", component: CertificateComponent},
-  {path: "new-admin", component: NewAdminComponent},
-  {path: "new-certificate", component: NewCertificateComponent},
-  {path: "new-certificate-admin", component: NewCertificateAdminComponent},
+  {
+    path: "admin-home", 
+    component: AdminHomeComponent,
+    canActivate: [RoleGuard], 
+    data: { 
+      expectedRole: 'ROLE_ADMIN'  
+    }
+  },
+  {
+    path: "user-home", 
+    component: UserHomeComponent,
+    canActivate: [RoleGuard], 
+    data: { 
+      expectedRole: 'ROLE_USER'  
+    }
+  },
+  {
+    path: "certificate-review/:id", 
+    component: CertificateComponent,
+    canActivate:[AuthentificationGuard]
+  },
+  {
+    path: "new-admin", 
+    component: NewAdminComponent,
+    canActivate: [RoleGuard], 
+    data: { 
+      expectedRole: 'ROLE_ADMIN'  
+    }
+  },
+  {
+    path: "new-certificate", 
+    component: NewCertificateComponent,
+    canActivate: [RoleGuard], 
+    data: { 
+      expectedRole: 'ROLE_USER'  
+    }
+  },
+  {
+    path: "new-certificate-admin", 
+    component: NewCertificateAdminComponent,
+    canActivate: [RoleGuard], 
+    data: { 
+      expectedRole: 'ROLE_ADMIN'  
+    }
+  },
   {path: "activate-account/:token", component: AccountActivationComponent},
-  {path: "change-password", component: ChangePasswordComponent},
+  {
+    path: "change-password", 
+    component: ChangePasswordComponent,
+    canActivate:[AuthentificationGuard]
+  },
 
 ];
 
