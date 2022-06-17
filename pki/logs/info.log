@@ -82,4 +82,32 @@
     2022-06-15 15:42:13 INFO  UserController:68 - Successfully found user with email: admin@gmail.com
     2022-06-15 15:42:13 INFO  CertificateController:160 - Successfully found certificate with serialNumberF286FAE4F2124BF9BCA3A3F47E0FB0F6  by user: admin@gmail.com
     2022-06-15 15:42:13 INFO  CertificateController:152 - Successfully found issuer email with serialNumberF286FAE4F2124BF9BCA3A3F47E0FB0F6  by user: admin@gmail.com
-    
+    {"level":"INFO","timestamp":"2022-06-17 20:40:42,587","file":"UserServiceImpl.java", "line":"100","message":"Verification email is sent!"}
+   {"level":"INFO","timestamp":"2022-06-17 20:40:42,606","file":"AuthController.java", "line":"58","message":"Successful registration with email: teodora.maruna@gmail.com. User id: 3"}
+   {"level":"INFO","timestamp":"2022-06-17 20:40:49,864","file":"AuthController.java", "line":"81","message":"Successfully activated account by user with email: teodora.maruna@gmail.com"}
+   {"level":"INFO","timestamp":"2022-06-17 20:41:05,393","file":"AuthController.java", "line":"119","message":"Successful login. User: teodora.maruna@gmail.com , ip address: 0:0:0:0:0:0:0:1"}
+   {"level":"INFO","timestamp":"2022-06-17 20:41:05,460","file":"UserController.java", "line":"88","message":"Successfully found user with email: teodora.maruna@gmail.com"}
+   {"level":"INFO","timestamp":"2022-06-17 20:41:05,488","file":"CertificateController.java", "line":"52","message":"Successfully found all certificatesfor user with id:3by user: teodora.maruna@gmail.com"}
+   {"level":"INFO","timestamp":"2022-06-17 20:41:09,937","file":"UserController.java", "line":"88","message":"Successfully found user with email: teodora.maruna@gmail.com"}
+   {"level":"INFO","timestamp":"2022-06-17 20:41:09,949","file":"CertificateController.java", "line":"52","message":"Successfully found all certificatesfor user with id:3by user: teodora.maruna@gmail.com"}
+   {"level":"INFO","timestamp":"2022-06-17 20:44:44,056","file":"UserServiceImpl.java", "line":"100","message":"Verification email is sent!"}
+   {"level":"INFO","timestamp":"2022-06-17 20:44:44,105","file":"AuthController.java", "line":"58","message":"Successful registration with email: teodora.maruna@gmail.com. User id: 3"}
+   {"level":"INFO","timestamp":"2022-06-17 20:44:47,413","file":"UserServiceImpl.java", "line":"100","message":"Verification email is sent!"}
+   {"level":"INFO","timestamp":"2022-06-17 20:45:46,976","file":"UserServiceImpl.java", "line":"100","message":"Verification email is sent!"}
+   {"level":"INFO","timestamp":"2022-06-17 20:45:46,990","file":"AuthController.java", "line":"58","message":"Successful registration with email: maruna.teodora@gmail.com. User id: 5"}
+   {"level":"INFO","timestamp":"2022-06-17 20:45:57,141","file":"AuthController.java", "line":"81","message":"Successfully activated account by user with email: maruna.teodora@gmail.com"}
+   {"level":"INFO","timestamp":"2022-06-17 20:46:10,831","file":"AuthController.java", "line":"119","message":"Successful login. User: maruna.teodora@gmail.com , ip address: 0:0:0:0:0:0:0:1"}
+   {"level":"INFO","timestamp":"2022-06-17 20:46:10,884","file":"UserController.java", "line":"88","message":"Successfully found user with email: maruna.teodora@gmail.com"}
+   {"level":"INFO","timestamp":"2022-06-17 20:46:10,909","file":"CertificateController.java", "line":"52","message":"Successfully found all certificatesfor user with id:5by user: maruna.teodora@gmail.com"}
+   {"level":"INFO","timestamp":"2022-06-17 20:46:27,490","file":"AuthController.java", "line":"119","message":"Successful login. User: admin@gmail.com , ip address: 0:0:0:0:0:0:0:1"}
+   {"level":"INFO","timestamp":"2022-06-17 20:46:27,509","file":"CertificateController.java", "line":"45","message":"Successfully found all certificates by user: admin@gmail.com"}
+   {"level":"INFO","timestamp":"2022-06-17 20:46:32,394","file":"UserController.java", "line":"88","message":"Successfully found user with email: admin@gmail.com"}
+   {"level":"INFO","timestamp":"2022-06-17 20:46:32,407","file":"UserController.java", "line":"73","message":"Successfully found all users by user: admin@gmail.com"}
+   {"level":"INFO","timestamp":"2022-06-17 20:46:32,410","file":"CertificateController.java", "line":"117","message":"Successfully found all roots and ca certificates by user: admin@gmail.com"}
+   {"level":"INFO","timestamp":"2022-06-17 20:46:50,239","file":"CertificateController.java", "line":"109","message":"Successfully created self signed certificate! Logged user: admin@gmail.com"}
+   {"level":"INFO","timestamp":"2022-06-17 20:46:51,698","file":"CertificateController.java", "line":"45","message":"Successfully found all certificates by user: admin@gmail.com"}
+   {"level":"INFO","timestamp":"2022-06-17 20:46:53,057","file":"UserController.java", "line":"88","message":"Successfully found user with email: admin@gmail.com"}
+   {"level":"INFO","timestamp":"2022-06-17 20:46:53,064","file":"CertificateController.java", "line":"81","message":"Successfully found certificate with id: 1by user: admin@gmail.com"}
+   {"level":"INFO","timestamp":"2022-06-17 20:46:53,077","file":"CertificateController.java", "line":"184","message":"Successfully found certificate with serialNumber5EC35D5247474FB89FBEB36A10AA1D48  by user: admin@gmail.com"}
+   {"level":"INFO","timestamp":"2022-06-17 20:46:53,080","file":"CertificateController.java", "line":"175","message":"Successfully found issuer email with serialNumber5EC35D5247474FB89FBEB36A10AA1D48  by user: admin@gmail.com"}
+   
