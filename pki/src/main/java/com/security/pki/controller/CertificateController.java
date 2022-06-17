@@ -4,6 +4,7 @@ import com.security.pki.dto.*;
 import com.security.pki.mapper.CertificateMapper;
 import com.security.pki.model.MyCertificate;
 import com.security.pki.model.User;
+import com.security.pki.security.util.TokenUtils;
 import com.security.pki.service.CertificateService;
 import org.apache.log4j.Logger;
 import org.bouncycastle.util.encoders.Base64Encoder;
@@ -31,6 +32,12 @@ public class CertificateController {
 //    @Autowired
 //    private Base64Encoder base64Encoder;
     static Logger log = Logger.getLogger(CertificateController.class.getName());
+    private final TokenUtils tokenUtils;
+    private static final String WHITESPACE = " ";
+
+    public CertificateController(TokenUtils tokenUtils) {
+        this.tokenUtils = tokenUtils;
+    }
 
     @RequestMapping(value="", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('getAllCertificates')")
@@ -50,6 +57,10 @@ public class CertificateController {
     @PreAuthorize("hasAuthority('downloadCertificate')")
     public ResponseEntity<?> downloadCertificate(@PathVariable Integer id) throws KeyStoreException, CertificateEncodingException, IOException {
         MyCertificate cert = certificateService.findById(id);
+        if(cert == null){
+            log.error("Certificate is null!");
+            return null;
+        }
         if(cert.isRevoked()){
             log.error("Error while downloading certificate by user: " + SecurityContextHolder.getContext().getAuthentication().getName());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -63,8 +74,11 @@ public class CertificateController {
     @RequestMapping(value="/findById/{id}", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('findCertificateById')")
     public CertificateReviewDTO findById(@PathVariable Integer id) {
+        CertificateReviewDTO c = this.certificateService.findDtoById(id);
+        if(c == null){
+            log.error("Certificate with id:" + id + "is null!");
+        }
         log.info("Successfully found certificate with id: " + id + "by user: " +  SecurityContextHolder.getContext().getAuthentication().getName());
-
         return this.certificateService.findDtoById(id);
     }
 
@@ -72,6 +86,7 @@ public class CertificateController {
     @PreAuthorize("hasAuthority('createCertificate')")
     public ResponseEntity<?> issueCertificate(@RequestBody CreateCertificateDTO dto) {
         X509Certificate certificate = certificateService.issueCertificate(dto);
+
         if(certificate == null) {
             log.error("Error while issuing certificate by user: " + SecurityContextHolder.getContext().getAuthentication().getName());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -106,7 +121,13 @@ public class CertificateController {
     @RequestMapping(value="/findUserByCertificateSerialNumber/{serialNumber}", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('findUserByCertificateSerialNumber')")
     public User findUserByCertificateSerialNumber(@PathVariable String serialNumber) {
+        serialNumber = serialNumber.replaceAll("[\n\r\t]", "_");
+
         MyCertificate certificate = this.certificateService.findMyCertificateBySerialNumber(serialNumber);
+        if(certificate == null){
+            log.error("Certificate with serialnumber: " + serialNumber + "is null!");
+            return null;
+        }
         log.info("Successfully found certificate with serialNumber" + serialNumber + "  by user: " + SecurityContextHolder.getContext().getAuthentication().getName());
         return certificate.getUser();
     }
@@ -115,13 +136,15 @@ public class CertificateController {
     @RequestMapping(value="/revokeCerificate/{serialNumber}", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('revokeCertificate')")
     public void revokeCerificate(@PathVariable String serialNumber){
+        serialNumber = serialNumber.replaceAll("[\n\r\t]", "_");
         log.info("Successfully revoked certificate with serialNumber" + serialNumber + "  by user: " + SecurityContextHolder.getContext().getAuthentication().getName());
         certificateService.revokeCerificate(serialNumber);
     }
-  
+
     @RequestMapping(value="/findCertificateBySerialNumber/{serialNumber}", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('findCertificateBySerialNumber')")
     public MyCertificate findCertificateBySerialNumber(@PathVariable String serialNumber) {
+        serialNumber = serialNumber.replaceAll("[\n\r\t]", "_");
         log.info("Successfully found certificate with serialNumber" + serialNumber + "  by user: " + SecurityContextHolder.getContext().getAuthentication().getName());
         return this.certificateService.findMyCertificateBySerialNumber(serialNumber);
     }
@@ -144,12 +167,12 @@ public class CertificateController {
     @RequestMapping(value="/findIssuerEmailBySerialNumber", method = RequestMethod.POST)
     @PreAuthorize("hasAuthority('findIssuerEmailBySerialNumber')")
     public ResponseEntity<?> findIssuerEmailBySerialNumber(@RequestBody RevokeCertificateDTO dto){
-        System.out.println("VRACAMOOO: " + certificateService.findIssuerEmailBySerialNumber(dto));
         if(certificateService.findIssuerEmailBySerialNumber(dto) == null){
             log.error("Error while finding issuer email with serialNumber" + dto.getSerialNumber() + "  by user: " + SecurityContextHolder.getContext().getAuthentication().getName());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        log.info("Successfully found issuer email with serialNumber" + dto.getSerialNumber() + "  by user: " + SecurityContextHolder.getContext().getAuthentication().getName());
+        String serialNumber = dto.getSerialNumber().replaceAll("[\n\r\t]", "_");
+        log.info("Successfully found issuer email with serialNumber" + serialNumber + "  by user: " + SecurityContextHolder.getContext().getAuthentication().getName());
         return new ResponseEntity<>(certificateService.findIssuerEmailBySerialNumber(dto), HttpStatus.OK);
     }
 
@@ -157,6 +180,7 @@ public class CertificateController {
     @PreAuthorize("hasAuthority('findBySerialNumber')")
     public AllCertificatesViewDTO findBySerialNumber(@PathVariable String serialNumber) {
         CertificateMapper certificateMapper = new CertificateMapper();
+        serialNumber = serialNumber.replaceAll("[\n\r\t]", "_");
         log.info("Successfully found certificate with serialNumber" + serialNumber + "  by user: " + SecurityContextHolder.getContext().getAuthentication().getName());
         return certificateMapper.certificateWithCommonNameToCertificateDto(this.certificateService.findMyCertificateBySerialNumber(serialNumber));
     }
